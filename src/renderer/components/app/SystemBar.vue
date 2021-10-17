@@ -3,6 +3,7 @@
     fixed
     height="25"
     id="systembar"
+    class="pb-0"
   >
     FlatShelf
   </v-system-bar>
