@@ -1,7 +1,7 @@
 <template>
   <v-app>
 
-    <Header/>
+    <SystemBar/>
 
     <SideBar class="main-contents"/>
 
@@ -12,21 +12,21 @@
         </v-container>
       </v-main>
     </div>
-    
+
   </v-app>
 </template>
 
 <script>
 
 import SideBar from "./components/app/AppSideBar"
-import Header from "./components/app/AppHeader"
+import SystemBar from "./components/app/SystemBar"
 
 export default {
   name: 'App',
 
   components: {
     SideBar,
-    Header
+    SystemBar
   },
 
   data() {
