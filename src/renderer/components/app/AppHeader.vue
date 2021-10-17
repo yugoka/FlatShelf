@@ -1,9 +1,10 @@
 <template>
   <v-system-bar
-    window
-    absolute
+    fixed
+    id="appheader"
+    height="30"
   >
-    あああああああああああああああああああ
+    FlatShelf
   </v-system-bar>
 </template>
 

@@ -2,14 +2,17 @@
   <v-app>
 
     <Header/>
-    <SideBar/>
 
-    <v-main>
-      <v-container>
-        <v-btn @click="increment">{{count}}</v-btn>
-      </v-container>
-    </v-main>
+    <SideBar class="main-contents"/>
 
+    <div class="main-contents">
+      <v-main>
+        <v-container>
+          <v-btn @click="increment">{{count}}</v-btn>
+        </v-container>
+      </v-main>
+    </div>
+    
   </v-app>
 </template>
 
@@ -44,3 +47,9 @@ export default {
 
 };
 </script>
+
+<style>
+.main-contents {
+  padding-top: 30px;
+}
+</style>
