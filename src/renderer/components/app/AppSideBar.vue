@@ -4,6 +4,7 @@
       stateless
       id="sidebar"
       v-model="isSideMenuShown"
+      :width="sideBar.width"
     >
       <v-list-item>
         <v-list-item-avatar>
@@ -17,7 +18,8 @@
 
       <v-divider></v-divider>
 
-      <span>{{isSideMenuShown}}</span>
+      <div>show:{{isSideMenuShown}}</div>
+      <div>width:{{sideBar.width}}</div>
       <div style="height: 300px;">あああ</div>
       <div style="height: 300px;">あああ</div>
       <div style="height: 300px;">あああ</div>
@@ -33,10 +35,15 @@
 
     data() {
       return {
-
+        sideBar: {
+          width: 400,
+          minWidth: 150,
+          maxWidth: 400
+        }
       }
     },
     computed: {
+      //サイドメニューの開閉はvuexで管理
       isSideMenuShown: {
         get() {
           return this.$store.state.isSideMenuShown
@@ -57,6 +64,7 @@
     margin-top: 25px;
   }
 
+  /*スクロールバー関連*/
   #sidebar ::-webkit-scrollbar {
     overflow:visible;
     width: 4px;
@@ -73,5 +81,18 @@
   #sidebar:hover ::-webkit-scrollbar-thumb {
     display: block;
   }
-  
+
+  /*幅調整関連*/
+  #sidebar .v-navigation-drawer__border {
+    background-color: transparent; 
+    width: 5px !important;
+    cursor: col-resize;
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
+  }
+  #sidebar .v-navigation-drawer__border:hover {
+    background-color: #489aeb !important;
+    cursor: col-resize;
+    transition: 0.2s;
+    transition-delay: 150ms;
+  }
 </style>

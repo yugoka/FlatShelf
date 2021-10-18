@@ -13,12 +13,13 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    //dispatchとかはいらないのでcontext.commitだけ引数に取る
+    //dispatchとかはいらないのでcontext.commitとcontext.stateだけ引数に取る
     toggleSideMenu({ commit, state }, sideBarStatus = null ) {
+      //切り替えをしたい場合イベントからの引数でnullを明示的に指定する必要があるので注意
       if (sideBarStatus === null || sideBarStatus === undefined) {
-        commit('toggleSideMenu', !state.isSideMenuShown);
+        commit('toggleSideMenu', !state.isSideMenuShown)
       } else {
-        commit('toggleSideMenu', sideBarStatus);
+        commit('toggleSideMenu', sideBarStatus)
       }
     }
   }

@@ -1,10 +1,10 @@
 <template>
     <v-navigation-drawer
       app
-      permanent
-      clipped-top
+      stateless
       id="sidebar"
-      v-model="test"
+      v-model="isSideMenuShown"
+      :width="sideBar.width"
     >
       <v-list-item>
         <v-list-item-avatar>
@@ -18,13 +18,13 @@
 
       <v-divider></v-divider>
 
-    <div style="height: 300px;">あああ</div>
-    <div style="height: 300px;">あああ</div>
-    <div style="height: 300px;">あああ</div>
-    <div style="height: 300px;">あああ</div>
-    <div style="height: 300px;">あああ</div>
-
-    <div id="scrollbar-wrapper"></div>
+      <div>show:{{isSideMenuShown}}</div>
+      <div>width:{{sideBar.width}}</div>
+      <div style="height: 300px;">あああ</div>
+      <div style="height: 300px;">あああ</div>
+      <div style="height: 300px;">あああ</div>
+      <div style="height: 300px;">あああ</div>
+      <div style="height: 300px;">あああ</div>
 
     </v-navigation-drawer>
 </template>
@@ -35,13 +35,27 @@
 
     data() {
       return {
-        test: false
+        sideBar: {
+          width: 400,
+          minWidth: 150,
+          maxWidth: 400
+        }
       }
     },
-
+    computed: {
+      //サイドメニューの開閉はvuexで管理
+      isSideMenuShown: {
+        get() {
+          return this.$store.state.isSideMenuShown
+        },
+        set(sideBarStatus) {
+          this.$store.dispatch('toggleSideMenu', sideBarStatus)
+        }
+      }
+    },
     methods: {
 
-    }
+    },
   }
 </script>
 
@@ -49,32 +63,36 @@
   #sidebar {
     margin-top: 25px;
   }
+
+  /*スクロールバー関連*/
   #sidebar ::-webkit-scrollbar {
     overflow:visible;
     width: 4px;
+    display: none;
   }
-
   #sidebar ::-webkit-scrollbar-thumb {
     background: rgba(0,0,0,.15); 
     border-radius: 2px;
+    display: none;
+  }
+  #sidebar:hover ::-webkit-scrollbar {
+    display: block;
+  }
+  #sidebar:hover ::-webkit-scrollbar-thumb {
+    display: block;
   }
 
-  #scrollbar-wrapper {
-  position: absolute;
-  background: #fff;;
-  height: 100%;  
-  top: 0;
-  right: 0;
-  width: .4em;
-  -webkit-transition: all .2s;
-  transition: .2s;
-  opacity: 1;
-  pointer-events: none;
+  /*幅調整関連*/
+  #sidebar .v-navigation-drawer__border {
+    background-color: transparent; 
+    width: 5px !important;
+    cursor: col-resize;
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
   }
-
-  #sidebar:hover #scrollbar-wrapper {
-  -webkit-transition: all .2s;
-  transition: .2s;
-  opacity: 0;
+  #sidebar .v-navigation-drawer__border:hover {
+    background-color: #489aeb !important;
+    cursor: col-resize;
+    transition: 0.2s;
+    transition-delay: 150ms;
   }
 </style>
