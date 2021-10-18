@@ -1,7 +1,6 @@
 <template>
     <v-navigation-drawer
       app
-      absolute
       permanent
       clipped-top
       id="sidebar"
@@ -19,6 +18,10 @@
       <v-divider></v-divider>
 
     <div style="height: 300px;">あああ</div>
+    <div style="height: 300px;">あああ</div>
+    <div style="height: 300px;">あああ</div>
+    <div style="height: 300px;">あああ</div>
+    <div style="height: 300px;">あああ</div>
     <!--スクロールバーを隠すためのラッパー-->
     <div id="scrollbar-wrapper"></div>
     </v-navigation-drawer>
@@ -35,6 +38,9 @@
 </script>
 
 <style>
+  #sidebar {
+    margin-top: 25px;
+  }
   #sidebar ::-webkit-scrollbar {
     overflow:visible;
     width: 4px;

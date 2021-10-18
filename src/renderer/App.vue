@@ -1,16 +1,14 @@
 <template>
   <v-app>
-
     <SystemBar/>
 
-    <SideBar class="window-contents"/>
+    <SideBar/>
 
-    <div class="window-contents">
+    <div id="main-content">
       <v-main>
         <router-view/>
       </v-main>
     </div>
-
   </v-app>
 </template>
 
@@ -47,10 +45,27 @@ export default {
 </script>
 
 <style>
-body { 
-overflow: hidden; 
-} 
-.window-contents {
-  padding-top: 25px;
-}
+  /* 
+    メインコンテンツの範囲を限定してスクロールバーを正しく出すようにしている。
+    サイドバーやプログレスバーが出ている場合の設定はまだなので注意
+  */
+  html {
+    overflow: hidden;
+  }
+  #main-content {
+    margin-top: 25px;
+    width: 100vw;
+    height: calc(100vh - 25px);
+    flex-direction: column;
+    overflow-y: scroll;
+  }
+  #main-content::-webkit-scrollbar {
+    overflow:visible;
+    width: 8px;
+  }
+
+  #main-content::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,.3); 
+    border-radius: 4px;
+  }
 </style>
