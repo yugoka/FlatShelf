@@ -4,6 +4,7 @@
       permanent
       clipped-top
       id="sidebar"
+      v-model="test"
     >
       <v-list-item>
         <v-list-item-avatar>
@@ -22,8 +23,7 @@
     <div style="height: 300px;">あああ</div>
     <div style="height: 300px;">あああ</div>
     <div style="height: 300px;">あああ</div>
-    <!--スクロールバーを隠すためのラッパー-->
-    <div id="scrollbar-wrapper"></div>
+
     </v-navigation-drawer>
 </template>
 
@@ -31,9 +31,15 @@
   export default {
     name: 'SideBar',
 
-    data: () => ({
+    data() {
+      return {
+        test: false
+      }
+    },
 
-    }),
+    methods: {
+
+    }
   }
 </script>
 
@@ -41,13 +47,22 @@
   #sidebar {
     margin-top: 25px;
   }
+
   #sidebar ::-webkit-scrollbar {
     overflow:visible;
     width: 4px;
+    display: none;
   }
-
   #sidebar ::-webkit-scrollbar-thumb {
     background: rgba(0,0,0,.15); 
     border-radius: 2px;
+    display: none;
   }
+  #sidebar:hover ::-webkit-scrollbar {
+    display: block;
+  }
+  #sidebar:hover ::-webkit-scrollbar-thumb {
+    display: block;
+  }
+  
 </style>

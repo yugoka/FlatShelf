@@ -59,11 +59,11 @@ export default {
     flex-direction: column;
     overflow-y: scroll;
   }
+
   #main-content::-webkit-scrollbar {
     overflow:visible;
     width: 8px;
   }
-
   #main-content::-webkit-scrollbar-thumb {
     background: rgba(0,0,0,.3); 
     border-radius: 4px;

@@ -1,10 +1,10 @@
 <template>
     <v-navigation-drawer
       app
-      absolute
       permanent
       clipped-top
       id="sidebar"
+      v-model="test"
     >
       <v-list-item>
         <v-list-item-avatar>
@@ -23,47 +23,40 @@
     <div style="height: 300px;">あああ</div>
     <div style="height: 300px;">あああ</div>
     <div style="height: 300px;">あああ</div>
-    <!--スクロールバーを隠すためのラッパー-->
-    <div id="scrollbar-wrapper" :class="{'show-scroll-bar': isScrollBarShown}"></div>
+
+    <div id="scrollbar-wrapper"></div>
+
     </v-navigation-drawer>
 </template>
 
 <script>
-  import { debounce } from 'lodash';
   export default {
     name: 'SideBar',
 
     data() {
       return {
-        isScrollBarShown: false
+        test: false
       }
-    },
-
-    mounted() {
-      window.addEventListener('scroll', this.showScrollBar)
     },
 
     methods: {
-      showScrollBar() {
-        console.log("aaa")
-        this.isScrollBarShown = true
-        debounce(() => {
-          this.isScrollBarShown = false
-        }, 500)
-      }
+
     }
   }
 </script>
 
 <style>
+  #sidebar {
+    margin-top: 25px;
+  }
   #sidebar ::-webkit-scrollbar {
     overflow:visible;
-    width: 6px;
+    width: 4px;
   }
 
   #sidebar ::-webkit-scrollbar-thumb {
-    background: rgba(0,0,0,.2); 
-    border-radius: 3px;
+    background: rgba(0,0,0,.15); 
+    border-radius: 2px;
   }
 
   #scrollbar-wrapper {
@@ -73,14 +66,15 @@
   top: 0;
   right: 0;
   width: .4em;
-  -webkit-transition: all .5s;
-  transition: .5s;
+  -webkit-transition: all .2s;
+  transition: .2s;
   opacity: 1;
+  pointer-events: none;
   }
 
-  #scrollbar-wrapper.show-scroll-bar {
-  -webkit-transition: all .5s;
-  transition: .5s;
+  #sidebar:hover #scrollbar-wrapper {
+  -webkit-transition: all .2s;
+  transition: .2s;
   opacity: 0;
   }
 </style>
