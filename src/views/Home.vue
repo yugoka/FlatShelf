@@ -1,12 +1,17 @@
 <template>
   <div class="home">
     ここはホームです
+    <div class="my-4">
+      <v-btn @click="toggleSideMenu(null)">切り替え</v-btn>
+      <v-btn @click="toggleSideMenu(false)">閉じる</v-btn>
+      <v-btn @click="toggleSideMenu(true)">開く</v-btn>
+      <v-btn @click="toggleDarkMode">ダークモード</v-btn>
+    </div>
     <div style="height: 400px;">あああ</div>
     <div style="height: 400px;">あああ</div>
     <div style="height: 400px;">あああ</div>
     <div style="height: 400px;">あああ</div>
     <div style="height: 400px;">あああ</div>
-    
   </div>
 </template>
 
@@ -16,6 +21,14 @@
 export default {
   name: 'Home',
 
+  methods: {
+    toggleSideMenu(sideBarStatus) {
+      this.$store.dispatch('toggleSideMenu', sideBarStatus)
+    },
+    toggleDarkMode() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+    }
+  }
 }
 </script>
 

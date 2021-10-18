@@ -5,11 +5,21 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    count: 0
+    isSideMenuShown: false
   },
   mutations: {
-    increment(state) {
-      state.count++
+    toggleSideMenu(state, sideBarStatus) {
+      state.isSideMenuShown = sideBarStatus
+    },
+  },
+  actions: {
+    //dispatchとかはいらないのでcontext.commitだけ引数に取る
+    toggleSideMenu({ commit, state }, sideBarStatus = null ) {
+      if (sideBarStatus === null || sideBarStatus === undefined) {
+        commit('toggleSideMenu', !state.isSideMenuShown);
+      } else {
+        commit('toggleSideMenu', sideBarStatus);
+      }
     }
   }
 })

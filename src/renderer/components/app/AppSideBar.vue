@@ -1,10 +1,9 @@
 <template>
     <v-navigation-drawer
       app
-      permanent
-      clipped-top
+      stateless
       id="sidebar"
-      v-model="test"
+      v-model="isSideMenuShown"
     >
       <v-list-item>
         <v-list-item-avatar>
@@ -18,11 +17,12 @@
 
       <v-divider></v-divider>
 
-    <div style="height: 300px;">あああ</div>
-    <div style="height: 300px;">あああ</div>
-    <div style="height: 300px;">あああ</div>
-    <div style="height: 300px;">あああ</div>
-    <div style="height: 300px;">あああ</div>
+      <span>{{isSideMenuShown}}</span>
+      <div style="height: 300px;">あああ</div>
+      <div style="height: 300px;">あああ</div>
+      <div style="height: 300px;">あああ</div>
+      <div style="height: 300px;">あああ</div>
+      <div style="height: 300px;">あああ</div>
 
     </v-navigation-drawer>
 </template>
@@ -33,13 +33,22 @@
 
     data() {
       return {
-        test: false
+
       }
     },
-
+    computed: {
+      isSideMenuShown: {
+        get() {
+          return this.$store.state.isSideMenuShown
+        },
+        set(sideBarStatus) {
+          this.$store.dispatch('toggleSideMenu', sideBarStatus)
+        }
+      }
+    },
     methods: {
 
-    }
+    },
   }
 </script>
 

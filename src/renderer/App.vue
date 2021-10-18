@@ -32,13 +32,11 @@ export default {
   },
 
   methods: {
-    increment() { this.$store.commit('increment') }
+
   },
 
   computed: {
-    count() {
-      return this.$store.state.count
-    }
+
   }
 
 };
