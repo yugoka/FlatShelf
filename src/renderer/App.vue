@@ -7,9 +7,7 @@
 
     <div class="window-contents">
       <v-main>
-        <v-container>
-          <v-btn @click="increment">{{count}}</v-btn>
-        </v-container>
+        <router-view/>
       </v-main>
     </div>
 
@@ -49,6 +47,9 @@ export default {
 </script>
 
 <style>
+body { 
+overflow: hidden; 
+} 
 .window-contents {
   padding-top: 25px;
 }
