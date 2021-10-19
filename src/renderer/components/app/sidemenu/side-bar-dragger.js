@@ -8,7 +8,7 @@ class SideBarDragger {
     this.closeWidth = 50
     //サイドメニュー幅の最大、最小
     this.minWidth = 125
-    this.maxWidth = 400
+    this.maxWidth = 600
     this.dragBar = null
     this.sideMenu = null
   }

@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-    ここはホームです
+    ここはホームです<br>
+    Electron {{ipcTestdata}}
     <div class="my-4">
       <v-btn @click="toggleSideMenu(null)">切り替え</v-btn>
       <v-btn @click="toggleSideMenu(false)">閉じる</v-btn>
@@ -21,6 +22,12 @@
 export default {
   name: 'Home',
 
+  data() {
+    return {
+      ipcTestdata: ""
+    }
+  },
+
   methods: {
     toggleSideMenu(sideBarStatus) {
       this.$store.dispatch('toggleSideMenu', sideBarStatus)
@@ -28,6 +35,10 @@ export default {
     toggleDarkMode() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark
     }
+  },
+
+  async mounted() {
+    this.ipcTestdata = await window.ipc.getRendererSettings()
   }
 }
 </script>
