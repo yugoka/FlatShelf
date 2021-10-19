@@ -7,7 +7,7 @@ const { contextBridge, ipcRenderer } = require("electron")
 
 contextBridge.exposeInMainWorld("ipc", {
   //レンダラープロセス用の設定を取得
-  getRendererSettings() {
-    return ipcRenderer.invoke("get-renderer-settings")
+  getRendererSettings: async () => {
+    return await ipcRenderer.invoke("get-renderer-settings")
   }
 })

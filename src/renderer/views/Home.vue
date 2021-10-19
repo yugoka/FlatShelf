@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     ここはホームです<br>
-    Electron {{ipcTestdata}}
+    {{settings.window.position}}
     <div class="my-4">
       <v-btn @click="toggleSideMenu(null)">切り替え</v-btn>
       <v-btn @click="toggleSideMenu(false)">閉じる</v-btn>
@@ -24,8 +24,17 @@ export default {
 
   data() {
     return {
-      ipcTestdata: ""
+      settings: {
+        window: {
+          position: []
+        }
+      }
     }
+  },
+
+  async mounted() {
+    //mountedで設定取得はちょっと違うと思う
+    this.settings = await this.$config.getAllSettings()
   },
 
   methods: {
@@ -37,9 +46,6 @@ export default {
     }
   },
 
-  async mounted() {
-    this.ipcTestdata = await window.ipc.getRendererSettings()
-  }
 }
 </script>
 
