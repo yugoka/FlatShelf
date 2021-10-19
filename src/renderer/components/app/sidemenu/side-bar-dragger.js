@@ -1,9 +1,9 @@
-import store from '../../../store'
+import store from "../../../store"
 
 //サイドバーの幅調整関連をまとめたクラス
 class SideBarDragger {
   constructor() {
-    this.width = 300
+    this.width = 250
     //マウスによって指定されたwidthがこれ以下ならサイドメニューを閉じる
     this.closeWidth = 50
     //サイドメニュー幅の最大、最小
@@ -15,13 +15,17 @@ class SideBarDragger {
 
   //AppSideBar.vueから呼び出されるメソッドはこれのみ
   startDragging() {
-    this.sideMenu = document.querySelector('#sidebar')
-    this.dragBar = this.dragBar || document.querySelector('#sidebar .v-navigation-drawer__border')
+    this.sideMenu = document.querySelector("#sidebar")
+    this.dragBar =
+      this.dragBar ||
+      document.querySelector("#sidebar .v-navigation-drawer__border")
 
     //マウス移動を検知。重かったらdebounceで頻度調整も視野に入れておく
-    document.addEventListener('mousemove', this.resize, false)
+    document.addEventListener("mousemove", this.resize, false)
     //↑のイベントを削除
-    document.addEventListener('mouseup', () => this.endDragging(), { once: true })
+    document.addEventListener("mouseup", () => this.endDragging(), {
+      once: true
+    })
 
     //ドラッグ中はv-navigation-drawerのtransitionを無効化する
     this.sideMenu.classList.add("no-transition")
@@ -29,7 +33,7 @@ class SideBarDragger {
   }
 
   endDragging() {
-    document.removeEventListener('mousemove', this.resize)
+    document.removeEventListener("mousemove", this.resize)
     //v-navigation-drawerのtransitionを元に戻す
     this.sideMenu.classList.remove("no-transition")
     this.dragBar.classList.remove("dragging")
@@ -39,8 +43,11 @@ class SideBarDragger {
     const currentWidth = e.clientX + 3
     if (self.minWidth < currentWidth && currentWidth < self.maxWidth) {
       self.width = currentWidth
-    } else if(currentWidth < self.closeWidth) {
-      store.dispatch('toggleSideMenu', false)
+    } else if (currentWidth < self.closeWidth) {
+      //幅が一定以下なら閉じる
+      self.width = 250
+      self.endDragging()
+      store.dispatch("toggleSideMenu", false)
     }
   }
 }

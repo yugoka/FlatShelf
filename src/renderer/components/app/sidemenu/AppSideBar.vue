@@ -31,7 +31,7 @@
 
 <script>
   //サイドバーのドラッグ関連の動きは別クラスで定義しているが要検討
-  import { sideBar } from './SideBarDragger'
+  import { sideBar } from './side-bar-dragger'
 
   export default {
     name: 'SideBar',
