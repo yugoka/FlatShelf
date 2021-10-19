@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    isSideMenuShown: false
+    isSideMenuShown: true
   },
   mutations: {
     toggleSideMenu(state, sideBarStatus) {

@@ -14,7 +14,7 @@
 
 <script>
 
-import SideBar from "./components/app/AppSideBar"
+import SideBar from "./components/app/sidemenu/AppSideBar"
 import SystemBar from "./components/app/SystemBar"
 
 export default {
