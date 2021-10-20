@@ -1,12 +1,17 @@
 <template>
   <div class="home">
     ここはホームです<br>
-    {{settings.window.position}}
+    {{settings}}
     <div class="my-4">
       <v-btn @click="toggleSideMenu(null)">切り替え</v-btn>
       <v-btn @click="toggleSideMenu(false)">閉じる</v-btn>
       <v-btn @click="toggleSideMenu(true)">開く</v-btn>
       <v-btn @click="toggleDarkMode">ダークモード</v-btn>
+    </div>
+    <div class="my-4">
+      <v-text-field v-model="configKey"></v-text-field>
+      <v-text-field v-model="configValue"></v-text-field>
+      <v-btn @click="setConfig">設定保存テスト</v-btn>
     </div>
     <div style="height: 400px;">あああ</div>
     <div style="height: 400px;">あああ</div>
@@ -24,17 +29,15 @@ export default {
 
   data() {
     return {
-      settings: {
-        window: {
-          position: []
-        }
-      }
+      configKey: "renderer.key",
+      configValue: "value"
     }
   },
 
-  async mounted() {
-    //mountedで設定取得はちょっと違うと思う
-    this.settings = await this.$config.getAllSettings()
+  computed: {
+    settings() {
+      return this.$store.state.settings
+    }
   },
 
   methods: {
@@ -43,6 +46,9 @@ export default {
     },
     toggleDarkMode() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+    },
+    setConfig() {
+      this.$config.set(this.configKey, this.configValue)
     }
   },
 

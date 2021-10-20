@@ -11,9 +11,9 @@ const {
   VUEJS_DEVTOOLS
 } = require("electron-devtools-installer")
 
-const { config } = require("./config-manager")
+const { config } = require("./managers/main-config-manager")
 const { getWindowCenterPosition } = require("./init-functions")
-const { registerIpcHandlers } = require("./ipc-handler")
+const { registerIpcHandlers } = require("./ipc/ipc-main")
 
 //------------------------------------
 // 定数
@@ -41,8 +41,8 @@ let mainWindow
 //------------------------------------
 const createWindow = () => {
   const position =
-    config.main.get("window.position") || getWindowCenterPosition(DEFAULT_SIZE)
-  const size = config.main.get("window.size") || [
+    config.get("main.window.position") || getWindowCenterPosition(DEFAULT_SIZE)
+  const size = config.get("main.window.size") || [
     DEFAULT_SIZE.width,
     DEFAULT_SIZE.height
   ]
@@ -77,8 +77,8 @@ const createWindow = () => {
   //メインウィンドウを閉じた時
   mainWindow.on("close", () => {
     //ウィンドウのサイズと位置を保存する
-    config.main.set("window.position", mainWindow.getPosition())
-    config.main.set("window.size", mainWindow.getSize())
+    config.set("main.window.position", mainWindow.getPosition())
+    config.set("main.window.size", mainWindow.getSize())
   })
 }
 

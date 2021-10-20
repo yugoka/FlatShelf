@@ -19,7 +19,7 @@ module.exports = {
       mainProcessArgs: ["--arg-name", "arg-value"],
 
       //プリロードファイルの指定
-      preload: "src/main/preload.js"
+      preload: "src/main/ipc/ipc-renderer.js"
     }
   }
 }

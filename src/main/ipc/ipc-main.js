@@ -1,5 +1,5 @@
 const { ipcMain } = require("electron")
-const { config } = require("./config-manager")
+const { config } = require("../managers/main-config-manager")
 
 //------------------------------------
 // IPCレシーバー設定
@@ -10,15 +10,16 @@ export const registerIpcHandlers = () => {
   // 相互通信：レンダラー⇔メイン
   //------------------------------------
   //レンダラープロセスの設定をすべて取得
-  ipcMain.handle("get-renderer-settings", () => {
-    return config.renderer.getAll()
+  ipcMain.handle("get-all-settings", () => {
+    return config.getAll()
+  })
+
+  //設定を保存する。成功すればtrue、失敗すればfalseが戻ってくる
+  ipcMain.handle("set-config", (event, { key, value }) => {
+    return config.set(key, value)
   })
 
   //------------------------------------
   // 片道通信：レンダラー→メイン
   //------------------------------------
-  //レンダラープロセスの設定を変更
-  ipcMain.on("set-renderer-setting", (key, value) => {
-    config.renderer.set(key, value)
-  })
 }
