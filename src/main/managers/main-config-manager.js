@@ -14,6 +14,7 @@ class ConfigManager {
     } catch (error) {
       return false
     }
+
     return true
   }
 }

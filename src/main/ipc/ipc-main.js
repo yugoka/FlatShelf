@@ -14,9 +14,14 @@ export const registerIpcHandlers = () => {
     return config.getAll()
   })
 
-  //設定を保存する。成功すればtrue、失敗すればfalseが戻ってくる
+  //設定を保存する。成功した場合settingsオブジェクト全体、失敗した場合falseを返す
   ipcMain.handle("set-config", (event, { key, value }) => {
-    return config.set(key, value)
+    const result = config.set(key, value)
+    if (result) {
+      return config.getAll()
+    } else {
+      return false
+    }
   })
 
   //------------------------------------

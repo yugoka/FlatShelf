@@ -5,16 +5,16 @@ class RendererConfigManager {
 
   async initSettings() {
     const settings = await window.ipc.getAllSettings()
-    store.commit("setConfigAll", settings)
+    store.commit("setConfig", settings)
   }
 
   //設定を変更する。変更するためには事前に値が設定されている必要があるため注意
   async set(key, value) {
-    const result_ok = await window.ipc.setConfig(key, value)
+    const result = await window.ipc.setConfig(key, value)
     //保存に成功したらレンダラーにも反映する
-    if (result_ok) {
-      //設定をすべて持ってくる。若干非効率かも
-      this.initSettings()
+    if (result) {
+      //resultで帰ってきたsettingsでstateを上書きする
+      store.commit("setConfig", result)
     } else {
       console.log(`設定の保存に失敗しました：${key}:${value}`)
     }

@@ -10,7 +10,7 @@ const store = new Vuex.Store({
   },
   mutations: {
     //レンダラー設定をまとめて保存する
-    setConfigAll(state, settings) {
+    setConfig(state, settings) {
       state.settings = settings
     },
     toggleSideMenu(state, sideBarStatus) {
@@ -19,8 +19,8 @@ const store = new Vuex.Store({
   },
   actions: {
     //dispatchとかはいらないのでcontext.commitとcontext.stateだけ引数に取る
+    //サイドバー切り替えをしたい場合イベントからの引数でnullを明示的に指定する必要があるので注意
     toggleSideMenu({ commit, state }, sideBarStatus = null) {
-      //切り替えをしたい場合イベントからの引数でnullを明示的に指定する必要があるので注意
       if (sideBarStatus === null || sideBarStatus === undefined) {
         commit("toggleSideMenu", !state.isSideMenuShown)
       } else {

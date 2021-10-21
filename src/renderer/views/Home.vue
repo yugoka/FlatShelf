@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     ここはホームです<br>
-    {{settings}}
+    {{settings.renderer}}
     <div class="my-4">
       <v-btn @click="toggleSideMenu(null)">切り替え</v-btn>
       <v-btn @click="toggleSideMenu(false)">閉じる</v-btn>
@@ -11,7 +11,18 @@
     <div class="my-4">
       <v-text-field v-model="configKey"></v-text-field>
       <v-text-field v-model="configValue"></v-text-field>
-      <v-btn @click="setConfig">設定保存テスト</v-btn>
+      <v-btn
+        @click="setConfig"
+        color="primary"
+      >
+        設定保存テスト
+        <v-icon
+          right
+          dark
+        >
+          mdi-upload
+        </v-icon>
+      </v-btn>
     </div>
     <div style="height: 400px;">あああ</div>
     <div style="height: 400px;">あああ</div>
