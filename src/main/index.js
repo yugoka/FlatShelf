@@ -12,7 +12,6 @@ const {
 } = require("electron-devtools-installer")
 
 const { config } = require("./managers/main-config-manager")
-const { getWindowCenterPosition } = require("./init-functions")
 const { registerIpcHandlers } = require("./ipc/ipc-main")
 
 //------------------------------------
@@ -25,10 +24,9 @@ protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } }
 ])
 
-// ウィンドウのデフォルトサイズ
-const DEFAULT_SIZE = {
-  width: 1200,
-  height: 600
+const DEFAULT_WINDOW_SETTINGS = {
+  size: [1200, 600],
+  position: [960, 580]
 }
 
 //------------------------------------
@@ -41,11 +39,8 @@ let mainWindow
 //------------------------------------
 const createWindow = () => {
   const position =
-    config.get("main.window.position") || getWindowCenterPosition(DEFAULT_SIZE)
-  const size = config.get("main.window.size") || [
-    DEFAULT_SIZE.width,
-    DEFAULT_SIZE.height
-  ]
+    config.get("main.window.position") || DEFAULT_WINDOW_SETTINGS.position
+  const size = config.get("main.window.size") || DEFAULT_WINDOW_SETTINGS.size
   // ウィンドウを生成
   mainWindow = new BrowserWindow({
     width: size[0],

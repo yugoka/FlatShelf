@@ -5,6 +5,9 @@ const { contextBridge, ipcRenderer } = require("electron")
 // レンダラー側でNode APIにアクセスする場合はこれを使う
 //------------------------------------
 contextBridge.exposeInMainWorld("ipc", {
+  //------------------------------------
+  // 往復通信：メイン⇔レンダラー
+  //------------------------------------
   //レンダラープロセス用の設定を取得
   getAllSettings: async () => {
     return await ipcRenderer.invoke("get-all-settings")
@@ -13,4 +16,8 @@ contextBridge.exposeInMainWorld("ipc", {
   setConfig: async (key, value) => {
     return await ipcRenderer.invoke("set-config", { key, value })
   }
+
+  //------------------------------------
+  // 片道通信：メイン→レンダラー
+  //------------------------------------
 })

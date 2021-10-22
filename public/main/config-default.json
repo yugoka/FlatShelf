@@ -1,0 +1,22 @@
+{
+	"config": {
+		"renderer": {
+			"key": "ばりゅ",
+      "defalultconfig": "これはデフォルトコンフィグの値じゃよyoyoyoyoyoをををををを",
+      "uwagaki": "これはデフォルトの値だよ",
+      "new": "新しい値を追加してみたよ"
+		},
+		"main": {
+			"window": {
+				"position": [
+					960,
+					540
+				],
+				"size": [
+					1200,
+					600
+				]
+			}
+		}
+	}
+}

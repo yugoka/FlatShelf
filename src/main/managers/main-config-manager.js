@@ -1,6 +1,10 @@
 const Store = require("electron-store")
 const store = new Store()
-
+const { initConfig } = require("../initializers/init-config")
+initConfig()
+//------------------------------------
+// configの読み込み/書き込み for メインプロセス
+//------------------------------------
 class ConfigManager {
   getAll() {
     return store.get(`config`)
