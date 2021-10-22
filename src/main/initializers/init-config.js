@@ -13,12 +13,12 @@ export const initConfig = () => {
     path.join(app.getPath("userData"), "config.json")
   )
 
+  //configファイルがない場合作成する
   if (!userConfigStat) {
-    copyDefaultConfigFile()
-    return
-  } else {
-    mergeConfig()
+    fs.writeFileSync(path.join(app.getPath("userData"), "config.json"), "{}")
   }
+
+  mergeConfig()
 }
 
 //------------------------------------
@@ -45,18 +45,5 @@ const mergeConfig = async () => {
   await fs.promises.writeFile(
     path.join(app.getPath("userData"), "config.json"),
     resultJson
-  )
-}
-
-const copyDefaultConfigFile = () => {
-  console.log("設定ファイルないよ！！")
-  const default_config_json = fs.readFileSync(
-    path.join(__static, "main/config-default.json"),
-    "utf8"
-  )
-  const default_config = JSON.stringify(default_config_json, null, 2)
-  fs.writeFileSync(
-    path.join(app.getPath("userData"), "config.json"),
-    default_config
   )
 }
