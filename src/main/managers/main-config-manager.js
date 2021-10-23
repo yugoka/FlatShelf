@@ -1,8 +1,4 @@
-const Store = require("electron-store")
-const store = new Store()
-const { initConfig } = require("../initializers/init-config")
-
-initConfig()
+const { store } = require("../initializers/init-config")
 
 //------------------------------------
 // configの読み込み/書き込み for メインプロセス
@@ -18,9 +14,9 @@ class ConfigManager {
     try {
       store.set(`config.${key}`, value)
     } catch (error) {
+      console.log(`設定の変更に失敗しました：${error}`)
       return false
     }
-
     return true
   }
 }

@@ -26,5 +26,5 @@ pnpm-debug.log*
 /dist_electron
 
 /private
-
 min.vue
+.lnk

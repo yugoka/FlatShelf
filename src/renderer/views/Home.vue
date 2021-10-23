@@ -2,6 +2,7 @@
   <div class="home">
     ここはホームです<br>
     {{settings.renderer}}
+    {{settings.renderer.test}}
     <div class="my-4">
       <v-btn @click="toggleSideMenu(null)">切り替え</v-btn>
       <v-btn @click="toggleSideMenu(false)">閉じる</v-btn>
@@ -45,9 +46,23 @@ export default {
     }
   },
 
+  mounted() {
+    this.$vuetify.theme.dark = this.darkmode
+  },
+
   computed: {
     settings() {
       return this.$store.state.settings
+    },
+
+    darkmode() {
+      return this.$store.state.settings.renderer.darkmode
+    }
+  },
+
+  watch: {
+    darkmode() {
+      this.$vuetify.theme.dark = this.darkmode
     }
   },
 
@@ -56,7 +71,7 @@ export default {
       this.$store.dispatch('toggleSideMenu', sideBarStatus)
     },
     toggleDarkMode() {
-      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      this.$config.set("renderer.darkmode", !this.darkmode)
     },
     setConfig() {
       this.$config.set(this.configKey, this.configValue)
