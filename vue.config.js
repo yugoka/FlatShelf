@@ -19,7 +19,10 @@ module.exports = {
       mainProcessArgs: ["--arg-name", "arg-value"],
 
       //プリロードファイルの指定
-      preload: "src/main/ipc/ipc-renderer.js"
+      preload: "src/main/ipc/ipc-renderer.js",
+
+      //sequelizeをWebpackのバンドル対象から外す
+      externals: ["sequelize"]
     }
   }
 }

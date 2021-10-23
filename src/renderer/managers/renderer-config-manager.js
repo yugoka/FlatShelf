@@ -1,3 +1,6 @@
+//------------------------------------
+// 設定管理 for レンダラープロセス
+//------------------------------------
 import store from "../store"
 
 class RendererConfigManager {
@@ -8,7 +11,6 @@ class RendererConfigManager {
     store.commit("setConfig", settings)
   }
 
-  //設定を変更する。変更するためには事前に値が設定されている必要があるため注意
   async set(key, value) {
     const result = await window.ipc.setConfig(key, value)
     //保存に成功したらレンダラーにも反映する

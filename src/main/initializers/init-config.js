@@ -1,4 +1,10 @@
+//------------------------------------
+// 設定ファイルの初期化
+//------------------------------------
+
 const Store = require("electron-store")
+//ワーキングスペースの場所を取得。保存場所はappdata/Roaming/flatshelf
+const { WORKING_SPACE } = require("./global-settings")
 
 //defaultsの読み込みを外部jsonにすることも検討
 const defaults = {
@@ -18,4 +24,7 @@ const defaults = {
   }
 }
 
-export const store = new Store({ defaults })
+export const store = new Store({
+  defaults,
+  cwd: WORKING_SPACE
+})
