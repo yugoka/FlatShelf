@@ -4,6 +4,8 @@
 const { imageManager } = require("./main-image-manager")
 const log = require("electron-log")
 const fileType = require("file-type")
+const { Content } = require("../../initializers/init-db")
+const { Op } = require("sequelize")
 
 class ContentsManager {
   //コンテンツを登録する
@@ -25,6 +27,18 @@ class ContentsManager {
       log.error(err)
       return false
     }
+  }
+
+  //これ別マネージャーに分けるかも
+  async search(query) {
+    const result = await Content.findAll({
+      where: {
+        name: {
+          [Op.like]: `%${query.searchWord}%`
+        }
+      }
+    })
+    return result
   }
 }
 

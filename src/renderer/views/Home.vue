@@ -8,7 +8,6 @@
       <v-btn @click="toggleSideMenu(false)">閉じる</v-btn>
       <v-btn @click="toggleSideMenu(true)">開く</v-btn>
       <v-btn @click="toggleDarkMode">ダークモード</v-btn>
-      <v-btn @click="testSaveContent">データ保存テスト</v-btn>
     </div>
     <div class="my-4">
       <v-text-field v-model="configKey"></v-text-field>
@@ -26,12 +25,24 @@
         </v-icon>
       </v-btn>
     </div>
-    <div>
+    <div class="my-5">
+      <v-file-input 
+        v-model="filePath"
+        label="ファイルを選択"
+      ></v-file-input>
+      <v-btn @click="testSaveContent" color="primary">データ保存テスト</v-btn>
+    </div>
+    <div class="my-5">
       <v-text-field v-model="searchWord"></v-text-field>
-      <v-btn @click="searchTest">
-        
+      <v-btn @click="searchTest" color="primary">
+        検索テスト
       </v-btn>
     </div>
+    <ul class="mx-5">
+      <li v-for="image in images" :key="image.dataValues.contentID">
+        <v-img :src="image.dataValues.filePath"></v-img>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -45,7 +56,9 @@ export default {
     return {
       configKey: "renderer.key",
       configValue: "value",
-      searchWord: "img.png"
+      searchWord: "img.jpg",
+      filePath: null,
+      images: []
     }
   },
 
@@ -81,11 +94,17 @@ export default {
     },
     async testSaveContent() {
       const data = {
-        filePath: "C:\\Users\\watas\\Downloads\\img.jpg"
+        filePath: this.filePath.path
       }
 
       const result = await this.$contents.create(data)
       console.log(`result: ${result}`)
+    },
+    async searchTest() {
+      const query = {searchWord: this.searchWord}
+      const result = await this.$contents.search(query)
+      console.log(result)
+      this.images = result
     }
   },
 

@@ -51,10 +51,12 @@ const createWindow = () => {
     minHeight: 400,
 
     webPreferences: {
-      // ここは変えないこと
+      // 下二行は変えないこと
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
-      preload: path.join(__dirname, "preload.js")
+
+      preload: path.join(__dirname, "preload.js"),
+      webSecurity: !isDevelopment
     },
     frame: true
   })
@@ -66,7 +68,9 @@ const createWindow = () => {
   } else {
     createProtocol("app")
     // Load the index.html when not in development
-    mainWindow.loadURL("app://./index.html")
+    //デフォルトだとloadURL。ただし画像を読み込めなかったためこの設定に変更した
+    // eslint-disable-next-line no-undef
+    mainWindow.loadFile(path.join(__static, "index.html"))
   }
 
   //メインウィンドウを閉じた時
