@@ -8,6 +8,7 @@
       <v-btn @click="toggleSideMenu(false)">閉じる</v-btn>
       <v-btn @click="toggleSideMenu(true)">開く</v-btn>
       <v-btn @click="toggleDarkMode">ダークモード</v-btn>
+      <v-btn @click="testSaveContent">データ保存テスト</v-btn>
     </div>
     <div class="my-4">
       <v-text-field v-model="configKey"></v-text-field>
@@ -75,6 +76,18 @@ export default {
     },
     setConfig() {
       this.$config.set(this.configKey, this.configValue)
+    },
+    testSaveContent() {
+      const data = {
+        contentData: {
+          name: "レンダラーからきたえろがぞう",
+          type: "image",
+          description: "これはえろがぞうです",
+          author: "かつしかほくせい"
+        }
+      }
+
+      this.$contents.createContent(data)
     }
   },
 

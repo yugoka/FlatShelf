@@ -1,5 +1,6 @@
 const { ipcMain } = require("electron")
 const { config } = require("../managers/main-config-manager")
+const { contents } = require("../managers/contents/main-contents-manager")
 
 //------------------------------------
 // IPCレシーバー設定
@@ -22,6 +23,10 @@ export const registerIpcHandlers = () => {
     } else {
       return false
     }
+  })
+
+  ipcMain.handle("create-content", (event, { data }) => {
+    return contents.create(data)
   })
 
   //------------------------------------

@@ -15,6 +15,10 @@ contextBridge.exposeInMainWorld("ipc", {
   //レンダラープロセスから設定を更新する
   setConfig: async (key, value) => {
     return await ipcRenderer.invoke("set-config", { key, value })
+  },
+
+  createContent: async data => {
+    return await ipcRenderer.invoke("create-content", { data })
   }
 
   //------------------------------------
