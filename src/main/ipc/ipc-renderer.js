@@ -17,8 +17,15 @@ contextBridge.exposeInMainWorld("ipc", {
     return await ipcRenderer.invoke("set-config", { key, value })
   },
 
+  //コンテンツ作成
+  //dataは必ずfilePathをプロパティに持つ
   createContent: async data => {
     return await ipcRenderer.invoke("create-content", { data })
+  },
+
+  //コンテンツ検索
+  searchContent: async query => {
+    return await ipcRenderer.invoke("search-content", { query })
   }
 
   //------------------------------------

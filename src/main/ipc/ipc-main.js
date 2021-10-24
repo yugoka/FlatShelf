@@ -25,8 +25,13 @@ export const registerIpcHandlers = () => {
     }
   })
 
+  //コンテンツ新規作成
   ipcMain.handle("create-content", (event, { data }) => {
     return contents.create(data)
+  })
+
+  ipcMain.handle("search-content", (event, { query }) => {
+    return contents.search(query)
   })
 
   //------------------------------------

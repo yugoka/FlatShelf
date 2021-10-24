@@ -3,8 +3,14 @@
 //------------------------------------
 
 class RendererContentsManager {
-  async createContent(data) {
+  async create(data) {
     const result = await window.ipc.createContent(data)
+    return result
+  }
+
+  //searchとCRUDはマネージャー分けるべきかも
+  async search(query) {
+    const result = await window.ipc.searchContent(query)
     return result
   }
 }

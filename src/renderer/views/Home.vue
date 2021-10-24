@@ -26,11 +26,12 @@
         </v-icon>
       </v-btn>
     </div>
-    <div style="height: 400px;">あああ</div>
-    <div style="height: 400px;">あああ</div>
-    <div style="height: 400px;">あああ</div>
-    <div style="height: 400px;">あああ</div>
-    <div style="height: 400px;">あああ</div>
+    <div>
+      <v-text-field v-model="searchWord"></v-text-field>
+      <v-btn @click="searchTest">
+        
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -43,7 +44,8 @@ export default {
   data() {
     return {
       configKey: "renderer.key",
-      configValue: "value"
+      configValue: "value",
+      searchWord: "img.png"
     }
   },
 
@@ -77,17 +79,13 @@ export default {
     setConfig() {
       this.$config.set(this.configKey, this.configValue)
     },
-    testSaveContent() {
+    async testSaveContent() {
       const data = {
-        contentData: {
-          name: "レンダラーからきたえろがぞう",
-          type: "image",
-          description: "これはえろがぞうです",
-          author: "かつしかほくせい"
-        }
+        filePath: "C:\\Users\\watas\\Downloads\\img.jpg"
       }
 
-      this.$contents.createContent(data)
+      const result = await this.$contents.create(data)
+      console.log(`result: ${result}`)
     }
   },
 
