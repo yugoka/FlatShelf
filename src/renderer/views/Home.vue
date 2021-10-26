@@ -27,7 +27,7 @@
     </div>
     <div class="my-5">
       <v-file-input 
-        v-model="filePath"
+        v-model="importFile"
         label="ファイルを選択"
       ></v-file-input>
       <v-btn @click="testSaveContent" color="primary">データ保存テスト</v-btn>
@@ -57,7 +57,7 @@ export default {
       configKey: "renderer.key",
       configValue: "value",
       searchWord: "img.jpg",
-      filePath: null,
+      importFile: null,
       images: []
     }
   },
@@ -93,17 +93,13 @@ export default {
       this.$config.set(this.configKey, this.configValue)
     },
     async testSaveContent() {
-      const data = {
-        filePath: this.filePath.path
-      }
-
-      const result = await this.$contents.create(data)
+      const result = await this.$contents.create(this.importFile)
       console.log(`result: ${result}`)
     },
     async searchTest() {
       const query = {searchWord: this.searchWord}
       const result = await this.$contents.search(query)
-      console.log(result)
+      console.log(`searchResult: ${result}`)
       this.images = result
     }
   },

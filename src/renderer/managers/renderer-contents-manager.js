@@ -3,12 +3,22 @@
 //------------------------------------
 
 class RendererContentsManager {
-  async create(data) {
-    const result = await window.ipc.createContent(data)
+  async create(file) {
+    if (!(file instanceof File)) {
+      return false
+    }
+    //Node側だとFileオブジェクトが使えないらしいので必要なデータはここで展開する
+    const fileData = {
+      name: file.name,
+      type: file.type,
+      path: file.path
+    }
+    const result = await window.ipc.createContent(fileData)
     return result
   }
 
   //searchとCRUDはマネージャー分けるべきかも
+  //→根幹は同じで委託する形かな
   async search(query) {
     const result = await window.ipc.searchContent(query)
     return result
