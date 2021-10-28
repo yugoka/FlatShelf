@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    ここはホームです<br>
+    ここはホームです<br/>
     {{settings.renderer}}
     {{settings.renderer.test}}
     <div class="my-4">
@@ -10,8 +10,10 @@
       <v-btn @click="toggleDarkMode">ダークモード</v-btn>
     </div>
     <div class="my-4">
-      <v-text-field v-model="configKey"></v-text-field>
-      <v-text-field v-model="configValue"></v-text-field>
+      <v-text-field
+        v-model="configKey"
+      />
+      <v-text-field v-model="configValue"/>
       <v-btn
         @click="setConfig"
         color="primary"
@@ -29,18 +31,18 @@
       <v-file-input 
         v-model="importFile"
         label="ファイルを選択"
-      ></v-file-input>
+      />
       <v-btn @click="testSaveContent" color="primary">データ保存テスト</v-btn>
     </div>
     <div class="my-5">
-      <v-text-field v-model="searchWord"></v-text-field>
+      <v-text-field v-model="searchWord"/>
       <v-btn @click="searchTest" color="primary">
         検索テスト
       </v-btn>
     </div>
     <ul class="mx-5">
       <li v-for="image in images" :key="image.dataValues.contentID">
-        <v-img :src="image.dataValues.filePath"></v-img>
+        <v-img :src="image.dataValues.filePath"/>
       </li>
     </ul>
   </div>

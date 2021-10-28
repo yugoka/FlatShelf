@@ -6,54 +6,32 @@
       v-model="isSideMenuShown"
       :width="sideBar.width"
     >
-      <v-list-item>
-        <v-list-item-avatar>
-          <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
-        </v-list-item-avatar>
-
-        <v-list-item-content>
-          <v-list-item-title>John Leider</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-divider></v-divider>
-
-      <div>show:{{isSideMenuShown}}</div>
-      <div>width:{{sideBar.width}}</div>
-      <div style="height: 300px;">あああ</div>
-      <div style="height: 300px;">あああ</div>
-      <div style="height: 300px;">あああ</div>
-      <div style="height: 300px;">あああ</div>
-      <div style="height: 300px;">あああ</div>
+      <MainMenus :selected-item="selectedItem"/>
 
     </v-navigation-drawer>
 </template>
 
 <script>
-  //サイドバーのドラッグ関連の動きは別クラスで定義しているが要検討
+  import MainMenus from "./SideBarMainMenus.vue"
+  //サイドバーのドラッグ関連の動きは別クラスで定義している
   import { sideBar } from './side-bar-dragger'
 
   export default {
     name: 'SideBar',
+
+
+    components: {
+      MainMenus
+    },
 
     data() {
       return {
         sideBar: {
           width: 300
         },
-        sideBarDragger: {}
+        sideBarDragger: {},
+        selectedItem: {item: null}
       }
-    },
-
-    mounted() {
-      //幅調整用クラスのインスタンスを代入
-      this.sideBar = sideBar
-
-      //幅調整開始のイベント登録
-      const sideBarDragger = this.$el.querySelector(".v-navigation-drawer__border")
-      sideBarDragger.addEventListener('mousedown', () => {
-        this.startDragging()
-      })
     },
 
     computed: {
@@ -66,6 +44,17 @@
           this.$store.dispatch('toggleSideMenu', sideBarStatus)
         }
       },
+    },
+
+    mounted() {
+      //幅調整用クラスのインスタンスを代入
+      this.sideBar = sideBar
+
+      //幅調整開始のイベント登録
+      const sideBarDragger = this.$el.querySelector(".v-navigation-drawer__border")
+      sideBarDragger.addEventListener('mousedown', () => {
+        this.startDragging()
+      })
     },
 
     methods: {
