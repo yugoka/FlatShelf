@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import MainMenus from "./SideBarMainMenus.vue"
+  import MainMenus from "./NavMenus.vue"
   //サイドバーのドラッグ関連の動きは別クラスで定義している
   import { sideBar } from './side-bar-dragger'
 

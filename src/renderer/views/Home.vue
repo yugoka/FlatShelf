@@ -42,7 +42,7 @@
     </div>
     <ul class="mx-5">
       <li v-for="image in images" :key="image.dataValues.contentID">
-        <v-img :src="image.dataValues.filePath"/>
+        <v-img :src="`file://${image.dataValues.filePath}`"/>
       </li>
     </ul>
   </div>
@@ -101,8 +101,8 @@ export default {
     async searchTest() {
       const query = {searchWord: this.searchWord}
       const result = await this.$contents.search(query)
-      console.log(`searchResult: ${result}`)
-      this.images = result
+      console.log(result)
+      this.images = result.dataValues
     }
   },
 
