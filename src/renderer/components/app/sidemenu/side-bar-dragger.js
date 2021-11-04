@@ -42,6 +42,7 @@ class SideBarDragger {
   resize(e) {
     const currentWidth = e.clientX + 3
     if (self.minWidth < currentWidth && currentWidth < self.maxWidth) {
+      //ドラッグ幅がしきい値以内ならサイズ変更する
       self.width = currentWidth
     } else if (currentWidth < self.closeWidth) {
       //幅が一定以下なら閉じる

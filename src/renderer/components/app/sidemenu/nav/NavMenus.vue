@@ -43,8 +43,9 @@
 
 <script>
   import NavItem from "./NavItem.vue"
+
   export default {
-    name: 'SideBarMainMenus',
+    name: 'SideMenuMainMenus',
 
     props: {
       selectedItem: Object

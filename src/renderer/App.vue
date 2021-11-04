@@ -2,7 +2,7 @@
   <v-app>
     <SystemBar/>
 
-    <SideBar/>
+    <SideMenu/>
 
     <div id="main-content">
       <v-main>
@@ -14,14 +14,14 @@
 
 <script>
 
-import SideBar from "./components/app/sidemenu/AppSideBar"
+import SideMenu from "./components/app/sidemenu/AppSideMenu"
 import SystemBar from "./components/app/SystemBar"
 
 export default {
   name: 'App',
 
   components: {
-    SideBar,
+    SideMenu,
     SystemBar
   },
 

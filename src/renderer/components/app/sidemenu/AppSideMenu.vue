@@ -7,12 +7,15 @@
       :width="sideBar.width"
     >
       <MainMenus :selected-item="selectedItem"/>
-
+      <NavFolders/>
+      
     </v-navigation-drawer>
 </template>
 
 <script>
-  import MainMenus from "./NavMenus.vue"
+  import MainMenus from "./nav/NavMenus.vue"
+  import NavFolders from "./nav/NavFolders.vue"
+
   //サイドバーのドラッグ関連の動きは別クラスで定義している
   import { sideBar } from './side-bar-dragger'
 
@@ -21,7 +24,8 @@
 
 
     components: {
-      MainMenus
+      MainMenus,
+      NavFolders
     },
 
     data() {
@@ -100,6 +104,7 @@
   }
   #sidebar .v-navigation-drawer__border:hover, 
   #sidebar .v-navigation-drawer__border.dragging {
+    /*この色はハードコーディングなので注意*/
     background-color: #489aeb !important;
     cursor: col-resize;
     transition: 0.2s;
