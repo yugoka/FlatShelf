@@ -73,7 +73,7 @@
 
 <style>
   #sidebar {
-    margin-top: 25px;
+    margin-top: 30px;
   }
 
   /*スクロールバー*/

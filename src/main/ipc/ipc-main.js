@@ -1,4 +1,4 @@
-const { ipcMain } = require("electron")
+const { ipcMain, app } = require("electron")
 const { config } = require("../managers/main-config-manager")
 const { contents } = require("../managers/contents/main-contents-manager")
 
@@ -6,7 +6,7 @@ const { contents } = require("../managers/contents/main-contents-manager")
 // IPCレシーバー設定
 // レンダラーからpreload.js経由で発火したイベントをこちらで受け取る
 //------------------------------------
-export const registerIpcHandlers = () => {
+export const registerIpcHandlers = ({mainWindow}) => {
   //------------------------------------
   // 相互通信：レンダラー⇔メイン
   //------------------------------------
@@ -37,4 +37,17 @@ export const registerIpcHandlers = () => {
   //------------------------------------
   // 片道通信：レンダラー→メイン
   //------------------------------------
+
+  ipcMain.on("quit-app", () => {
+    app.quit()
+  })
+
+  ipcMain.on("minimize-main-window", () => {
+    mainWindow.minimize()
+  })
+
+  ipcMain.on("maximize-main-window", () => {
+    mainWindow.maximize()
+  })
+
 }

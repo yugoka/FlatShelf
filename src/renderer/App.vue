@@ -15,7 +15,7 @@
 <script>
 
 import SideMenu from "./components/app/sidemenu/AppSideMenu"
-import SystemBar from "./components/app/SystemBar"
+import SystemBar from "./components/app/systembar/SystemBar"
 
 export default {
   name: 'App',
@@ -51,9 +51,9 @@ export default {
     overflow: hidden;
   }
   #main-content {
-    margin-top: 25px;
+    margin-top: 30px;
     width: 100vw;
-    height: calc(100vh - 25px);
+    height: calc(100vh - 30px);
     flex-direction: column;
     overflow-y: scroll;
   }

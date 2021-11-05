@@ -26,6 +26,20 @@ contextBridge.exposeInMainWorld("ipc", {
   //コンテンツ検索
   searchContent: async query => {
     return await ipcRenderer.invoke("search-content", { query })
+  },
+
+  //------------------------------------
+  // 片道通信：レンダラー→メイン
+  //------------------------------------
+
+  quitApp: () => {
+    ipcRenderer.send("quit-app")
+  },
+  minimizeMainWindow: () => {
+    ipcRenderer.send("minimize-main-window")
+  },
+  maximizeMainWindow: () => {
+    ipcRenderer.send("maximize-main-window")
   }
 
   //------------------------------------

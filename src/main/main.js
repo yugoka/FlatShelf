@@ -32,6 +32,7 @@ const DEFAULT_WINDOW_SETTINGS = {
 //------------------------------------
 // グローバル変数
 //------------------------------------
+//createWindowで一度だけ再代入される
 let mainWindow
 
 //------------------------------------
@@ -58,7 +59,7 @@ const createWindow = () => {
       preload: path.join(__dirname, "preload.js"),
       webSecurity: !isDevelopment
     },
-    frame: true
+    frame: isDevelopment
   })
 
   //development環境関連設定
@@ -117,7 +118,9 @@ app.on("ready", async () => {
   createWindow()
 
   //IPC通信の窓口を設定
-  registerIpcHandlers()
+  registerIpcHandlers({
+    mainWindow
+  })
 })
 
 //終了時処理
