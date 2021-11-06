@@ -11,7 +11,10 @@ const defaults = {
   config: {
     //=======レンダラープロセス設定=======//
     renderer: {
-      darkmode: false
+      darkmode: false,
+      folders: {
+        initiallyOpened: []
+      }
     },
 
     //=======メインプロセス設定=======//

@@ -8,8 +8,10 @@
     :items="folders"
     item-key="id"
     :active.sync="activatedFolder"
+    :open.sync="openedFolders"
 
     @update:active="clickFolder"
+    @update:open="saveOpenedFolders"
   >
     <template v-slot:prepend="{ open }">
       <v-icon>
@@ -21,13 +23,17 @@
 </template>
 
 <script>
+  import debounce from 'lodash.debounce'
+
   export default {
     name: 'SideMenuFolders',
     data() {
       return {
         activatedFolder: [],
+        openedFolders: [],
+        //選択解除時にactivatedFolderを↓に戻す
         currentActiveFolder: null,
-        isSelectingNavFolder: false
+        isSelectingNavFolder: false,
       }
     },
 
@@ -52,13 +58,30 @@
           //このイベントはAppSideMenuを経由してNavMenusの選択を解除する
           this.$emit("select")
 
-          //console.log(this.activatedFolder)
+          //ここにフォルダクリック時の処理(ページ遷移など)
+
         //ダブルクリックなどで選択解除を試みた場合再度アクティベートする
         } else if(this.isSelectingNavFolder) {
           this.activatedFolder[0] = this.currentActiveFolder
         }
-      }
+      },
+
+      //次回起動時用に開いたフォルダの情報を保存する
+      //5秒間操作しないでいた場合のみ実行
+      saveOpenedFolders: debounce(function() {
+        this.$config.set("renderer.folders.initiallyOpened", this.openedFolders)
+      }, 5000)
+
     },
+
+    created() {
+      //フォルダが読み込まれた際一度だけ前回起動時の設定を読み込む
+      const folderLoadWatcher = this.$watch('folders', () => {
+        this.openedFolders = this.$config.renderer.folders.initiallyOpened
+        //watchを終了する
+        folderLoadWatcher()
+      })
+    }
   }
 
 </script>

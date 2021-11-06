@@ -4,6 +4,7 @@ const { store } = require("../initializers/init-config")
 // configの読み込み/書き込み for メインプロセス
 //------------------------------------
 class ConfigManager {
+
   getAll() {
     return store.get(`config`)
   }
