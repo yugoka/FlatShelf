@@ -2,18 +2,21 @@
   <v-treeview
     id="side-menu-folders"
     dense
-    activatable
     hoverable
+    activatable
 
-    v-model="tree"
     :items="items"
     item-key="id"
+    :active.sync="activatedFolder"
+
+    @update:active="clickFolder"
   >
     <template v-slot:prepend="{ open }">
       <v-icon>
         {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
       </v-icon>
     </template>
+
   </v-treeview>
 </template>
 
@@ -22,7 +25,9 @@
     name: 'SideMenuFolders',
     data() {
       return {
-        tree: [],
+        activatedFolder: [],
+        currentActiveFolder: null,
+        isSelectingNavFolder: false,
         items: [
           {
             id: 1,
@@ -56,6 +61,29 @@
           }
         ]
       }
+    },
+
+    methods: {
+      //NavMenusが選択された場合フォルダの選択を外す
+      unselect() {
+        this.isSelectingNavFolder = false
+        this.activatedFolder = []
+      },
+      clickFolder(folderID) {
+        //フォルダーを普通に選択した場合
+        if (folderID[0]) {
+          this.isSelectingNavFolder = true
+          this.currentActiveFolder = folderID
+
+          //このイベントはAppSideMenuを経由してNavMenusの選択を解除する
+          this.$emit("select")
+
+          console.log(this.activatedFolder)
+        //ダブルクリックなどで選択解除を試みた場合再度アクティベートする
+        } else if(this.isSelectingNavFolder) {
+          this.activatedFolder[0] = this.currentActiveFolder
+        }
+      }
     }
   }
 
@@ -68,6 +96,7 @@
   min-height: 30px;
   margin: 1px 0;
   cursor: pointer;
+  user-select: none;
 }
 #side-menu-folders .v-treeview-node__root:before {
   border-radius: 4px;

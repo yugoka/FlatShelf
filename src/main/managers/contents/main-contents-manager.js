@@ -39,7 +39,7 @@ class ContentsManager {
     }
   }
 
-  //これ別マネージャーに分けるかも
+  //これ別マネージャーに分ける
   async search(query) {
     const result = await Content.findAll({
       where: {

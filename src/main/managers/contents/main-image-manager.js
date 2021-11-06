@@ -12,7 +12,8 @@ class ImageManager {
   async create(file) {
     const fileName = file.name
     //保存ディレクトリを生成
-    const targetDirectory = path.join(WORKING_SPACE, "contents/images", UUID())
+    const fileUUID = UUID()
+    const targetDirectory = path.join(WORKING_SPACE, "contents/images", fileUUID)
 
     const targetFile = path.join(targetDirectory, fileName)
     const type = file.type
@@ -27,7 +28,8 @@ class ImageManager {
     const newContent = await Content.create({
       name: fileName,
       type: type,
-      filePath: targetFile
+      filePath: targetFile,
+      UUID: fileUUID
     })
     return newContent
   }

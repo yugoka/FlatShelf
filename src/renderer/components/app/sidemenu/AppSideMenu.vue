@@ -2,12 +2,18 @@
     <v-navigation-drawer
       app
       stateless
-      id="sidebar"
+      id="sidemenu"
       v-model="isSideMenuShown"
       :width="sideBar.width"
     >
-      <MainMenus :selected-item="selectedItem"/>
-      <NavFolders/>
+      <MainMenus 
+        ref="mainMenu"
+        @select="unselectFolders"
+      />
+      <NavFolders
+        ref="folders"
+        @select="unselectMainMenu"
+      />
       
     </v-navigation-drawer>
 </template>
@@ -66,51 +72,59 @@
       //幅の変更やイベントの終了はSideBarDragger.jsに委託する
       startDragging() {
         this.sideBar.startDragging()
+      },
+
+      //メインメニューの選択を解除する
+      unselectMainMenu() {
+        this.$refs.mainMenu.unselect()
+      },
+      unselectFolders() {
+        this.$refs.folders.unselect()
       }
     },
   }
 </script>
 
 <style>
-  #sidebar {
+  #sidemenu {
     margin-top: 30px;
   }
 
   /*スクロールバー*/
-  #sidebar ::-webkit-scrollbar {
+  #sidemenu ::-webkit-scrollbar {
     overflow:visible;
     width: 4px;
     display: none;
   }
-  #sidebar ::-webkit-scrollbar-thumb {
+  #sidemenu ::-webkit-scrollbar-thumb {
     background: rgba(0,0,0,.15); 
     border-radius: 2px;
     display: none;
   }
-  #sidebar:hover ::-webkit-scrollbar {
+  #sidemenu:hover ::-webkit-scrollbar {
     display: block;
   }
-  #sidebar:hover ::-webkit-scrollbar-thumb {
+  #sidemenu:hover ::-webkit-scrollbar-thumb {
     display: block;
   }
 
   /*サイドメニュー幅調整*/
-  #sidebar .v-navigation-drawer__border {
+  #sidemenu .v-navigation-drawer__border {
     background-color: transparent; 
     width: 5px !important;
     cursor: col-resize;
     border-right: 1px solid rgba(0, 0, 0, 0.12);
     user-select: none;
   }
-  #sidebar .v-navigation-drawer__border:hover, 
-  #sidebar .v-navigation-drawer__border.dragging {
+  #sidemenu .v-navigation-drawer__border:hover, 
+  #sidemenu .v-navigation-drawer__border.dragging {
     /*この色はハードコーディングなので注意*/
     background-color: #489aeb !important;
     cursor: col-resize;
     transition: 0.2s;
     transition-delay: 150ms;
   }
-  #sidebar.no-transition {
+  #sidemenu.no-transition {
     transition: none;
   }
 </style>

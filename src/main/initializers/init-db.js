@@ -34,7 +34,11 @@ export const Content = sequelize.define("Content", {
   filePath: {
     type: DataTypes.STRING,
     allowNull: false
-  }
+  },
+  UUID: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
 })
 
 export const initDB = () => {

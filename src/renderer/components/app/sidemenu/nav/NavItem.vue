@@ -1,5 +1,8 @@
 <template>
-  <v-list-item class="sidebar-nav-item">
+  <v-list-item 
+    class="sidebar-nav-item"
+    :ripple="false"
+  >
     <v-list-item-icon>
       <v-icon v-text="icon"/>
     </v-list-item-icon>

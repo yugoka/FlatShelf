@@ -5,9 +5,9 @@
     class="pt-1"
   >
     <v-list-item-group
-      v-model="selectedItem.item"
+      v-model="selectedItem"
       color="primary"
-      mandatory
+      :mandatory="isMandatoryEnabled"
     >
       <NavItem 
         title="ホーム"
@@ -47,13 +47,35 @@
   export default {
     name: 'SideMenuMainMenus',
 
-    props: {
-      selectedItem: Object
-    },
-
     components: {
       NavItem
     },
+
+    data() {
+      return {
+        selectedItem: 0,
+        isMandatoryEnabled: true
+      }
+    },
+
+    methods: {
+      unselect() {
+        //NavFoldersが選択された場合NavMenusの選択状態を外す。このメソッドは親から呼び出される
+        this.isMandatoryEnabled = false
+        this.selectedItem = null
+      }
+    },
+
+    watch: {
+      selectedItem() {
+        if (this.selectedItem != null) {
+          //NavMenusコンテンツを選択したならNavFolders側の選択を外す
+          //このイベントはAppSideMenuを経由してNavFoldersの選択を解除する
+          this.$emit("select")
+          this.isMandatoryEnabled = true
+        }
+      }
+    }
   }
 
 </script>

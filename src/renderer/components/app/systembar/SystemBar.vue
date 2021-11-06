@@ -4,7 +4,7 @@
     fixed
     height="30"
     class="pb-0 pe-0"
-    color="white"
+    color="systemBar"
   >
     FlatShelf
 

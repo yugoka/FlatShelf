@@ -15,10 +15,10 @@ class SideBarDragger {
 
   //AppSideBar.vueから呼び出されるメソッドはこれのみ
   startDragging() {
-    this.sideMenu = document.querySelector("#sidebar")
+    this.sideMenu = document.querySelector("#sidemenu")
     this.dragBar =
       this.dragBar ||
-      document.querySelector("#sidebar .v-navigation-drawer__border")
+      document.querySelector("#sidemenu .v-navigation-drawer__border")
 
     //マウス移動を検知。重かったらdebounceで頻度調整も視野に入れておく
     document.addEventListener("mousemove", this.resize, false)
