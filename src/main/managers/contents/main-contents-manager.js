@@ -30,17 +30,18 @@ class ContentsManager {
       }
 
       //ファイルタイプがどれにも該当しない or サポートされていないファイルの場合
-      log.error(`[fileImport]${ext} is not supported`)
+      log.error(`[fileImport] ${ext} is not supported`)
       return false
     } catch (err) {
       //登録に失敗した場合
-      log.error(`[fileImport]${err}`)
+      log.error(`[fileImport] ${err}`)
       return false
     }
   }
 
   //これ別マネージャーに分ける
   async search(query) {
+    log.info(`[contentSearch] Start searching`)
     const result = await Content.findAll({
       where: {
         name: {
@@ -48,6 +49,7 @@ class ContentsManager {
         }
       }
     })
+    log.info(`[contentSearch] Found ${result.length} items`)
     return result
   }
 }

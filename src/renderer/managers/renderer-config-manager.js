@@ -6,6 +6,8 @@ import store from "../store"
 class RendererConfigManager {
   constructor() {}
 
+  //設定ロード処理
+  //main.jsからVueの生成前に同期的に1度呼ばれる
   async initSettings() {
     const settings = await window.ipc.getAllSettings()
     store.commit("setConfig", settings)

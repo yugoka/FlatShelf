@@ -102,7 +102,7 @@ export default {
       const query = {searchWord: this.searchWord}
       const result = await this.$contents.search(query)
       console.log(result)
-      this.images = result.dataValues
+      this.images = result
     }
   },
 

@@ -6,12 +6,16 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     settings: {},
+    foldersStructure: [],
     isSideMenuShown: true
   },
   mutations: {
     //レンダラー設定をまとめて保存する
     setConfig(state, settings) {
       state.settings = settings
+    },
+    setFoldersStructure(state, structure) {
+      state.foldersStructure = structure
     },
     toggleSideMenu(state, sideBarStatus) {
       state.isSideMenuShown = sideBarStatus

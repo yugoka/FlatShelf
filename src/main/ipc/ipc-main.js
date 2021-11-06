@@ -1,5 +1,6 @@
 const { ipcMain, app } = require("electron")
 const { config } = require("../managers/main-config-manager")
+const { folders } = require("../managers/main-folders-manager")
 const { contents } = require("../managers/contents/main-contents-manager")
 
 //------------------------------------
@@ -13,6 +14,10 @@ export const registerIpcHandlers = ({mainWindow}) => {
   //レンダラープロセスの設定をすべて取得
   ipcMain.handle("get-all-settings", () => {
     return config.getAll()
+  })
+
+  ipcMain.handle("get-folders-structure", () => {
+    return folders.getStructure()
   })
 
   //設定を保存する。成功した場合settingsオブジェクト全体、失敗した場合falseを返す

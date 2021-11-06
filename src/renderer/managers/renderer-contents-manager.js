@@ -4,9 +4,9 @@
 
 class RendererContentsManager {
   async create(file) {
-    if (!(file instanceof File)) {
-      return false
-    }
+    //入力がそもそもファイル形式じゃないなら弾く
+    if (!(file instanceof File)) return false
+
     //Node側だとFileオブジェクトが使えないらしいので必要なデータはここで展開する
     const fileData = {
       name: file.name,

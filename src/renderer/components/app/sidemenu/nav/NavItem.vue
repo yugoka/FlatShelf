@@ -1,15 +1,16 @@
 <template>
-  <v-list-item 
-    class="sidebar-nav-item"
-    :ripple="false"
-  >
-    <v-list-item-icon>
-      <v-icon v-text="icon"/>
-    </v-list-item-icon>
-    <v-list-item-content>
-      <v-list-item-title v-text="title"/>
-    </v-list-item-content>
-  </v-list-item>
+    <v-list-item 
+      class="sidebar-nav-item"
+      :ripple="false"
+      @click="redirect"
+    >
+      <v-list-item-icon>
+        <v-icon v-text="icon"/>
+      </v-list-item-icon>
+      <v-list-item-content>
+        <v-list-item-title v-text="title"/>
+      </v-list-item-content>
+    </v-list-item>
 </template>
 
 <script>
@@ -18,8 +19,17 @@
 
     props: {
       title: String,
-      icon: String
+      icon: String,
+      to: String
     },
+
+    methods: {
+      redirect() {
+        if (this.to && this.to != this.$route.name) {
+          this.$router.push({ name: this.to })
+        }
+      }
+    }
   }
 
 </script>

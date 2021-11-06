@@ -12,6 +12,12 @@ contextBridge.exposeInMainWorld("ipc", {
   getAllSettings: async () => {
     return await ipcRenderer.invoke("get-all-settings")
   },
+
+  //サイドバー表示用のフォルダ構造を取得
+  getFoldersStructure: async () => {
+    return await ipcRenderer.invoke("get-folders-structure")
+  },
+
   //レンダラープロセスから設定を更新する
   setConfig: async (key, value) => {
     return await ipcRenderer.invoke("set-config", { key, value })

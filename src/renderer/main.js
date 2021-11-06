@@ -5,19 +5,29 @@ import vuetify from "./plugins/vuetify"
 import store from "./store"
 import router from "./router"
 
-//これは自作プラグイン
+//------------------------------------
+// マネージャー類の読み込み
+//------------------------------------
 import rendererConfigManager from "./managers/renderer-config-manager"
 import rendererContentsManager from "./managers/renderer-contents-manager"
+import rendererFoldersManager from "./managers/renderer-folders-manager"
+//各コンポーネントでthis.$config, this.$contentsという感じでマネージャを使えるようにする
+Vue.prototype.$config = rendererConfigManager
+Vue.prototype.$contents = rendererContentsManager
+Vue.prototype.$folders = rendererFoldersManager
 
 Vue.config.productionTip = false
 Vue.use(Vuex)
 
-//各モジュールでthis.$config, this.$contentsを使えるようにする
-Vue.prototype.$config = rendererConfigManager
-Vue.prototype.$contents = rendererContentsManager
 ;(async () => {
-  //設定ファイルを読み込み。今は同期的だけど起動速度が心配なので非同期にすることも要検討
+  //------------------------------------
+  // 初期設定読み込み
+  //------------------------------------
+  //設定ファイルを読み込む。今は同期的だけど起動速度が心配なので非同期にすることも要検討
   await rendererConfigManager.initSettings()
+  //フォルダ構造を読み込んでstoreに格納する。
+  rendererFoldersManager.getStructure()
+
   new Vue({
     router,
     store,

@@ -5,7 +5,7 @@
     hoverable
     activatable
 
-    :items="items"
+    :items="folders"
     item-key="id"
     :active.sync="activatedFolder"
 
@@ -27,39 +27,13 @@
       return {
         activatedFolder: [],
         currentActiveFolder: null,
-        isSelectingNavFolder: false,
-        items: [
-          {
-            id: 1,
-            name: "親フォルダ1",
-            children: [
-              {
-                id: 4,
-                name: "子フォルダ1",
-                children: [
-                  {
-                    id: 6,
-                    name: "孫フォルダ",
-                    children: [
-                      {
-                        id: 7,
-                        name: "ひ孫フォルダ"
-                      },
-                    ]
-                  },
-                ]
-              },
-              {
-                id: 5,
-                name: "子フォルダ2"
-              },
-            ]
-          },
-          {
-            id: 2,
-            name: "親フォルダ2"
-          }
-        ]
+        isSelectingNavFolder: false
+      }
+    },
+
+    computed: {
+      folders() {
+        return this.$store.state.foldersStructure
       }
     },
 
@@ -78,13 +52,13 @@
           //このイベントはAppSideMenuを経由してNavMenusの選択を解除する
           this.$emit("select")
 
-          console.log(this.activatedFolder)
+          //console.log(this.activatedFolder)
         //ダブルクリックなどで選択解除を試みた場合再度アクティベートする
         } else if(this.isSelectingNavFolder) {
           this.activatedFolder[0] = this.currentActiveFolder
         }
       }
-    }
+    },
   }
 
 </script>

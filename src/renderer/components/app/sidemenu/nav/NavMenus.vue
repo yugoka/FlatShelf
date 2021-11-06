@@ -12,6 +12,7 @@
       <NavItem 
         title="ホーム"
         icon="mdi-home"
+        to="Home"
       />
 
       <v-divider
@@ -21,6 +22,7 @@
       <NavItem 
         title="未分類"
         icon="mdi-archive-outline"
+        to="Search"
       />
 
       <NavItem 
@@ -63,6 +65,10 @@
         //NavFoldersが選択された場合NavMenusの選択状態を外す。このメソッドは親から呼び出される
         this.isMandatoryEnabled = false
         this.selectedItem = null
+      },
+      redirect(path) {
+        this.$router.push(path)
+        console.log(path)
       }
     },
 
