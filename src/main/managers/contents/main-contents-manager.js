@@ -3,7 +3,7 @@
 //------------------------------------
 const { imageManager } = require("./main-image-manager")
 const log = require("electron-log")
-const { Content } = require("../../initializers/init-db")
+const { Content } = require("../../db/models/content")
 const { Op } = require("sequelize")
 const imageFileExts = ["png", "jpg", "jpeg", "webp", "gif", "bmp"]
 

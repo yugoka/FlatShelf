@@ -10,6 +10,11 @@
         ref="mainMenu"
         @select="unselectFolders"
       />
+
+      <v-divider class="mx-2"/>
+
+      <v-subheader class="my-1">フォルダ</v-subheader>
+
       <NavFolders
         ref="folders"
         @select="unselectMainMenu"
@@ -126,5 +131,12 @@
   }
   #sidemenu.no-transition {
     transition: none;
+  }
+
+  /* その他微調整 */
+
+  #sidemenu .v-subheader {
+    height: 30px;
+    margin: 0;
   }
 </style>

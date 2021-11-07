@@ -28,7 +28,7 @@ Vue.use(Vuex)
   //this.$config.main, this.$config.rendererで設定にアクセスできるようにする
   rendererConfigManager.main = store.state.settings.main
   rendererConfigManager.renderer = store.state.settings.renderer
-  //フォルダ構造を読み込んでstoreに格納する。
+  //フォルダ構造を読み込んでstoreに格納する。(非同期的)
   rendererFoldersManager.getStructure()
 
   new Vue({

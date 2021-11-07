@@ -1,6 +1,6 @@
 const { ipcMain, app } = require("electron")
 const { config } = require("../managers/main-config-manager")
-const { folders } = require("../managers/main-folders-manager")
+const { folders } = require("../managers/folders/main-folders-manager")
 const { contents } = require("../managers/contents/main-contents-manager")
 
 //------------------------------------

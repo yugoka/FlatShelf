@@ -35,10 +35,6 @@
         icon="mdi-archive-outline"
       />
 
-      <v-divider
-        class="my-1"  
-      />
-
     </v-list-item-group>
   </v-list>
 </template>

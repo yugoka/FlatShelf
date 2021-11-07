@@ -1,7 +1,7 @@
 //------------------------------------
 // 画像ファイルのCRUD
 //------------------------------------
-const { Content } = require("../../initializers/init-db")
+const { Content } = require("../../db/models/content")
 const { WORKING_SPACE } = require("../../initializers/global-settings")
 const fs = require("fs").promises
 const path = require("path")
@@ -29,7 +29,7 @@ class ImageManager {
       name: fileName,
       type: type,
       filePath: targetFile,
-      UUID: fileUUID
+      UUID: fileUUID,
     })
     return newContent
   }

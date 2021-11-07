@@ -67,7 +67,7 @@
       },
 
       //次回起動時用に開いたフォルダの情報を保存する
-      //5秒間操作しないでいた場合のみ実行
+      //5秒間操作しないでいた場合に実行
       saveOpenedFolders: debounce(function() {
         this.$config.set("renderer.folders.initiallyOpened", this.openedFolders)
       }, 5000)
