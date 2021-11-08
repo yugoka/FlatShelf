@@ -1,32 +1,47 @@
 <template>
-  <v-treeview
-    id="side-menu-folders"
-    dense
-    hoverable
-    activatable
+  <div id="side-menu-folders-wrapper">
 
-    :items="folders"
-    item-key="id"
-    :active.sync="activatedFolder"
-    :open.sync="openedFolders"
+    <v-subheader class="my-1">
+      フォルダ
+      <NewFolderButton @click="createNewFolder"/>
+    </v-subheader>
 
-    @update:active="clickFolder"
-    @update:open="saveOpenedFolders"
-  >
-    <template v-slot:prepend="{ open }">
-      <v-icon>
-        {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
-      </v-icon>
-    </template>
+    <v-treeview
+      id="side-menu-folders"
+      dense
+      hoverable
+      activatable
 
-  </v-treeview>
+      :items="folders"
+      item-key="id"
+      :active.sync="activatedFolder"
+      :open.sync="openedFolders"
+
+      @update:active="clickFolder"
+      @update:open="saveOpenedFolders"
+    >
+      <template v-slot:prepend="{ open }">
+        <v-icon>
+          {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
+        </v-icon>
+      </template>
+
+    </v-treeview>
+  </div>
 </template>
 
 <script>
   import debounce from 'lodash.debounce'
+  import NewFolderButton from "./NewFolderButton.vue"
 
   export default {
+
     name: 'SideMenuFolders',
+
+    components: {
+      NewFolderButton
+    },
+
     data() {
       return {
         activatedFolder: [],
@@ -39,7 +54,7 @@
 
     computed: {
       folders() {
-        return this.$store.state.foldersStructure
+        return this.$store.state.folders.children
       }
     },
 
@@ -66,19 +81,23 @@
         }
       },
 
-      //次回起動時用に開いたフォルダの情報を保存する
-      //5秒間操作しないでいた場合に実行
+      //次回起動時用に開いたフォルダの情報を保存する。5秒間操作しなかった場合に実行
       saveOpenedFolders: debounce(function() {
         this.$config.set("renderer.folders.initiallyOpened", this.openedFolders)
-      }, 5000)
+      }, 5000),
+
+      createNewFolder() {
+        this.$folders.create()
+      }
 
     },
 
     created() {
-      //フォルダが読み込まれた際一度だけ前回起動時の設定を読み込む
       const folderLoadWatcher = this.$watch('folders', () => {
+        //この中の処理はフォルダ構造が読み込まれた際一度だけ実行される
         this.openedFolders = this.$config.renderer.folders.initiallyOpened
-        //watchを終了する
+
+        //プロパティの監視をを終了する
         folderLoadWatcher()
       })
     }
@@ -87,6 +106,10 @@
 </script>
 
 <style>
+#side-menu-folders-wrapper .v-subheader {
+    height: 30px;
+    margin: 0;
+}
 #side-menu-folders .v-treeview-node__root {
   font-size: 14px;
   height: 30px;

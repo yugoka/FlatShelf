@@ -11,13 +11,14 @@ export const registerIpcHandlers = ({mainWindow}) => {
   //------------------------------------
   // 相互通信：レンダラー⇔メイン
   //------------------------------------
+
+  //------------------------------------
+  // 設定関連
+  //------------------------------------
+
   //レンダラープロセスの設定をすべて取得
   ipcMain.handle("get-all-settings", () => {
     return config.getAll()
-  })
-
-  ipcMain.handle("get-folders-structure", () => {
-    return folders.getStructure()
   })
 
   //設定を保存する。成功した場合settingsオブジェクト全体、失敗した場合falseを返す
@@ -30,6 +31,10 @@ export const registerIpcHandlers = ({mainWindow}) => {
     }
   })
 
+  //------------------------------------
+  // コンテンツ関連
+  //------------------------------------
+
   //コンテンツ新規作成
   ipcMain.handle("create-content", (event, { file }) => {
     return contents.create(file)
@@ -37,6 +42,18 @@ export const registerIpcHandlers = ({mainWindow}) => {
 
   ipcMain.handle("search-content", (event, { query }) => {
     return contents.search(query)
+  })
+
+  //------------------------------------
+  // フォルダ関連
+  //------------------------------------
+
+  ipcMain.handle("get-folders-structure", () => {
+    return folders.getAll()
+  })
+
+  ipcMain.handle("create-new-folder", () => {
+    return folders.create()
   })
 
   //------------------------------------

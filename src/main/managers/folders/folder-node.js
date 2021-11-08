@@ -6,16 +6,50 @@ export class Node {
   constructor(id, name) {
     this.id = id
     this.name = name
-    this.parent = null
+    this.parentID = null
     this.children = []
   }
 
   appendChild(childNode) {
     this.children.push(childNode)
-    childNode.parent = this
+    childNode.parentID = this.id
   }
 
-  //structure再帰的に子要素を追加する
+  deleteChild(id) {
+    this.children = this.children.filter((child) => {
+      return (child.id != id)
+    })
+  }
+
+  //子孫フォルダのIDをすべて取得する
+  getAllDecendantsId() {
+    const decendants = []
+    for (const child of this.children) {
+      decendants.push(child.id)
+      const childDecendants = child.getAllDecendantsId()
+      decendants.push(...childDecendants)
+    }
+    return decendants
+  }
+
+  //子孫フォルダの中から指定IDのフォルダnodeを取得する
+  //頻繁に呼ぶ重い処理なのでキャッシュ化するなども検討するべき
+  getChildById(id) {
+    if (this.id === id) return this
+    //末端ノードかつ検索対象でないならfalseを返す
+    if (!this.children.length) return false
+
+    //少しでも高速化するために通常のfor文を使用
+    for (let i=0; i<this.children.length; i++) {
+      const result = this.children[i].getChildById(id)
+      //IDが一致したらそのオブジェクトを返す
+      if (result) return result
+    }
+
+    return false
+  }
+
+  //structureを参照して再帰的に子要素を追加し、Nodeインスタンスによるツリー構造を作る
   appendAllChildren(structure) {
     if (structure.children) {
       for (const childStructure of structure.children) {

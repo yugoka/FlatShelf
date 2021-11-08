@@ -8,20 +8,23 @@ contextBridge.exposeInMainWorld("ipc", {
   //------------------------------------
   // 往復通信：メイン⇔レンダラー
   //------------------------------------
+
+  //------------------------------------
+  // 設定関連
+  //------------------------------------
   //レンダラープロセス用の設定を取得
   getAllSettings: async () => {
     return await ipcRenderer.invoke("get-all-settings")
-  },
-
-  //サイドバー表示用のフォルダ構造を取得
-  getFoldersStructure: async () => {
-    return await ipcRenderer.invoke("get-folders-structure")
   },
 
   //レンダラープロセスから設定を更新する
   setConfig: async (key, value) => {
     return await ipcRenderer.invoke("set-config", { key, value })
   },
+
+  //------------------------------------
+  // コンテンツ関連
+  //------------------------------------
 
   //コンテンツ作成
   //dataは必ずfilePathをプロパティに持つ
@@ -33,6 +36,20 @@ contextBridge.exposeInMainWorld("ipc", {
   searchContent: async query => {
     return await ipcRenderer.invoke("search-content", { query })
   },
+
+  //------------------------------------
+  // フォルダ関連
+  //------------------------------------
+
+  //サイドバー表示用のフォルダ構造を取得
+  getFoldersStructure: async () => {
+    return await ipcRenderer.invoke("get-folders-structure")
+  },
+
+  createNewFolder: async () => {
+    return await ipcRenderer.invoke("create-new-folder")
+  },
+
 
   //------------------------------------
   // 片道通信：レンダラー→メイン

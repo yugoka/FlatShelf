@@ -10,7 +10,12 @@ class RendererFoldersManager {
   //main.jsで初期化時に一度呼ばれる(同期的)
   async getStructure() {
     const foldersStructure = await window.ipc.getFoldersStructure()
-    store.commit("setFoldersStructure", foldersStructure)
+    store.commit("setFolders", foldersStructure)
+  }
+
+  async create() {
+    const foldersStructure = await window.ipc.createNewFolder()
+    store.commit("setFolders", foldersStructure)
   }
 
 }

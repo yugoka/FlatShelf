@@ -6,7 +6,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     settings: {},
-    foldersStructure: [],
+    folders: {},
     isSideMenuShown: true
   },
   mutations: {
@@ -14,8 +14,8 @@ const store = new Vuex.Store({
     setConfig(state, settings) {
       state.settings = settings
     },
-    setFoldersStructure(state, structure) {
-      state.foldersStructure = structure
+    setFolders(state, folders) {
+      state.folders= folders
     },
     toggleSideMenu(state, sideBarStatus) {
       state.isSideMenuShown = sideBarStatus

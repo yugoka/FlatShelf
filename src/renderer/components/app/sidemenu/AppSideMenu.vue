@@ -13,8 +13,6 @@
 
       <v-divider class="mx-2"/>
 
-      <v-subheader class="my-1">フォルダ</v-subheader>
-
       <NavFolders
         ref="folders"
         @select="unselectMainMenu"
@@ -25,7 +23,7 @@
 
 <script>
   import MainMenus from "./nav/NavMenus.vue"
-  import NavFolders from "./nav/NavFolders.vue"
+  import NavFolders from "./nav/folders/NavFolders.vue"
 
   //サイドバーのドラッグ関連の動きは別クラスで定義している
   import { sideBar } from './side-bar-dragger'
@@ -91,52 +89,45 @@
 </script>
 
 <style>
-  #sidemenu {
-    margin-top: 30px;
-  }
+#sidemenu {
+  margin-top: 30px;
+}
 
-  /*スクロールバー*/
-  #sidemenu ::-webkit-scrollbar {
-    overflow:visible;
-    width: 4px;
-    display: none;
-  }
-  #sidemenu ::-webkit-scrollbar-thumb {
-    background: rgba(0,0,0,.15); 
-    border-radius: 2px;
-    display: none;
-  }
-  #sidemenu:hover ::-webkit-scrollbar {
-    display: block;
-  }
-  #sidemenu:hover ::-webkit-scrollbar-thumb {
-    display: block;
-  }
+/*スクロールバー*/
+#sidemenu ::-webkit-scrollbar {
+  overflow:visible;
+  width: 4px;
+  display: none;
+}
+#sidemenu ::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,.15); 
+  border-radius: 2px;
+  display: none;
+}
+#sidemenu:hover ::-webkit-scrollbar {
+  display: block;
+}
+#sidemenu:hover ::-webkit-scrollbar-thumb {
+  display: block;
+}
 
-  /*サイドメニュー幅調整*/
-  #sidemenu .v-navigation-drawer__border {
-    background-color: transparent; 
-    width: 5px !important;
-    cursor: col-resize;
-    border-right: 1px solid rgba(0, 0, 0, 0.12);
-    user-select: none;
-  }
-  #sidemenu .v-navigation-drawer__border:hover, 
-  #sidemenu .v-navigation-drawer__border.dragging {
-    /*この色はハードコーディングなので注意*/
-    background-color: #489aeb !important;
-    cursor: col-resize;
-    transition: 0.2s;
-    transition-delay: 150ms;
-  }
-  #sidemenu.no-transition {
-    transition: none;
-  }
-
-  /* その他微調整 */
-
-  #sidemenu .v-subheader {
-    height: 30px;
-    margin: 0;
-  }
+/*サイドメニュー幅調整*/
+#sidemenu .v-navigation-drawer__border {
+  background-color: transparent; 
+  width: 5px !important;
+  cursor: col-resize;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  user-select: none;
+}
+#sidemenu .v-navigation-drawer__border:hover, 
+#sidemenu .v-navigation-drawer__border.dragging {
+  /*この色はハードコーディングなので注意*/
+  background-color: #489aeb !important;
+  cursor: col-resize;
+  transition: 0.2s;
+  transition-delay: 150ms;
+}
+#sidemenu.no-transition {
+  transition: none;
+}
 </style>

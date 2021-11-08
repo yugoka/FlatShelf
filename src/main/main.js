@@ -76,7 +76,7 @@ const createWindow = () => {
 
   //メインウィンドウを閉じた時
   mainWindow.on("close", () => {
-    log.info("window closed")
+    log.info("[electron] window closed")
     //ウィンドウのサイズと位置を保存する
     config.set("main.window.position", mainWindow.getPosition())
     config.set("main.window.size", mainWindow.getSize())
@@ -105,7 +105,7 @@ app.on("activate", () => {
 // アプリ準備完了後
 //一部のAPIはこれ以降に触る必要がある
 app.on("ready", async () => {
-  log.info("app ready")
+  log.info("[electron] app ready")
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
