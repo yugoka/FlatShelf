@@ -4,6 +4,7 @@
     <FolderContextMenu
       ref="folderContextMenu"
       @rename="startRenaming"
+      @create-folder="createNewFolder"
     />
 
     <v-subheader class="my-1">
@@ -25,6 +26,7 @@
       @update:active="clickFolder"
       @update:open="openFolder"
     >
+      <!-- labelスロット -->
       <template v-slot:label="{ item }"> 
         <!-- 通常時 -->
         <template v-if="renamingFolderID != item.id">{{item.name}}</template>
@@ -33,16 +35,20 @@
         <FolderRenameTextField
           v-else
           @end="endRenaming"
+          :current-name="item.name"
         />
       </template>
 
+      <!-- prependスロット -->
       <template v-slot:prepend="{ open }">
         <v-icon>
           {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
         </v-icon>
       </template>
-
+      
+      <!-- appendスロット -->
       <template v-slot:append="{ item }">
+        <!-- 右クリックした時などにフォルダIDを取得する隠し場所 -->
         <input type="hidden" :value="item.id" class="side-menu-folders-folder-id"/>
       </template>
 
@@ -134,8 +140,12 @@
       }, 5000),
 
       //parentID=1はすべての最上層フォルダが所属するrootフォルダ(非表示)
-      createNewFolder(parentID=1) {
-        this.$folders.create(parentID)
+      async createNewFolder(parentID=1) {
+        const newFolder = await this.$folders.create(parentID)
+        //追加したフォルダの親フォルダをオープンする
+        this.openedFolders.push(parentID)
+        //追加したフォルダのリネームを開始する
+        this.startRenaming(newFolder.id)
       },
 
       startRenaming(folderID) {

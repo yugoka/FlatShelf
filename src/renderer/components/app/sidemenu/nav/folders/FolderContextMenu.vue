@@ -45,7 +45,7 @@ export default {
     },
 
     createFolder() {
-      this.$folders.create(this.folderID)
+      this.$emit("create-folder", this.folderID)
     },
 
     renameFolder() {

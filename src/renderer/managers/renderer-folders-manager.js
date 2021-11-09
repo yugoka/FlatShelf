@@ -14,9 +14,12 @@ class RendererFoldersManager {
     this.setFolders(foldersStructure)
   }
 
+  //この関数ではフォルダツリー全体に加えて作成されたノード単体も返される
   async create(targetID) {
-    const foldersStructure = await window.ipc.createNewFolder(Number(targetID))
+    const result = await window.ipc.createNewFolder(Number(targetID))
+    const foldersStructure = result.structure
     this.setFolders(foldersStructure)
+    return result.newFolder
   }
 
   async rename(folderID, name) {

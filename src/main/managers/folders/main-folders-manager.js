@@ -18,7 +18,8 @@ class FoldersManager {
   //フォルダを作成する
   async create(parentID=1) {
     const parent = this.root.getChildById(parentID)
-    if (!parent) return this.getAll()
+    if (!parent) return
+
     const newFolder = await Folder.create({
       name: "新規フォルダ"
     })
@@ -27,7 +28,8 @@ class FoldersManager {
     parent.appendChild(folderNode)
 
     this.saveStructure()
-    return this.getAll()
+    //新しく作ったフォルダが返される
+    return folderNode
   }
 
   //フォルダの所属先を変更する。バグを生む可能性がかなり高い部分なので注意すること

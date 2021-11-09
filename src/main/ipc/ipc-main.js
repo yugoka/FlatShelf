@@ -54,8 +54,9 @@ export const registerIpcHandlers = ({mainWindow}) => {
   })
 
   ipcMain.handle("create-new-folder", async (event, { targetID }) => {
-    await folders.create(targetID)
-    return folders.getAll()
+    const newFolder = await folders.create(targetID)
+    //新しく作ったフォルダも一緒に返す
+    return { structure: folders.getAll(), newFolder }
   })
 
   ipcMain.handle("rename-folder", async (event, { folderID, name }) => {
