@@ -67,10 +67,30 @@ class FoldersManager {
     targetFolderData.save()
   }
 
-  //フォルダを削除する
-  //子フォルダまで削除したりdb編集したりがあるのであとまわし
+  //フォルダを削除する(子フォルダ含む)
   async delete(folderID) {
+    //安全対策:rootフォルダを削除できないようにする
+    if (Number(folderID) === 1) return
 
+    const folderNode = this.root.getChildById(folderID)
+    const parentNode = this.root.getChildById(folderNode.parentID)
+
+    if(!folderNode || !parentNode) return
+
+    const childrenIDs = folderNode.getAllDecendantsID()
+
+    //DBから削除
+    await Folder.destroy({
+      where: {
+        folderId: childrenIDs
+      }
+    })
+
+    //フォルダ構造から削除
+    parentNode.deleteChild(folderID)
+    this.saveStructure()
+
+    //コンテンツをフォルダ所属から外す追記が必要
   }
 
   getAll() {

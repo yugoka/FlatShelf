@@ -180,6 +180,10 @@
 </script>
 
 <style>
+#side-menu-folders-wrapper {
+  min-height: 300px;
+}
+
 #side-menu-folders-wrapper .v-subheader {
     margin: 0;
 }

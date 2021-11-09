@@ -64,6 +64,11 @@ export const registerIpcHandlers = ({mainWindow}) => {
     return folders.getAll()
   })
 
+  ipcMain.handle("delete-folder", async (event, { folderID }) => {
+    await folders.delete(folderID)
+    return folders.getAll()
+  })
+
   //------------------------------------
   // 片道通信：レンダラー→メイン
   //------------------------------------

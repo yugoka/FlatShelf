@@ -21,12 +21,12 @@ export class Node {
     })
   }
 
-  //子孫フォルダのIDをすべて取得する
-  getAllDecendantsId() {
-    const decendants = []
+  //自分のID+子孫フォルダのIDをすべて取得する
+  getAllDecendantsID() {
+    const decendants = [this.id]
     for (const child of this.children) {
       decendants.push(child.id)
-      const childDecendants = child.getAllDecendantsId()
+      const childDecendants = child.getAllDecendantsID()
       decendants.push(...childDecendants)
     }
     return decendants

@@ -56,6 +56,10 @@ contextBridge.exposeInMainWorld("ipc", {
     return await ipcRenderer.invoke("rename-folder", { folderID, name })
   },
 
+  deleteFolder: async (folderID) => {
+    return await ipcRenderer.invoke("delete-folder", { folderID })
+  },
+
   //------------------------------------
   // 片道通信：レンダラー→メイン
   //------------------------------------

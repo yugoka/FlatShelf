@@ -15,7 +15,7 @@
       名前の変更
     </MenuButton>
 
-    <MenuButton>
+    <MenuButton @click.native="deleteFolder">
       削除
     </MenuButton>
 
@@ -50,6 +50,10 @@ export default {
 
     renameFolder() {
       this.$emit("rename", this.folderID)
+    },
+
+    deleteFolder() {
+      this.$folders.delete(this.folderID)
     }
   }
 }

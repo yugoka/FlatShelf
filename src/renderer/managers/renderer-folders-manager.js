@@ -28,6 +28,13 @@ class RendererFoldersManager {
     this.setFolders(foldersStructure)
   }
 
+  async delete(folderID) {
+    //rootを削除させない安全対策
+    if (folderID === 1) return
+    const foldersStructure = await window.ipc.deleteFolder(Number(folderID))
+    this.setFolders(foldersStructure)
+  }
+
   setFolders(structure) {
     store.commit("setFolders", structure)
   }
