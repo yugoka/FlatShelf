@@ -34,16 +34,13 @@ class FoldersManager {
   //後でテストする
   changeParent(targetID, newParentID) {
     const target = this.root.getChildById(targetID)
-
-    //移動先のフォルダがターゲットフォルダの子孫要素ならキャンセルする
-    if (target.getChildById(newParentID)) return this.getAll()
-
     const oldParent = this.root.getChildById(target.parentID)
     const newParent = this.root.getChildById(newParentID)
 
-    //移動元=移動先の場合やいずれかのフォルダが見つからない場合はキャンセル
-    if (oldParent === newParent) return this.getAll()
-    if (!target || !oldParent || !newParent) return this.getAll()
+    //いずれかのフォルダーが見つからなかったらキャンセル
+    if (!target || !oldParent || !newParent) return
+    //移動先のフォルダがターゲットフォルダの子孫要素ならキャンセル
+    if (target.getChildById(newParentID)) return
 
     //元のフォルダから削除
     oldParent.deleteChild(targetID)
@@ -52,9 +49,21 @@ class FoldersManager {
 
     this.saveStructure()
 
-    return this.getAll()
   }
 
+  //バリデーションつける。レンダラー側にも
+  async rename(folderID, name) {
+    const targetFolderData = await Folder.findByPk(folderID)
+    const targetFolderNode = this.root.getChildById(folderID)
+    if (!targetFolderData || !targetFolderNode) return
+
+    //structure上で名前を変更
+    targetFolderNode.name = name
+    this.saveStructure()
+    //db上で名前を変更
+    targetFolderData.name = name
+    targetFolderData.save()
+  }
 
   //フォルダを削除する
   //子フォルダまで削除したりdb編集したりがあるのであとまわし

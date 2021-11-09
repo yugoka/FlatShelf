@@ -11,7 +11,7 @@
       新規フォルダ
     </MenuButton>
 
-    <MenuButton>
+    <MenuButton @click.native="renameFolder">
       名前の変更
     </MenuButton>
 
@@ -46,6 +46,10 @@ export default {
 
     createFolder() {
       this.$folders.create(this.folderID)
+    },
+
+    renameFolder() {
+      this.$emit("rename", this.folderID)
     }
   }
 }

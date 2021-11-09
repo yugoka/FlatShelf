@@ -47,10 +47,14 @@ contextBridge.exposeInMainWorld("ipc", {
     return await ipcRenderer.invoke("get-folders-structure")
   },
 
+  //新規フォルダを作成
   createNewFolder: async (targetID) => {
     return await ipcRenderer.invoke("create-new-folder", { targetID })
   },
 
+  renameFolder: async (folderID, name) => {
+    return await ipcRenderer.invoke("rename-folder", { folderID, name })
+  },
 
   //------------------------------------
   // 片道通信：レンダラー→メイン

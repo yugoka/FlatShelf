@@ -3,6 +3,7 @@
 
     <FolderContextMenu
       ref="folderContextMenu"
+      @rename="startRenaming"
     />
 
     <v-subheader class="my-1">
@@ -25,7 +26,14 @@
       @update:open="openFolder"
     >
       <template v-slot:label="{ item }"> 
-        {{item.name}}{{item.id}}
+        <!-- 通常時 -->
+        <template v-if="renamingFolderID != item.id">{{item.name}}</template>
+
+        <!-- このnodeがリネーム対象の場合 -->
+        <FolderRenameTextField
+          v-else
+          @end="endRenaming"
+        />
       </template>
 
       <template v-slot:prepend="{ open }">
@@ -48,6 +56,7 @@
 
   import NewFolderButton from "./NewFolderButton.vue"
   import FolderContextMenu from "./FolderContextMenu.vue"
+  import FolderRenameTextField from "./FolderRenameTextField.vue"
 
   export default {
 
@@ -55,7 +64,8 @@
 
     components: {
       NewFolderButton,
-      FolderContextMenu
+      FolderContextMenu,
+      FolderRenameTextField
     },
 
     data() {
@@ -67,6 +77,7 @@
         isSelectingNavFolder: false,
         //初期オープンなフォルダを一度だけ読み込むためのフラグ
         hasInitiallyOpenFolderLoaded: false,
+        renamingFolderID: null
       }
     },
 
@@ -105,8 +116,8 @@
         }
       },
 
-      rightClickFolder(folderID) {
-        this.$refs.folderContextMenu.show(folderID)
+      rightClickFolder(event) {
+        this.$refs.folderContextMenu.show(event.currentTarget.folderID)
       },
 
       openFolder() {
@@ -126,6 +137,16 @@
       createNewFolder(parentID=1) {
         this.$folders.create(parentID)
       },
+
+      startRenaming(folderID) {
+        this.renamingFolderID = folderID
+      },
+
+      //リネーム処理開始
+      async endRenaming(input) {
+        await this.$folders.rename(this.renamingFolderID, input)
+        this.renamingFolderID = null
+      }
 
     },
 

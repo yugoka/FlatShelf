@@ -53,8 +53,14 @@ export const registerIpcHandlers = ({mainWindow}) => {
     return folders.getAll()
   })
 
-  ipcMain.handle("create-new-folder", (event, { targetID }) => {
-    return folders.create(targetID)
+  ipcMain.handle("create-new-folder", async (event, { targetID }) => {
+    await folders.create(targetID)
+    return folders.getAll()
+  })
+
+  ipcMain.handle("rename-folder", async (event, { folderID, name }) => {
+    await folders.rename(folderID, name)
+    return folders.getAll()
   })
 
   //------------------------------------
