@@ -1,6 +1,10 @@
 <template>
   <div id="side-menu-folders-wrapper">
 
+    <FolderContextMenu
+      ref="folderContextMenu"
+    />
+
     <v-subheader class="my-1">
       フォルダ
       <NewFolderButton @click="createNewFolder"/>
@@ -20,10 +24,18 @@
       @update:active="clickFolder"
       @update:open="saveOpenedFolders"
     >
+      <template v-slot:label="{ item }"> 
+        {{item.name}}
+      </template>
+
       <template v-slot:prepend="{ open }">
         <v-icon>
           {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
         </v-icon>
+      </template>
+
+      <template v-slot:append="{ item }">
+        <input type="hidden" :value="item.id" class="side-menu-folders-folder-id"/>
       </template>
 
     </v-treeview>
@@ -32,14 +44,18 @@
 
 <script>
   import debounce from 'lodash.debounce'
+  import { registerRightClickListener } from "./rightClickEventListener"
+
   import NewFolderButton from "./NewFolderButton.vue"
+  import FolderContextMenu from "./FolderContextMenu.vue"
 
   export default {
 
     name: 'SideMenuFolders',
 
     components: {
-      NewFolderButton
+      NewFolderButton,
+      FolderContextMenu
     },
 
     data() {
@@ -49,6 +65,8 @@
         //選択解除時にactivatedFolderを↓に戻す
         currentActiveFolder: null,
         isSelectingNavFolder: false,
+        //初期オープンなフォルダを一度だけ読み込むためのフラグ
+        hasInitiallyOpenFolderLoaded: false,
       }
     },
 
@@ -64,7 +82,15 @@
         this.isSelectingNavFolder = false
         this.activatedFolder = []
       },
+
       clickFolder(folderID) {
+        
+        //ダブルクリックなどで選択解除を試みた場合再度アクティベートする
+        if(!folderID[0] && this.isSelectingNavFolder) {
+          this.activatedFolder[0] = this.currentActiveFolder
+          return
+        }
+
         //フォルダーを普通に選択した場合
         if (folderID[0]) {
           this.isSelectingNavFolder = true
@@ -76,9 +102,11 @@
           //ここにフォルダクリック時の処理(ページ遷移など)
 
         //ダブルクリックなどで選択解除を試みた場合再度アクティベートする
-        } else if(this.isSelectingNavFolder) {
-          this.activatedFolder[0] = this.currentActiveFolder
         }
+      },
+
+      rightClickFolder(folderID) {
+        this.$refs.folderContextMenu.show(folderID)
       },
 
       //次回起動時用に開いたフォルダの情報を保存する。5秒間操作しなかった場合に実行
@@ -86,34 +114,38 @@
         this.$config.set("renderer.folders.initiallyOpened", this.openedFolders)
       }, 5000),
 
-      createNewFolder() {
-        this.$folders.create()
-      }
+      //parentID=1はすべての最上層フォルダが所属するrootフォルダ(非表示)
+      createNewFolder(parentID=1) {
+        this.$folders.create(parentID)
+      },
 
     },
 
-    created() {
-      const folderLoadWatcher = this.$watch('folders', () => {
-        //この中の処理はフォルダ構造が読み込まれた際一度だけ実行される
-        this.openedFolders = this.$config.renderer.folders.initiallyOpened
+    watch: {
+      folders() {
+        this.$nextTick(() => {
+          //フォルダ構造が変更されるたびに右クリックイベントを登録し直す
+          registerRightClickListener(this.rightClickFolder)
+        })
 
-        //プロパティの監視をを終了する
-        folderLoadWatcher()
-      })
-    }
+        //フォルダが読み込まれた時一度だけ初期オープンフォルダを読み込む
+        if (!this.hasInitiallyOpenFolderLoaded) {
+          this.openedFolders = this.$config.renderer.folders.initiallyOpened
+          this.hasInitiallyOpenFolderLoaded = true
+        }
+
+      }
+    },
   }
 
 </script>
 
 <style>
 #side-menu-folders-wrapper .v-subheader {
-    height: 30px;
     margin: 0;
 }
 #side-menu-folders .v-treeview-node__root {
   font-size: 14px;
-  height: 30px;
-  min-height: 30px;
   margin: 1px 0;
   cursor: pointer;
   user-select: none;

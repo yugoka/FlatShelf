@@ -1,0 +1,12 @@
+<template>
+  <v-btn
+    text
+    tile
+    block
+    small
+    :ripple="false"
+  >
+    <slot/>
+    <v-spacer/>
+  </v-btn>
+</template>

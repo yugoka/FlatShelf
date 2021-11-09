@@ -13,8 +13,8 @@ class RendererFoldersManager {
     store.commit("setFolders", foldersStructure)
   }
 
-  async create() {
-    const foldersStructure = await window.ipc.createNewFolder()
+  async create(targetID) {
+    const foldersStructure = await window.ipc.createNewFolder(Number(targetID))
     store.commit("setFolders", foldersStructure)
   }
 

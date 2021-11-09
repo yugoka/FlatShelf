@@ -36,8 +36,7 @@
 
 <style scoped>
 .sidebar-nav-item {
-  height: 30px !important;
-  min-height: 30px !important;
+  height: 30px;
   margin: 1px 0px !important;
 }
 .sidebar-nav-item .v-list-item__icon {

@@ -16,10 +16,11 @@ class FoldersManager {
   }
 
   //フォルダを作成する
-  async create(parentId=1) {
-    const parent = this.root.getChildById(parentId)
+  async create(parentID=1) {
+    const parent = this.root.getChildById(parentID)
+    if (!parent) return this.getAll()
     const newFolder = await Folder.create({
-      name: "新しいフォルダ"
+      name: "新規フォルダ"
     })
 
     const folderNode = new Node(newFolder.dataValues.folderID, newFolder.dataValues.name)

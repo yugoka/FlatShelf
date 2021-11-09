@@ -3,6 +3,7 @@ const { contextBridge, ipcRenderer } = require("electron")
 //------------------------------------
 // プリロード設定
 // レンダラー側でNode APIにアクセスする場合はこれを使う
+// 要するにレンダラーロセス側の通信APIだよ
 //------------------------------------
 contextBridge.exposeInMainWorld("ipc", {
   //------------------------------------
@@ -46,8 +47,8 @@ contextBridge.exposeInMainWorld("ipc", {
     return await ipcRenderer.invoke("get-folders-structure")
   },
 
-  createNewFolder: async () => {
-    return await ipcRenderer.invoke("create-new-folder")
+  createNewFolder: async (targetID) => {
+    return await ipcRenderer.invoke("create-new-folder", { targetID })
   },
 
 

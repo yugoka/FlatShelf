@@ -6,6 +6,7 @@ const { contents } = require("../managers/contents/main-contents-manager")
 //------------------------------------
 // IPCレシーバー設定
 // レンダラーからpreload.js経由で発火したイベントをこちらで受け取る
+// 要するにメインプロセス側の通信APIだよ
 //------------------------------------
 export const registerIpcHandlers = ({mainWindow}) => {
   //------------------------------------
@@ -52,8 +53,8 @@ export const registerIpcHandlers = ({mainWindow}) => {
     return folders.getAll()
   })
 
-  ipcMain.handle("create-new-folder", () => {
-    return folders.create()
+  ipcMain.handle("create-new-folder", (event, { targetID }) => {
+    return folders.create(targetID)
   })
 
   //------------------------------------
