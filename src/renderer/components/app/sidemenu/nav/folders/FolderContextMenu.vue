@@ -12,6 +12,10 @@
     </MenuButton>
 
     <MenuButton>
+      名前の変更
+    </MenuButton>
+
+    <MenuButton>
       削除
     </MenuButton>
 
@@ -41,7 +45,6 @@ export default {
     },
 
     createFolder() {
-      console.log(this.folderID)
       this.$folders.create(this.folderID)
     }
   }

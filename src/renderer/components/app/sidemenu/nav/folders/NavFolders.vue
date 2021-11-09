@@ -22,10 +22,10 @@
       :open.sync="openedFolders"
 
       @update:active="clickFolder"
-      @update:open="saveOpenedFolders"
+      @update:open="openFolder"
     >
       <template v-slot:label="{ item }"> 
-        {{item.name}}
+        {{item.name}}{{item.id}}
       </template>
 
       <template v-slot:prepend="{ open }">
@@ -107,6 +107,14 @@
 
       rightClickFolder(folderID) {
         this.$refs.folderContextMenu.show(folderID)
+      },
+
+      openFolder() {
+        //次回起動時用に開いたフォルダの情報を保存する。
+        this.saveOpenedFolders()
+        this.$nextTick(() => {
+          registerRightClickListener(this.rightClickFolder)
+        })
       },
 
       //次回起動時用に開いたフォルダの情報を保存する。5秒間操作しなかった場合に実行
