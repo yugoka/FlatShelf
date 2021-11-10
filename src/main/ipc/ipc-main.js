@@ -64,6 +64,11 @@ export const registerIpcHandlers = ({mainWindow}) => {
     return folders.getAll()
   })
 
+  ipcMain.handle("change-parent-folder", async (event, { folderID, parentFolderID }) => {
+    await folders.changeParent(folderID, parentFolderID)
+    return folders.getAll()
+  })
+
   ipcMain.handle("delete-folder", async (event, { folderID }) => {
     await folders.delete(folderID)
     return folders.getAll()

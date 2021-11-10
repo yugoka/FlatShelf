@@ -28,6 +28,13 @@ class RendererFoldersManager {
     this.setFolders(foldersStructure)
   }
 
+  async changeParent(folderID, parentFolderID) {
+    if (!folderID || !parentFolderID) return
+    if (folderID === parentFolderID) return
+    const foldersStructure = await window.ipc.changeParentFolder(Number(folderID), Number(parentFolderID))
+    this.setFolders(foldersStructure)
+  }
+
   async delete(folderID) {
     //rootを削除させない安全対策
     if (folderID === 1) return

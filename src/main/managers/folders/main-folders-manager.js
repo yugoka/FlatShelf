@@ -11,7 +11,6 @@ class FoldersManager {
     //フォルダ構造を表すオブジェクトで、jsonから読み込まれる
     const structure = store.get("structure")
     //structureを拡張したもので、フォルダ構造の管理を行える
-    //独立したクラスなのでレンダラーに渡した後もメソッドを使える
     this.root = this.initStructure(structure)
   }
 

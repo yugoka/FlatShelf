@@ -1,21 +1,34 @@
 <template>
   <ContextMenu ref="contextMenu">
 
-    <MenuButton>
+    <MenuButton
+      v-if="folderID != 1"
+    >
       開く
     </MenuButton>
 
-    <v-divider class="my-1"/>
+    <v-divider 
+      class="my-1"
+      v-if="folderID != 1"
+    />
 
-    <MenuButton @click.native="createFolder">
+    <MenuButton 
+      @click.native="createFolder"
+    >
       新規フォルダ
     </MenuButton>
 
-    <MenuButton @click.native="renameFolder">
+    <MenuButton
+      @click.native="renameFolder"
+      v-if="folderID != 1"
+    >
       名前の変更
     </MenuButton>
 
-    <MenuButton @click.native="deleteFolder">
+    <MenuButton
+      @click.native="deleteFolder"
+      v-if="folderID != 1"
+    >
       削除
     </MenuButton>
 

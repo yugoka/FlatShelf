@@ -56,6 +56,10 @@ contextBridge.exposeInMainWorld("ipc", {
     return await ipcRenderer.invoke("rename-folder", { folderID, name })
   },
 
+  changeParentFolder: async (folderID, parentFolderID) => {
+    return await ipcRenderer.invoke("change-parent-folder", { folderID, parentFolderID })
+  },
+
   deleteFolder: async (folderID) => {
     return await ipcRenderer.invoke("delete-folder", { folderID })
   },

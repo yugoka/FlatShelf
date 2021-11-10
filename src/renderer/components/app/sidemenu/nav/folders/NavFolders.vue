@@ -58,7 +58,7 @@
 
 <script>
   import debounce from 'lodash.debounce'
-  import { registerRightClickListener } from "./rightClickEventListener"
+  import { registerNodeEventListeners, initFolderEventListeners } from "./folder-nodes-event-listener"
 
   import NewFolderButton from "./NewFolderButton.vue"
   import FolderContextMenu from "./FolderContextMenu.vue"
@@ -100,8 +100,13 @@
         this.activatedFolder = []
       },
 
+      registerEventListeners() {
+        registerNodeEventListeners({
+          rightClick: this.rightClickFolder
+        })
+      },
+
       clickFolder(folderID) {
-        
         //ダブルクリックなどで選択解除を試みた場合再度アクティベートする
         if(!folderID[0] && this.isSelectingNavFolder) {
           this.activatedFolder[0] = this.currentActiveFolder
@@ -123,22 +128,23 @@
       },
 
       rightClickFolder(event) {
+        event.stopPropagation()
         this.$refs.folderContextMenu.show(event.currentTarget.folderID)
       },
 
       openFolder() {
-        //次回起動時用に開いたフォルダの情報を保存する。
         this.saveOpenedFolders()
         this.$nextTick(() => {
-          registerRightClickListener(this.rightClickFolder)
+          this.registerEventListeners()
         })
       },
 
-      //次回起動時用に開いたフォルダの情報を保存する。5秒間操作しなかった場合に実行
+      //開いたフォルダの情報を保存。5秒間操作しなかった場合に実行
       saveOpenedFolders: debounce(function() {
         this.$config.set("renderer.folders.initiallyOpened", this.openedFolders)
       }, 5000),
 
+      //フォルダを新規作成
       //parentID=1はすべての最上層フォルダが所属するrootフォルダ(非表示)
       async createNewFolder(parentID=1) {
         const newFolder = await this.$folders.create(parentID)
@@ -148,11 +154,12 @@
         this.startRenaming(newFolder.id)
       },
 
+      //リネーム処理を開始
       startRenaming(folderID) {
         this.renamingFolderID = folderID
       },
 
-      //リネーム処理開始
+      //リネーム処理を終了して保存
       async endRenaming(input) {
         await this.$folders.rename(this.renamingFolderID, input)
         this.renamingFolderID = null
@@ -164,7 +171,7 @@
       folders() {
         this.$nextTick(() => {
           //フォルダ構造が変更されるたびに右クリックイベントを登録し直す
-          registerRightClickListener(this.rightClickFolder)
+          this.registerEventListeners()
         })
 
         //フォルダが読み込まれた時一度だけ初期オープンフォルダを読み込む
@@ -175,6 +182,11 @@
 
       }
     },
+
+    mounted() {
+      //フォルダノード以外の固定イベントを登録する
+      initFolderEventListeners({ rightClick: this.rightClickFolder })
+    }
   }
 
 </script>
@@ -182,6 +194,7 @@
 <style>
 #side-menu-folders-wrapper {
   min-height: 300px;
+  padding-bottom: 50px;
 }
 
 #side-menu-folders-wrapper .v-subheader {
