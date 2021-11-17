@@ -76,7 +76,8 @@ class FoldersManager {
 
     if(!folderNode || !parentNode) return
 
-    const childrenIDs = folderNode.getAllDecendantsID()
+    const childrenIDs = folderNode.getAllAffiliatedID()
+    
 
     //DBから削除
     await Folder.destroy({

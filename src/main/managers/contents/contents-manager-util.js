@@ -1,3 +1,4 @@
+//YYYY-MM-DD-mm-ss-msms方式で日時を出力
 export const getDate = () => {
   const date = new Date()
   return (

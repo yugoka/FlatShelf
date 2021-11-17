@@ -163,8 +163,7 @@
       async endRenaming(input) {
         await this.$folders.rename(this.renamingFolderID, input)
         this.renamingFolderID = null
-      }
-
+      },
     },
 
     watch: {

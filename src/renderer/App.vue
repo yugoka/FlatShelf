@@ -4,6 +4,8 @@
 
     <SideMenu/>
 
+    <ContentsEditMenu/>
+
     <div id="main-content">
       <v-main>
         <router-view/>
@@ -14,15 +16,17 @@
 
 <script>
 
-import SideMenu from "./components/app/sidemenu/AppSideMenu"
 import SystemBar from "./components/app/systembar/SystemBar"
+import SideMenu from "./components/app/sidemenu/AppSideMenu"
+import ContentsEditMenu from "./components/app/editmenu/AppEditMenu"
 
 export default {
   name: 'App',
 
   components: {
+    SystemBar,
     SideMenu,
-    SystemBar
+    ContentsEditMenu
   },
 
   data() {

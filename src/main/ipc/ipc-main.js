@@ -2,6 +2,7 @@ const { ipcMain, app } = require("electron")
 const { config } = require("../managers/main-config-manager")
 const { folders } = require("../managers/folders/main-folders-manager")
 const { contents } = require("../managers/contents/main-contents-manager")
+const { executeSearch } = require("../managers/search/main-search-manager")
 
 //------------------------------------
 // IPCレシーバー設定
@@ -41,10 +42,6 @@ export const registerIpcHandlers = ({mainWindow}) => {
     return contents.create(file)
   })
 
-  ipcMain.handle("search-content", (event, { query }) => {
-    return contents.search(query)
-  })
-
   //------------------------------------
   // フォルダ関連
   //------------------------------------
@@ -72,6 +69,14 @@ export const registerIpcHandlers = ({mainWindow}) => {
   ipcMain.handle("delete-folder", async (event, { folderID }) => {
     await folders.delete(folderID)
     return folders.getAll()
+  })
+
+  //------------------------------------
+  // 検索関連
+  //------------------------------------
+
+  ipcMain.handle("search-content", (event, { query }) => {
+    return executeSearch(query)
   })
 
   //------------------------------------

@@ -29,7 +29,7 @@
   import { sideBar } from './side-bar-dragger'
 
   export default {
-    name: 'SideBar',
+    name: 'SideMenu',
 
 
     components: {

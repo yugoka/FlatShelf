@@ -17,12 +17,12 @@ class FolderDragger {
     event.dataTransfer.setData("text/plain", folderID)
   }
 
-  drop(event) {
+  async drop(event) {
     event.stopPropagation()
     if (event.currentTarget.eventType != "folder") return
     const parentFolderID = event.currentTarget.folderID
     const childFolderID = event.dataTransfer.getData("text/plain")
-    foldersManager.changeParent(childFolderID, parentFolderID)
+    await foldersManager.changeParent(childFolderID, parentFolderID)
   }
 }
 

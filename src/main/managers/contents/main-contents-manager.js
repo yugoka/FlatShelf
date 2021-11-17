@@ -3,8 +3,6 @@
 //------------------------------------
 const { imageManager } = require("./main-image-manager")
 const log = require("electron-log")
-const { Content } = require("../../db/models/content")
-const { Op } = require("sequelize")
 const imageFileExts = ["png", "jpg", "jpeg", "webp", "gif", "bmp"]
 
 class ContentsManager {
@@ -37,20 +35,6 @@ class ContentsManager {
       log.error(`[fileImport] ${err}`)
       return false
     }
-  }
-
-  //これ別マネージャーに分ける
-  async search(query) {
-    log.info(`[contentSearch] Start searching`)
-    const result = await Content.findAll({
-      where: {
-        name: {
-          [Op.like]: `%${query.searchWord}%`
-        }
-      }
-    })
-    log.info(`[contentSearch] Found ${result.length} items`)
-    return result
   }
 }
 
