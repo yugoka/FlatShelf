@@ -17,7 +17,7 @@ class Search {
     this.query = query
 
     //検索オブジェクトを初期化
-    this.searchObject = {    
+    this.queryObject = {    
       where: {
         [Op.or]: [
           {
@@ -26,12 +26,19 @@ class Search {
         ]
       }
     }
-    //and条件にショートカットでアクセスできるようにする
-    this.queryAnd = this.searchObject.where[Op.or][0][Op.and]
+    //条件にショートカットでアクセスできるようにする
+    this.queryRoot = this.queryObject.where[Op.or]
+    this.queryAnd = this.queryObject.where[Op.or][0][Op.and]
+    
+    //各検索条件をクエリに登録する
+    this.registerSearchWords()
+    this.registerSearchFolders()
   }
 
   //スペースやカンマで区切られたワードを展開して検索に登録する
-  parseSearchWords() {
+  registerSearchWords() {
+    if (!this.query.searchWord) return
+
     //各種スペースかコンマで区切る
     const splitter = (/[\s|　,]/)
     const words = this.query.searchWord.split(splitter)
@@ -41,14 +48,19 @@ class Search {
     }
   }
 
+  //フォルダ
+  registerSearchFolders() {
+    if (!this.query.searchFolders) return
+    //クエリにフォルダ条件を追加する。複数のフォルダ条件がある場合or条件になる
+    this.queryAnd.push({ folderID: this.query.searchFolders })
+  }
+
   //検索を実行する
   async execute() {
     log.info(`[contentSearch] Start searching`)
-
-    //検索ワード
-    this.parseSearchWords()
-    const result = await Content.findAll(this.searchObject)
+    const result = await Content.findAll(this.queryObject)
     log.info(`[contentSearch] Found ${result.length} items`)
+
     return result
   }
 }
