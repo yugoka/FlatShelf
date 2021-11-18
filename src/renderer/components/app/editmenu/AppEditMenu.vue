@@ -4,7 +4,7 @@
       stateless
       right
       id="editmenu"
-      v-model="show"
+      v-model="isShown"
       width="250"
     >
       <div>
@@ -27,13 +27,13 @@
 
     data() {
       return {
-        show: true
+        isShown: false
       }
     },
 
     methods: {
       close() {
-        this.show = false
+        this.isShown = false
       }
     }
   }

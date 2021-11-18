@@ -3,6 +3,8 @@
 //------------------------------------
 
 import store from "../../../store"
+import config from "../../../managers/renderer-config-manager"
+import debounce from "lodash.debounce"
 
 class SideBarDragger {
   constructor() {
@@ -27,7 +29,7 @@ class SideBarDragger {
     document.addEventListener("mousemove", this.resize, false)
     //↑のイベントを削除
     document.addEventListener("mouseup", () => this.endDragging(), {
-      once: true
+      once: true,
     })
 
     //ドラッグ中はv-navigation-drawerのtransitionを無効化する
@@ -47,6 +49,7 @@ class SideBarDragger {
     if (self.minWidth < currentWidth && currentWidth < self.maxWidth) {
       //ドラッグ幅がしきい値以内ならサイズ変更する
       self.width = currentWidth
+      saveConfigWidth(currentWidth)
     } else if (currentWidth < self.closeWidth) {
       //幅が一定以下なら閉じる
       self.width = 250
@@ -58,3 +61,8 @@ class SideBarDragger {
 
 export const sideBar = new SideBarDragger()
 const self = sideBar
+
+//設定ファイルに幅を保存する
+const saveConfigWidth = debounce(function (width) {
+  config.set("renderer.app.sideMenuWidth", width)
+}, 500)

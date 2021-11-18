@@ -2,6 +2,7 @@ import Vue from "vue"
 import App from "./App.vue"
 import Vuex from "vuex"
 import vuetify from "./plugins/vuetify"
+import { VueMasonryPlugin } from "vue-masonry"
 import store from "./store"
 import router from "./router"
 
@@ -18,7 +19,7 @@ Vue.prototype.$folders = rendererFoldersManager
 
 Vue.config.productionTip = false
 Vue.use(Vuex)
-
+Vue.use(VueMasonryPlugin)
 ;(async () => {
   //------------------------------------
   // 初期設定読み込み
@@ -35,6 +36,6 @@ Vue.use(Vuex)
     router,
     store,
     vuetify,
-    render: h => h(App)
+    render: (h) => h(App),
   }).$mount("#app")
 })()

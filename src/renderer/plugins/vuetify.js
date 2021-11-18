@@ -10,8 +10,9 @@ export default new Vuetify({
         systemBar: "#ffffff",
       },
       dark: {
-        systemBar: "#363636"
+        systemBar: "#363636",
       },
     },
-  }, 
+    //options: { customProperties: true },
+  },
 })
