@@ -12,22 +12,25 @@ const defaults = {
     //=======レンダラープロセス設定=======//
     renderer: {
       darkmode: false,
+      app: {
+        sideMenuWidth: 250,
+      },
       folders: {
-        initiallyOpened: []
-      }
+        initiallyOpened: [],
+      },
     },
 
     //=======メインプロセス設定=======//
     main: {
       window: {
         size: [1200, 900],
-        position: [360, 90]
-      }
-    }
-  }
+        position: [360, 90],
+      },
+    },
+  },
 }
 
 export const store = new Store({
   defaults,
-  cwd: WORKING_SPACE
+  cwd: WORKING_SPACE,
 })

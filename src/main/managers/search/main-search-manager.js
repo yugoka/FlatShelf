@@ -12,24 +12,26 @@ export const executeSearch = (query) => {
 }
 
 class Search {
-  constructor(query) {
+  constructor(query, raw = true) {
     log.info(`[contentSearch] Creating search instance`)
     this.query = query
 
     //検索オブジェクトを初期化
-    this.queryObject = {    
+    this.queryObject = {
+      //raw=trueならdataValuesだけが返る
+      raw,
       where: {
         [Op.or]: [
           {
-            [Op.and]: []
-          }
-        ]
-      }
+            [Op.and]: [],
+          },
+        ],
+      },
     }
     //条件にショートカットでアクセスできるようにする
     this.queryRoot = this.queryObject.where[Op.or]
     this.queryAnd = this.queryObject.where[Op.or][0][Op.and]
-    
+
     //各検索条件をクエリに登録する
     this.registerSearchWords()
     this.registerSearchFolders()
@@ -40,11 +42,11 @@ class Search {
     if (!this.query.searchWord) return
 
     //各種スペースかコンマで区切る
-    const splitter = (/[\s|　,]/)
+    const splitter = /[\s|　,]/
     const words = this.query.searchWord.split(splitter)
 
     for (const word of words) {
-      this.queryAnd.push({name: {[Op.like]: `%${word}%`}})
+      this.queryAnd.push({ name: { [Op.like]: `%${word}%` } })
     }
   }
 

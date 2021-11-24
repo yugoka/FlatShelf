@@ -24,6 +24,7 @@
     "vue": "^2.6.11",
     "vue-masonry": "^0.13.0",
     "vue-router": "^3.5.2",
+    "vue-virtual-scroller": "^1.0.10",
     "vuetify": "^2.4.0",
     "vuex": "^3.6.2"
   },
