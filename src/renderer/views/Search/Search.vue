@@ -7,7 +7,7 @@
 
 <script>
   import BrowserFileDropArea from "./components/BrowserFileDropArea"
-  import SearchContents from "./components/Contents"
+  import SearchContents from "./components/contents/Contents"
 
   export default {
 

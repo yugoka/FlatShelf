@@ -1,10 +1,10 @@
 <template>
   <DynamicScroller
-    :items="contentColumns"
-    :min-item-size="400"
+    :items="contentRows"
+    :min-item-size="100"
     class="scroller"
     key-field="id"
-    :buffer="300"
+    :buffer="500"
   >
     <template v-slot="{ item, index, active }">
       <DynamicScrollerItem
@@ -16,28 +16,10 @@
         ]"
         :data-index="index"
       >
-        <v-row
-          no-gutters
-        >
-          <v-col
-            :cols="cols"
-            v-for="content in item"
-            :key="content.contentID"
-          >
-            <v-card
-              class="mx-1 my-1"
-              ripple
-              height="400"
-            >
-              <v-img
-                height="300"
-                :src="`file://${content.filePath}`"
-                eager
-              />
-              {{content.name}}
-            </v-card>
-          </v-col>
-        </v-row>
+        <ContentsRow 
+          :contents="item"
+          :colSize="colSize"
+        />
       </DynamicScrollerItem>
     </template>
   </DynamicScroller>
@@ -46,21 +28,23 @@
 <script>
   import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
   import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
+  import ContentsRow from './ContentsRow.vue'
 
   export default {
 
     name:"SearchContents",
 
     components: {
-      DynamicScroller,
-      DynamicScrollerItem
-    },
+    DynamicScroller,
+    DynamicScrollerItem,
+    ContentsRow
+},
 
     data() {
       return {
         contents: [],
         isActive: false,
-        rows: 6
+        columns: 3
       }
     },
 
@@ -73,26 +57,24 @@
         return this.$store.state.settings.renderer.app.sideMenuWidth
       },
 
-      contentColumns() {
+      contentRows() {
         //行の数を計算
-        const columnsNum = Math.ceil(this.contents.length / this.rows)
-        console.log(columnsNum)
-        const columns = []
-        for (let i=0; i<columnsNum; i++) {
-          columns.push(this.contents.slice(i*this.rows, (i+1)*this.rows))
-          columns[i].id = i
+        const rowsNum = Math.ceil(this.contents.length / this.columns)
+        const rows = []
+        for (let i=0; i<rowsNum; i++) {
+          rows.push(this.contents.slice(i*this.columns, (i+1)*this.columns))
+          rows[i].id = i
         }
-        console.log(columns)
-        return columns
+        return rows
       },
 
-      cols() {
-        return 12 / this.rows
+      colSize() {
+        return 12 / this.columns
       }
     },
 
     async mounted() {
-      const query = { searchWord: "jpg" }
+      const query = { searchWord: "." }
       const result = await this.$contents.search(query)
       console.log(result)
       this.contents = result
