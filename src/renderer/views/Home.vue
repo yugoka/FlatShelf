@@ -95,8 +95,10 @@ export default {
       this.$config.set(this.configKey, this.configValue)
     },
     async testSaveContent() {
-      const result = await this.$contents.create(this.importFile)
-      console.log(`result: ${result}`)
+      for (let i=0; i<60; i++) {
+        const result = await this.$contents.create(this.importFile)
+        console.log(`result: ${result}`)
+      }
     },
     async searchTest() {
       const query = {searchWord: this.searchWord}

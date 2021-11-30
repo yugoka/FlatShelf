@@ -8,7 +8,7 @@ const path = require("path")
 const { createProtocol } = require("vue-cli-plugin-electron-builder/lib")
 const {
   default: installExtension,
-  VUEJS_DEVTOOLS
+  VUEJS_DEVTOOLS,
 } = require("electron-devtools-installer")
 
 const { config } = require("./managers/main-config-manager")
@@ -21,12 +21,12 @@ const { registerIpcHandlers } = require("./ipc/ipc-main")
 const isDevelopment = process.env.NODE_ENV !== "production"
 //プロトコルの登録
 protocol.registerSchemesAsPrivileged([
-  { scheme: "app", privileges: { secure: true, standard: true } }
+  { scheme: "app", privileges: { secure: true, standard: true } },
 ])
 
 const DEFAULT_WINDOW_SETTINGS = {
   size: [1200, 600],
-  position: [960, 580]
+  position: [960, 580],
 }
 
 //------------------------------------
@@ -52,14 +52,13 @@ const createWindow = () => {
     minHeight: 400,
 
     webPreferences: {
-      // 下二行は変えないこと
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
 
       preload: path.join(__dirname, "preload.js"),
-      webSecurity: !isDevelopment
+      webSecurity: !isDevelopment,
     },
-    frame: isDevelopment
+    //frame: isDevelopment
   })
 
   //development環境関連設定
@@ -119,14 +118,14 @@ app.on("ready", async () => {
 
   //IPC通信の窓口を設定
   registerIpcHandlers({
-    mainWindow
+    mainWindow,
   })
 })
 
 //終了時処理
 if (isDevelopment) {
   if (process.platform === "win32") {
-    process.on("message", data => {
+    process.on("message", (data) => {
       if (data === "graceful-exit") {
         app.quit()
       }

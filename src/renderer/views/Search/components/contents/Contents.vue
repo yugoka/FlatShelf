@@ -4,7 +4,8 @@
     :min-item-size="100"
     class="scroller"
     key-field="id"
-    :buffer="500"
+    :buffer="700"
+    page-mode
   >
     <template v-slot="{ item, index, active }">
       <DynamicScrollerItem
@@ -18,7 +19,6 @@
       >
         <ContentsRow 
           :contents="item"
-          :colSize="colSize"
         />
       </DynamicScrollerItem>
     </template>
@@ -67,10 +67,6 @@
         }
         return rows
       },
-
-      colSize() {
-        return 12 / this.columns
-      }
     },
 
     async mounted() {
@@ -84,9 +80,6 @@
 </script>
 
 <style scoped>
-.scroller {
-  height: 100%;
-}
 .content-row {
   width: 100%;
 }

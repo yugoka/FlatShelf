@@ -15,14 +15,12 @@ import ContentCard from "./ContentCard.vue"
     name: "ContentsRow",
 
     components: {
-    ContentCard
-},
+      ContentCard
+    },
 
     props: {
-        contents: Array,
-        colSize: Number
+      contents: Array
     },
-    methods: {},
 }
 </script>
 
