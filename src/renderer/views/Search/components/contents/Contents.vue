@@ -44,7 +44,7 @@
       return {
         contents: [],
         isActive: false,
-        columns: 3
+        columns: 4
       }
     },
 

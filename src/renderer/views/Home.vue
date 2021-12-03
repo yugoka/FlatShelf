@@ -95,7 +95,7 @@ export default {
       this.$config.set(this.configKey, this.configValue)
     },
     async testSaveContent() {
-      for (let i=0; i<60; i++) {
+      for (let i=0; i<1; i++) {
         const result = await this.$contents.create(this.importFile)
         console.log(`result: ${result}`)
       }

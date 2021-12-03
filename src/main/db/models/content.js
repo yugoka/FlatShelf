@@ -9,35 +9,47 @@ export const Content = sequelize.define("Content", {
     type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
   },
   type: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
   description: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
   },
   author: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
   },
   filePath: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
   UUID: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
   folderId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     //コンテンツはデフォルトではrootに所属する
-    defaultValue: 1
+    defaultValue: 1,
+  },
+  thumbnailPath: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  thumbnailWidth: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  thumbnailHeight: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
 })
 
