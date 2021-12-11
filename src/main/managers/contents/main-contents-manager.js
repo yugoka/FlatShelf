@@ -32,7 +32,7 @@ class ContentsManager {
       return false
     } catch (err) {
       //登録に失敗した場合
-      log.error(`[fileImport] ${err}`)
+      log.error(`[fileImport]Error: ${err}`)
       return false
     }
   }

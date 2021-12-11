@@ -28,15 +28,18 @@ class ImageManager {
       )
       const type = file.type
 
-      //サムネイルを生成
-      const thumbnail = await this.generateThumbnail(file.path, targetDirectory)
-
       //コンテンツ本体ファイルを複製
       //↓は共通する可能性が高いので今後リファクタリングの余地あり
       const targetFile = path.join(targetDirectory, fileName)
       log.info(`[fileImport]creating ${type} content:${targetFile}`)
+      
+      //ディレクトリを作成
       await fs.mkdir(targetDirectory, { recursive: true })
+      //サムネイルを生成
+      const thumbnail = await this.generateThumbnail(file.path, targetDirectory)
+      //画像本体をコピー
       await fs.copyFile(file.path, targetFile)
+
       //dbにデータを登録する
       const newContent = await Content.create({
         name: fileName,
@@ -59,7 +62,6 @@ class ImageManager {
   async generateThumbnail(targetImage, targetDirectory) {
     const image = await sharp(targetImage)
     const metadata = await image.metadata()
-    console.log(metadata)
 
     //サムネイル最小値を下回る大きさなら元画像をサムネイルにする
     if (
@@ -74,14 +76,16 @@ class ImageManager {
     }
 
     //サムネイルを作成して保存
-    const thumbnailPath = path.join(targetDirectory, "thumbnail.png")
+    const thumbnailPath = path.join(targetDirectory, "thumbnail.jpg")
     const resizedImage = await image.resize(
-      maxThumbnailWidth,
-      maxThumbnailHeight,
-      { fit: "inside" }
+      { 
+        fit: "inside",
+        width: maxThumbnailWidth,
+        height: maxThumbnailHeight,
+      }
     )
-    const resizedImageMetadata = await resizedImage.metadata()
-    await resizedImage.tofile(thumbnailPath)
+    await resizedImage.toFile(thumbnailPath)
+    const resizedImageMetadata = await sharp(thumbnailPath).metadata()
 
     return {
       path: thumbnailPath,

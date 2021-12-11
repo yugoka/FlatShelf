@@ -19,7 +19,7 @@
       ripple
       eager
 
-      :src="`file://${content.filePath}`"
+      :src="`file://${content.thumbnailPath}`"
       :transition="false"
       v-show="showImg"
       @load="showImg=true"
@@ -52,21 +52,13 @@
     },
 
     methods: {
-      loadImage(src) {
-        return new Promise((resolve, reject) => {
-          const img = new Image()
-          img.onload = () => resolve(img)
-          img.onerror = (e) => reject(e)
-          img.src = src
-        })
-      },
 
     },
 
     async created() {
-      const res = await this.loadImage(this.content.filePath)
-      this.flexGrow = res.width / res.height
-      this.width = (res.width / res.height) + "px"
+      const res = this.content
+      this.flexGrow = res.thumbnailWidth / res.thumbnailHeight
+      this.width = (res.thumbnailWidth / res.thumbnailHeight) + "px"
       this.showCard = true
     }
 
