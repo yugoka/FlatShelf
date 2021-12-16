@@ -4,7 +4,7 @@
     :min-item-size="100"
     class="scroller"
     key-field="id"
-    :buffer="700"
+    :buffer="1000"
     page-mode
   >
     <template v-slot="{ item, index, active }">

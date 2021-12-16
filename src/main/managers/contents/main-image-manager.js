@@ -7,10 +7,7 @@ const fs = require("fs").promises
 const path = require("path")
 const { v4: UUID } = require("uuid")
 const log = require("electron-log")
-const sharp = require("sharp")
-
-const maxThumbnailWidth = 200
-const maxThumbnailHeight = 200
+const {generateThumbnail} = require("./contents-manager-util")
 
 class ImageManager {
   //------------------------------------
@@ -36,7 +33,7 @@ class ImageManager {
       //ディレクトリを作成
       await fs.mkdir(targetDirectory, { recursive: true })
       //サムネイルを生成
-      const thumbnail = await this.generateThumbnail(file.path, targetDirectory)
+      const thumbnail = await generateThumbnail(file.path, targetDirectory)
       //画像本体をコピー
       await fs.copyFile(file.path, targetFile)
 
@@ -53,44 +50,6 @@ class ImageManager {
       return newContent
     } catch (err) {
       log.error(`[fileImport]Error: ${err}`)
-    }
-  }
-
-  //------------------------------------
-  // 画像サムネイルの作成
-  //------------------------------------
-  async generateThumbnail(targetImage, targetDirectory) {
-    const image = await sharp(targetImage)
-    const metadata = await image.metadata()
-
-    //サムネイル最小値を下回る大きさなら元画像をサムネイルにする
-    if (
-      metadata.width <= maxThumbnailWidth &&
-      metadata.height <= maxThumbnailHeight
-    ) {
-      return {
-        path: path.join(targetDirectory, targetImage),
-        width: metadata.width,
-        height: metadata.height,
-      }
-    }
-
-    //サムネイルを作成して保存
-    const thumbnailPath = path.join(targetDirectory, "thumbnail.jpg")
-    const resizedImage = await image.resize(
-      { 
-        fit: "inside",
-        width: maxThumbnailWidth,
-        height: maxThumbnailHeight,
-      }
-    )
-    await resizedImage.toFile(thumbnailPath)
-    const resizedImageMetadata = await sharp(thumbnailPath).metadata()
-
-    return {
-      path: thumbnailPath,
-      width: resizedImageMetadata.width,
-      height: resizedImageMetadata.height,
     }
   }
 }
