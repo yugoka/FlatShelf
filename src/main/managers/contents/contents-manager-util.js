@@ -32,13 +32,13 @@ export const generateThumbnail = async (targetImage, targetDirectory) => {
   const image = await sharp(targetImage)
   const metadata = await image.metadata()
 
-  //サムネイル最小値を下回る大きさなら元画像をサムネイルにする
+  //最小サムネイルサイズを下回る大きさなら元画像をサムネイルにする
   if (
     metadata.width <= maxThumbnailWidth &&
     metadata.height <= maxThumbnailHeight
   ) {
     return {
-      path: path.join(targetDirectory, targetImage),
+      path: path.join(targetDirectory, path.basename(targetImage)),
       width: metadata.width,
       height: metadata.height,
     }

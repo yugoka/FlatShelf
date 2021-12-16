@@ -1,12 +1,11 @@
 <template>
   <v-card
-    class="content-card mx-1 my-1 text-center elevation-2"
+    class="content-card text-center elevation-2"
     ripple
     :style="{
       width: width,
       flexGrow: flexGrow, 
     }"
-    v-show="showCard"
   >
     <v-responsive
       :aspect-ratio="flexGrow"
@@ -16,8 +15,8 @@
 
     <v-img
       class="rounded"
-      ripple
       eager
+      draggable
 
       :src="`file://${content.thumbnailPath}`"
       :transition="false"
@@ -46,7 +45,6 @@
       return {
         width: "",
         flexGrow: 0,
-        showCard: false,
         showImg: false
       }
     },
@@ -59,7 +57,6 @@
       const res = this.content
       this.flexGrow = res.thumbnailWidth / res.thumbnailHeight
       this.width = (res.thumbnailWidth / res.thumbnailHeight) + "px"
-      this.showCard = true
     }
 
   }
@@ -68,6 +65,8 @@
 <style scoped>
 .content-card {
   min-width: 0;
+  cursor: pointer;
+  margin: 2px;
 }
 
 .content-card-img-placeholder {

@@ -14,43 +14,39 @@ class ImageManager {
   // 画像保存
   //------------------------------------
   async create(file) {
-    try {
-      const fileName = file.name
-      //保存ディレクトリを生成
-      const fileUUID = UUID()
-      const targetDirectory = path.join(
-        WORKING_SPACE,
-        "contents/images",
-        fileUUID
-      )
-      const type = file.type
+    const fileName = file.name
+    //保存ディレクトリを生成
+    const fileUUID = UUID()
+    const targetDirectory = path.join(
+      WORKING_SPACE,
+      "contents/images",
+      fileUUID
+    )
+    const type = file.type
 
-      //コンテンツ本体ファイルを複製
-      //↓は共通する可能性が高いので今後リファクタリングの余地あり
-      const targetFile = path.join(targetDirectory, fileName)
-      log.info(`[fileImport]creating ${type} content:${targetFile}`)
-      
-      //ディレクトリを作成
-      await fs.mkdir(targetDirectory, { recursive: true })
-      //サムネイルを生成
-      const thumbnail = await generateThumbnail(file.path, targetDirectory)
-      //画像本体をコピー
-      await fs.copyFile(file.path, targetFile)
+    //コンテンツ本体ファイルを複製
+    //↓は共通する可能性が高いので今後リファクタリングの余地あり
+    const targetFile = path.join(targetDirectory, fileName)
+    log.info(`[fileImport]creating ${type} content:${targetFile}`)
+    
+    //ディレクトリを作成
+    await fs.mkdir(targetDirectory, { recursive: true })
+    //サムネイルを生成
+    const thumbnail = await generateThumbnail(file.path, targetDirectory)
+    //画像本体をコピー
+    await fs.copyFile(file.path, targetFile)
 
-      //dbにデータを登録する
-      const newContent = await Content.create({
-        name: fileName,
-        type: type,
-        filePath: targetFile,
-        UUID: fileUUID,
-        thumbnailPath: thumbnail.path,
-        thumbnailWidth: thumbnail.width,
-        thumbnailHeight: thumbnail.height,
-      })
-      return newContent
-    } catch (err) {
-      log.error(`[fileImport]Error: ${err}`)
-    }
+    //dbにデータを登録する
+    const newContent = await Content.create({
+      name: fileName,
+      type: type,
+      filePath: targetFile,
+      UUID: fileUUID,
+      thumbnailPath: thumbnail.path,
+      thumbnailWidth: thumbnail.width,
+      thumbnailHeight: thumbnail.height,
+    })
+    return newContent
   }
 }
 
