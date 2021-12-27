@@ -32,25 +32,27 @@ export const generateThumbnail = async (targetImage, targetDirectory) => {
   const image = await sharp(targetImage)
   const metadata = await image.metadata()
 
+  //アスペクト比が最大を超える場合fitをcoverにする
+  let fit = "inside"
+  if (
+    metadata.width / metadata.height > maxAspectRatio ||
+    metadata.height / metadata.width > maxAspectRatio
+  ) {
+    fit = "cover"
+  }
+
   //最小サムネイルサイズを下回る大きさなら元画像をサムネイルにする
   if (
     metadata.width <= maxThumbnailWidth &&
-    metadata.height <= maxThumbnailHeight
+    metadata.height <= maxThumbnailHeight &&
+    //画像が十分に小さい場合でもアスペクト比が上限を超える場合サムネを生成する
+    fit != "cover"
   ) {
     return {
       path: path.join(targetDirectory, path.basename(targetImage)),
       width: metadata.width,
       height: metadata.height,
     }
-  }
-
-  let fit = "inside"
-  //アスペクト比が最大を超える場合fitをcoverにする
-  if (
-    metadata.width / metadata.height > maxAspectRatio ||
-    metadata.height / metadata.width > maxAspectRatio
-  ) {
-    fit = "cover"
   }
 
   //サムネイルを作成して保存

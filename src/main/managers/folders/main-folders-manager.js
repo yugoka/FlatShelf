@@ -5,6 +5,8 @@ const Store = require("electron-store")
 const { WORKING_SPACE } = require("../../initializers/global-settings")
 const { Node } = require("./folder-node")
 const { Folder } = require("../../db/models/folder")
+const { Content } = require("../../db/models/content")
+const fs = require("fs").promises
 
 class FoldersManager {
   constructor() {
@@ -78,6 +80,9 @@ class FoldersManager {
 
     const childrenIDs = folderNode.getAllAffiliatedID()
     
+    //子孫フォルダ＋自身に属するコンテンツを削除
+    //ごみ箱フォルダを設けてそこに移動する実装も検討するべき
+    await this.deleteChildContents(childrenIDs)
 
     //DBから削除
     await Folder.destroy({
@@ -89,8 +94,6 @@ class FoldersManager {
     //フォルダ構造から削除
     parentNode.deleteChild(folderID)
     this.saveStructure()
-
-    //コンテンツをフォルダ所属から外す追記が必要
   }
 
   getAll() {
@@ -107,6 +110,21 @@ class FoldersManager {
   
   saveStructure() {
     store.set("structure", [this.root])
+  }
+
+  //指定フォルダのコンテンツをすべて削除
+  async deleteChildContents(folderIDs) {
+    const folderPaths = await Content.findAll({
+      raw: true,
+      where: {
+        folderId: folderIDs
+      },
+      attributes: ["folderPath"]
+    })
+    for (const folder of folderPaths) {
+      console.log(folder.folderPath)
+      await fs.rmdir(folder.folderPath, { recursive: true });
+    }
   }
 }
 

@@ -38,7 +38,7 @@ export class Node {
   }
 
   //子孫フォルダの中から指定IDのフォルダnodeを取得する
-  //頻繁に呼ぶ重い処理なのでキャッシュ化するなども検討するべき
+  //頻繁に呼ぶ重い処理なのでキャッシュ化することも検討するべき
   getChildById(id) {
     if (this.id === id) return this
     //末端ノードかつ検索対象でないならfalseを返す

@@ -25,7 +25,10 @@ export const Content = sequelize.define("Content", {
   author: {
     type: DataTypes.STRING,
   },
-  filePath: {
+  mainFilePath: {
+    type: DataTypes.STRING,
+  },
+  folderPath: {
     type: DataTypes.STRING,
     allowNull: false,
   },

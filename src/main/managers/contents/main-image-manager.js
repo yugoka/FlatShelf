@@ -13,7 +13,8 @@ class ImageManager {
   //------------------------------------
   // 画像保存
   //------------------------------------
-  async create(file) {
+  async create(data) {
+    const file = data.fileData
     const fileName = file.name
     //保存ディレクトリを生成
     const fileUUID = UUID()
@@ -40,11 +41,13 @@ class ImageManager {
     const newContent = await Content.create({
       name: fileName,
       type: type,
-      filePath: targetFile,
+      mainFilePath: targetFile,
+      folderPath: targetDirectory,
       UUID: fileUUID,
       thumbnailPath: thumbnail.path,
       thumbnailWidth: thumbnail.width,
       thumbnailHeight: thumbnail.height,
+      folderId: data.folderID
     })
     return newContent
   }

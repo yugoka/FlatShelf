@@ -3,7 +3,8 @@
 //------------------------------------
 
 class RendererContentsManager {
-  async create(file) {
+  async create(data) {
+    const file = data.file
     //入力がそもそもファイル形式じゃないなら弾く
     if (!(file instanceof File)) return false
 
@@ -13,7 +14,12 @@ class RendererContentsManager {
       type: file.type,
       path: file.path
     }
-    const result = await window.ipc.createContent(fileData)
+
+    const requestData = {
+      fileData,
+      folderID: data.folderID || 1
+    }
+    const result = await window.ipc.createContent(requestData)
     return result
   }
 

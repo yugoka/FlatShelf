@@ -96,14 +96,16 @@ export default {
     },
     async testSaveContent() {
       for (let i=0; i<50; i++) {
-        const result = await this.$contents.create(this.importFile)
+        const result = await this.$contents.create({
+          file: this.importFile,
+          folderID: 1
+        })
         console.log(`result: ${result}`)
       }
     },
     async searchTest() {
       const query = {searchWord: this.searchWord}
       const result = await this.$contents.search(query)
-      console.log(result)
       this.images = result
     }
   },

@@ -8,8 +8,9 @@ const imageFileExts = ["png", "jpg", "jpeg", "webp", "gif", "bmp"]
 class ContentsManager {
   //コンテンツを登録する
   //やや長く読みづらいため分割の余地あり
-  async create(fileData) {
+  async create(data) {
     try {
+      const fileData = data.fileData
       //ファイルの種類を判定
       const type = fileData.type.split("/")[0]
       const ext = fileData.type.split("/")[1]
@@ -20,7 +21,7 @@ class ContentsManager {
         //画像ファイルの場合
         case "image":
           if (ext.indexOf(imageFileExts)) {
-            return await imageManager.create(fileData)
+            return await imageManager.create(data)
           }
           break
         case "aaa":
