@@ -57,15 +57,25 @@
       async onDrop(event) {
         this.fileDropSnackBar = false
         if (!event.dataTransfer.types.includes("Files")) return
+        
+        const files = event.dataTransfer.files
 
         await this.$contents.createMany({
-          files: event.dataTransfer.files,
+          files,
           folderID: 1
         })
         
         //検索結果をリロードする
         this.$refs.contents.loadContents()
 
+        //通知を表示する
+        let noticeMessage
+        if (files.length === 1) {
+          noticeMessage = `コンテンツの保存が完了しました。`
+        } else {
+          noticeMessage = `${files.length}件のコンテンツの保存が完了しました。`
+        }
+        this.$store.commit("setNotice", { message: noticeMessage, icon: "mdi-check" })
       }
     }
 

@@ -6,6 +6,8 @@
 
     <ContentsEditMenu/>
 
+    <NoticeChip/>
+
     <div id="main-content">
       <v-main>
         <router-view/>
@@ -19,6 +21,7 @@
 import SystemBar from "./components/app/systembar/SystemBar"
 import SideMenu from "./components/app/sidemenu/AppSideMenu"
 import ContentsEditMenu from "./components/app/editmenu/AppEditMenu"
+import NoticeChip from "./components/app/NoticeChip"
 
 export default {
   name: 'App',
@@ -26,7 +29,8 @@ export default {
   components: {
     SystemBar,
     SideMenu,
-    ContentsEditMenu
+    ContentsEditMenu,
+    NoticeChip
   },
 
   data() {

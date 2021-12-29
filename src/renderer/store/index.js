@@ -7,7 +7,8 @@ const store = new Vuex.Store({
   state: {
     settings: {},
     folders: {},
-    isSideMenuShown: true
+    isSideMenuShown: true,
+    notice: { message: null, color: "primary" },
   },
   mutations: {
     //レンダラー設定をまとめて保存する
@@ -15,11 +16,15 @@ const store = new Vuex.Store({
       state.settings = settings
     },
     setFolders(state, folders) {
-      state.folders= folders
+      state.folders = folders
     },
     toggleSideMenu(state, sideBarStatus) {
       state.isSideMenuShown = sideBarStatus
-    }
+    },
+    //通知を追加する
+    setNotice(state, notice) {
+      state.notice = notice
+    },
   },
   actions: {
     //dispatchとかはいらないのでcontext.commitとcontext.stateだけ引数に取る
@@ -30,8 +35,8 @@ const store = new Vuex.Store({
       } else {
         commit("toggleSideMenu", sideBarStatus)
       }
-    }
-  }
+    },
+  },
 })
 
 export default store
