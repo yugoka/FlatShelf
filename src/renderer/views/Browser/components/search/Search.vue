@@ -28,7 +28,7 @@
 <script>
   import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
   import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
-  import ContentsRow from './ContentsRow.vue'
+  import ContentsRow from './components/ContentsRow.vue'
 
   export default {
 
@@ -49,8 +49,9 @@
     },
 
     methods: {
+      //コンテンツを読み込む。すべての検索はここで行われる
       async loadContents() {
-        const query = { searchWord: "." }
+        const query = this.viewContext
         this.contents = await this.$contents.search(query)
       }
     },
@@ -70,6 +71,17 @@
         }
         return rows
       },
+
+      viewContext() {
+        return this.$store.state.viewContext
+      }
+    },
+
+    watch: {
+      //検索条件が変わった時コンテンツをロードし直す
+      viewContext() {
+        loadContents()
+      }
     },
 
     async mounted() {

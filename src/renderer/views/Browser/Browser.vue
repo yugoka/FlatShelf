@@ -29,11 +29,11 @@
 </template>
 
 <script>
-  import SearchContents from "./components/contents/Contents"
+  import SearchContents from "./components/search/Search"
 
   export default {
 
-    name:"Search",
+    name:"Browser",
 
     components: {
       SearchContents

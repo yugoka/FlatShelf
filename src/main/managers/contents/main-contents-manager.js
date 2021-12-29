@@ -1,6 +1,7 @@
 //------------------------------------
 // コンテンツ管理 for メインプロセス
 //------------------------------------
+const { Content } = require("../../db/models/content")
 const { imageManager } = require("./main-image-manager")
 const log = require("electron-log")
 const imageFileExts = ["png", "jpg", "jpeg", "webp", "gif", "bmp"]
@@ -35,6 +36,15 @@ class ContentsManager {
       //登録に失敗した場合
       log.error(`[fileImport]Error: ${err}`)
       return false
+    }
+  }
+
+  //コンテンツのメタデータを変更
+  async update(data) {
+    try {
+      await Content.update(data.values, { where: { contentId: data.id } })
+    } catch (err) {
+      log.error(`[contentUpdate]Error: ${err}`)
     }
   }
 }

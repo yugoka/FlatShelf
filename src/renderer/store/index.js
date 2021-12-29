@@ -9,6 +9,10 @@ const store = new Vuex.Store({
     folders: {},
     isSideMenuShown: true,
     notice: { message: null, color: "primary" },
+    viewContext: {
+      folders: [1],
+      word: null,
+    },
   },
   mutations: {
     //レンダラー設定をまとめて保存する

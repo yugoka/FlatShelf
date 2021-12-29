@@ -28,6 +28,7 @@ class Search {
         ],
       },
     }
+
     //条件にショートカットでアクセスできるようにする
     this.queryRoot = this.queryObject.where[Op.or]
     this.queryAnd = this.queryObject.where[Op.or][0][Op.and]
@@ -39,11 +40,11 @@ class Search {
 
   //スペースやカンマで区切られたワードを展開して検索に登録する
   registerSearchWords() {
-    if (!this.query.searchWord) return
+    if (!this.query.word) return
 
     //各種スペースかコンマで区切る
     const splitter = /[\s|　,]/
-    const words = this.query.searchWord.split(splitter)
+    const words = this.query.word.split(splitter)
 
     for (const word of words) {
       this.queryAnd.push({ name: { [Op.like]: `%${word}%` } })
@@ -52,9 +53,9 @@ class Search {
 
   //フォルダ
   registerSearchFolders() {
-    if (!this.query.searchFolders) return
+    if (!this.query.folders) return
     //クエリにフォルダ条件を追加する。複数のフォルダ条件がある場合or条件になる
-    this.queryAnd.push({ folderID: this.query.searchFolders })
+    this.queryAnd.push({ folderID: this.query.folders })
   }
 
   //検索を実行する
