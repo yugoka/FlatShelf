@@ -35,10 +35,10 @@
     name:"SearchContents",
 
     components: {
-    DynamicScroller,
-    DynamicScrollerItem,
-    ContentsRow
-},
+      DynamicScroller,
+      DynamicScrollerItem,
+      ContentsRow
+    },
 
     data() {
       return {
@@ -49,7 +49,10 @@
     },
 
     methods: {
-
+      async loadContents() {
+        const query = { searchWord: "." }
+        this.contents = await this.$contents.search(query)
+      }
     },
 
     computed: {
@@ -70,10 +73,7 @@
     },
 
     async mounted() {
-      const query = { searchWord: "." }
-      const result = await this.$contents.search(query)
-      console.log(result)
-      this.contents = result
+      await this.loadContents()
     },
 
   }

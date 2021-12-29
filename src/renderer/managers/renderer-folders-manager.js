@@ -24,14 +24,20 @@ class RendererFoldersManager {
 
   async rename(folderID, name) {
     if (!name || !folderID) return
-    const foldersStructure = await window.ipc.renameFolder(Number(folderID), name)
+    const foldersStructure = await window.ipc.renameFolder(
+      Number(folderID),
+      name
+    )
     this.setFolders(foldersStructure)
   }
 
   async changeParent(folderID, parentFolderID) {
     if (!folderID || !parentFolderID) return
     if (folderID === parentFolderID) return
-    const foldersStructure = await window.ipc.changeParentFolder(Number(folderID), Number(parentFolderID))
+    const foldersStructure = await window.ipc.changeParentFolder(
+      Number(folderID),
+      Number(parentFolderID)
+    )
     this.setFolders(foldersStructure)
   }
 
@@ -45,7 +51,6 @@ class RendererFoldersManager {
   setFolders(structure) {
     store.commit("setFolders", structure)
   }
-
 }
 
 const foldersManager = new RendererFoldersManager()

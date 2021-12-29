@@ -12,15 +12,26 @@ class RendererContentsManager {
     const fileData = {
       name: file.name,
       type: file.type,
-      path: file.path
+      path: file.path,
     }
 
     const requestData = {
       fileData,
-      folderID: data.folderID || 1
+      folderID: data.folderID || 1,
     }
+
     const result = await window.ipc.createContent(requestData)
     return result
+  }
+
+  async createMany(data) {
+    const files = data.files
+    for (const file of files) {
+      await this.create({
+        file,
+        folderID: data.folderID || 1,
+      })
+    }
   }
 
   //searchとCRUDはマネージャー分けるべきかも

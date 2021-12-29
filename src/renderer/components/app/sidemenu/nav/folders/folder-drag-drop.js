@@ -1,18 +1,16 @@
 //------------------------------------
 // フォルダのドラッグ＆ドロップ管理
-//------------------------------------ 
+//------------------------------------
 import foldersManager from "../../../../../managers/renderer-folders-manager"
 
 class FolderDragger {
-  constructor() {
-
-  }
+  constructor() {}
 
   startDrag(event) {
     event.stopPropagation()
     const folderID = event.target.folderID
-    event.dataTransfer.effectAllowed = 'move'
-    event.dataTransfer.dropEffect = 'move'
+    event.dataTransfer.effectAllowed = "move"
+    event.dataTransfer.dropEffect = "move"
 
     event.dataTransfer.setData("text/plain", folderID)
   }
