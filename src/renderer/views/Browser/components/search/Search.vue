@@ -79,8 +79,11 @@
 
     watch: {
       //検索条件が変わった時コンテンツをロードし直す
-      viewContext() {
-        loadContents()
+      viewContext: {
+        handler(){
+          this.loadContents()
+        },
+        deep: true
       }
     },
 

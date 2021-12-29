@@ -20,15 +20,22 @@
     props: {
       title: String,
       icon: String,
-      to: String
+      to: String,
+      context: { type: Object, required: false, default: null }
     },
 
     methods: {
       redirect() {
+        //ボタンに対し検索コンテキストが設定されているなら検索条件を変更
+        if (this.context) {
+          this.$store.commit("setContext", this.context)
+        }
+
+        //現在ページから遷移
         if (this.to && this.to != this.$route.name) {
           this.$router.push({ name: this.to })
         }
-      }
+      },
     }
   }
 

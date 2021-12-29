@@ -59,10 +59,11 @@
         if (!event.dataTransfer.types.includes("Files")) return
         
         const files = event.dataTransfer.files
+        const context = this.$store.state.viewContext
 
         await this.$contents.createMany({
           files,
-          folderID: 1
+          folderID: context.folders[0]
         })
         
         //検索結果をリロードする

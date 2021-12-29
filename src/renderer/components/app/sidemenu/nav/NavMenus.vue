@@ -23,6 +23,7 @@
         title="未分類"
         icon="mdi-archive-outline"
         to="Search"
+        :context="contexts.noFolder"
       />
 
       <NavItem 
@@ -52,7 +53,20 @@
     data() {
       return {
         selectedItem: 0,
-        isMandatoryEnabled: true
+        isMandatoryEnabled: true,
+
+        //各ボタンに対応する検索コンテキスト
+        contexts: {
+          noFolder: {
+            folders: [1]
+          },
+          noTags: {
+
+          },
+          recent: {
+
+          }
+        }
       }
     },
 
