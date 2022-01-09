@@ -63,13 +63,22 @@
       },
 
       contentRows() {
-        //行の数を計算
-        const rowsNum = Math.ceil(this.contents.length / this.columns)
         const rows = []
-        for (let i=0; i<rowsNum; i++) {
-          rows.push(this.contents.slice(i*this.columns, (i+1)*this.columns))
-          rows[i].id = i
+        let row = []
+        let totalWithRatio = 0
+        //行の数を計算
+        for (let i=0; i<this.contents.length-1; i++) {
+          const content = this.contents[i]
+          row.push(content)
+          totalWithRatio += content.thumbnailWidth / content.thumbnailHeight
+          if (totalWithRatio > 10) {
+            rows.push(row)
+            rows[rows.length - 1].id = rows.length - 1
+            totalWithRatio = 0
+            row = []
+          }
         }
+        console.log(rows)
         return rows
       },
 
