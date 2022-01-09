@@ -121,21 +121,8 @@
           //このイベントはAppSideMenuを経由してNavMenusの選択を解除する
           this.$emit("select")
 
-          //ここにフォルダクリック時の処理(ページ遷移など)
-          this.redirect({folders: this.currentActiveFolder})
-        }
-      },
-
-      //ページ遷移。ハードコーディング気味＆他とかぶる処理なので統合も検討
-      redirect(context) {
-        //ボタンに対し検索コンテキストが設定されているなら検索条件を変更
-        if (context) {
-          this.$store.commit("setContext", context)
-        }
-
-        //現在ページから遷移
-        if (this.$route.name != "Search") {
-          this.$router.push({ name: "Search" })
+          //検索コンテキストを変更＆ページを遷移する
+          this.$search.redirect({folders: this.currentActiveFolder})
         }
       },
 

@@ -1,7 +1,6 @@
 import Vue from "vue"
 import Vuex from "vuex"
 import { merge, cloneDeep } from "lodash"
-import router from "../router"
 
 Vue.use(Vuex)
 
@@ -32,7 +31,6 @@ const store = new Vuex.Store({
       state.notice = notice
     },
     setContext(state, context) {
-      //Search.vueのcomputedで監視するためにcloneDeepしてるけど余り良い実装ではなさそう
       state.viewContext = cloneDeep(merge(state.viewContext, context))
     },
   },

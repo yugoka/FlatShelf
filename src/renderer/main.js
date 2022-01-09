@@ -12,10 +12,12 @@ import router from "./router"
 import rendererConfigManager from "./managers/renderer-config-manager"
 import rendererContentsManager from "./managers/renderer-contents-manager"
 import rendererFoldersManager from "./managers/renderer-folders-manager"
+import rendererSearchManager from "./managers/renderer-search-manager"
 //各コンポーネントでthis.$config, this.$contentsという感じでマネージャを使えるようにする
 Vue.prototype.$config = rendererConfigManager
 Vue.prototype.$contents = rendererContentsManager
 Vue.prototype.$folders = rendererFoldersManager
+Vue.prototype.$search = rendererSearchManager
 
 Vue.config.productionTip = false
 Vue.use(Vuex)

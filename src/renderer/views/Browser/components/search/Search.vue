@@ -6,6 +6,7 @@
     key-field="id"
     :buffer="1000"
     page-mode
+    ref="scroller"
   >
     <template v-slot="{ item, index, active }">
       <DynamicScrollerItem
@@ -80,14 +81,16 @@
     watch: {
       //検索条件が変わった時コンテンツをロードし直す
       viewContext: {
-        handler(){
-          this.loadContents()
+        async handler(){
+          await this.loadContents()
+          console.log(window)
+          window.scrollTo(0, 0)
         },
         deep: true
       }
     },
 
-    async mounted() {
+    async created() {
       await this.loadContents()
     },
 

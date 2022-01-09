@@ -19,7 +19,6 @@
       draggable
 
       :src="`file://${content.thumbnailPath}`"
-      :transition="false"
       v-show="showImg"
       @load="showImg=true"
     />
