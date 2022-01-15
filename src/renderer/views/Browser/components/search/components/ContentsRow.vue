@@ -1,5 +1,7 @@
 <template>
-    <div class="content-row-container">
+    <div
+      class="content-row-container"
+    >
       <ContentCard
         v-for="content in contents"
         :key="content.contentID"

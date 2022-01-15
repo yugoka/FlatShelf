@@ -1,5 +1,6 @@
 <template>
   <v-card
+    v-if="!content.isDummy"
     class="content-card text-center elevation-2"
     ripple
     :style="{
@@ -7,6 +8,16 @@
       flexGrow: flexGrow, 
     }"
   >
+    <v-btn
+      class="content-card-select-button"
+      absolute
+      icon
+    >
+      <v-icon>
+        mdi-check-circle
+      </v-icon>
+    </v-btn>
+
     <v-responsive
       :aspect-ratio="flexGrow"
       v-show="!showImg"
@@ -27,6 +38,11 @@
       {{content.name}}
     </v-card-text>
   </v-card>
+
+  <div
+    v-else
+    class="content-card-dummy"
+  />
 </template>
 
 <script>
@@ -70,5 +86,16 @@
 
 .content-card-img-placeholder {
   background-color: #fafafa;
+}
+
+.content-card-dummy {
+  width: 1;
+  flex-grow: 1;
+  pointer-events: none;
+}
+
+.content-card-select-button {
+  top: 10px;
+  left: 10px;
 }
 </style>

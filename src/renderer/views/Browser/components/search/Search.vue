@@ -35,7 +35,7 @@
       return {
         contents: [],
         isActive: false,
-        itemSize: 3,
+        itemSize: 2,
         scrollerWidth: 500
       }
     },
@@ -67,8 +67,9 @@
         const rows = []
         let row = []
         let totalWithRatio = 0
-        //行の数を計算
-        for (let i=0; i<this.contents.length-1; i++) {
+
+        //行を作成
+        for (let i=0; i<this.contents.length; i++) {
           const content = this.contents[i]
           row.push(content)
           totalWithRatio += content.thumbnailWidth / content.thumbnailHeight
@@ -81,6 +82,24 @@
             totalWithRatio = 0
             row = []
           }
+        }
+
+        //最後の行を追加。ここの処理きたない
+        if (row.length) {
+          rows.push(row)
+
+          //高さが大きくなりすぎないようにダミーコンテンツを追加する
+          while (totalWithRatio <= this.maxWidthRatio) {
+            row.push({
+              isDummy: true,
+              contentID: "dummy-" + (row.length - 1)
+            })
+            totalWithRatio += 1
+          }
+
+          const currentRowNum = rows.length - 1
+          rows[currentRowNum].id = currentRowNum
+          rows[currentRowNum].size = this.getRowHeight(totalWithRatio, row.length)
         }
         console.log(rows)
         return rows
@@ -110,7 +129,7 @@
     },
 
     mounted() {
-      this.getScrollerWidth()
+      this.scrollerWidth = this.$refs.scroller.$el.clientWidth
     }
 
   }
