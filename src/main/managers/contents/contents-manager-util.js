@@ -24,8 +24,8 @@ export const getDate = () => {
 //------------------------------------
 // 画像サムネイルの作成
 //------------------------------------
-const maxThumbnailWidth = 500
-const maxThumbnailHeight = 500
+const maxThumbnailWidth = 300
+const maxThumbnailHeight = 300
 const maxAspectRatio = 2
 
 export const generateThumbnail = async (targetImage, targetDirectory) => {
@@ -57,13 +57,11 @@ export const generateThumbnail = async (targetImage, targetDirectory) => {
 
   //サムネイルを作成して保存
   const thumbnailPath = path.join(targetDirectory, "thumbnail.jpg")
-  const resizedImage = await image.resize(
-    { 
-      fit,
-      width: maxThumbnailWidth,
-      height: maxThumbnailHeight,
-    }
-  )
+  const resizedImage = await image.resize({
+    fit,
+    width: maxThumbnailWidth,
+    height: maxThumbnailHeight,
+  })
   await resizedImage.toFile(thumbnailPath)
   const resizedImageMetadata = await sharp(thumbnailPath).metadata()
 

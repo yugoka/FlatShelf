@@ -1,33 +1,24 @@
 <template>
-  <DynamicScroller
+  <RecycleScroller
     :items="contentRows"
-    :min-item-size="100"
     class="scroller"
     key-field="id"
     :buffer="1000"
     page-mode
     ref="scroller"
+    @resize="getScrollerWidth"
   >
-    <template v-slot="{ item, index, active }">
-      <DynamicScrollerItem
-        :item="item"
-        :active="active"
-        :size-dependencies="[
-          //アイテムの高さに関わる変数
-          item[0].filePath
-        ]"
-        :data-index="index"
-      >
-        <ContentsRow 
-          :contents="item"
-        />
-      </DynamicScrollerItem>
+    <template v-slot="{ item }">
+      <ContentsRow 
+        :contents="item"
+      />
     </template>
-  </DynamicScroller>
+  </RecycleScroller>
 </template>
 
 <script>
-  import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
+  import debounce from 'lodash.debounce'
+  import { RecycleScroller } from 'vue-virtual-scroller'
   import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
   import ContentsRow from './components/ContentsRow.vue'
 
@@ -36,8 +27,7 @@
     name:"SearchContents",
 
     components: {
-      DynamicScroller,
-      DynamicScrollerItem,
+      RecycleScroller,
       ContentsRow
     },
 
@@ -45,7 +35,8 @@
       return {
         contents: [],
         isActive: false,
-        columns: 4
+        itemSize: 3,
+        scrollerWidth: 500
       }
     },
 
@@ -54,14 +45,24 @@
       async loadContents() {
         const query = this.viewContext
         this.contents = await this.$contents.search(query)
+      },
+      
+      //スクローラーの幅を取得
+      getScrollerWidth: debounce(function() {
+        this.scrollerWidth = this.$refs.scroller.$el.clientWidth
+      }, 200),
+
+      //各行の高さを算出する。かなりハードコーディングなので改善したい
+      getRowHeight(totalWithRatio, contentNum) {
+        //横マージンを考慮した場合に各画像が専有できる高さ
+        const practicalWidth = this.scrollerWidth - (contentNum - 1) * 4 - 4
+        return (practicalWidth / totalWithRatio) + 26
       }
     },
 
     computed: {
-      sideMenuWidth() {
-        return this.$store.state.settings.renderer.app.sideMenuWidth
-      },
 
+      //コンテンツ表示の各行を準備する
       contentRows() {
         const rows = []
         let row = []
@@ -71,9 +72,12 @@
           const content = this.contents[i]
           row.push(content)
           totalWithRatio += content.thumbnailWidth / content.thumbnailHeight
-          if (totalWithRatio > 10) {
+          if (totalWithRatio > this.maxWidthRatio) {
             rows.push(row)
-            rows[rows.length - 1].id = rows.length - 1
+
+            const currentRowNum = rows.length - 1
+            rows[currentRowNum].id = currentRowNum
+            rows[currentRowNum].size = this.getRowHeight(totalWithRatio, row.length)
             totalWithRatio = 0
             row = []
           }
@@ -84,6 +88,10 @@
 
       viewContext() {
         return this.$store.state.viewContext
+      },
+
+      maxWidthRatio() {
+        return 10 / this.itemSize
       }
     },
 
@@ -92,8 +100,6 @@
       viewContext: {
         async handler(){
           await this.loadContents()
-          console.log(window)
-          window.scrollTo(0, 0)
         },
         deep: true
       }
@@ -102,6 +108,10 @@
     async created() {
       await this.loadContents()
     },
+
+    mounted() {
+      this.getScrollerWidth()
+    }
 
   }
 </script>
