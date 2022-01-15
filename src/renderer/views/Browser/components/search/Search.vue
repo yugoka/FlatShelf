@@ -35,7 +35,7 @@
       return {
         contents: [],
         isActive: false,
-        itemSize: 2,
+        itemSize: 3,
         scrollerWidth: 500
       }
     },
@@ -56,7 +56,7 @@
       getRowHeight(totalWithRatio, contentNum) {
         //横マージンを考慮した場合に各画像が専有できる高さ
         const practicalWidth = this.scrollerWidth - (contentNum - 1) * 4 - 4
-        return (practicalWidth / totalWithRatio) + 26
+        return Math.ceil((practicalWidth / totalWithRatio) + 26)
       }
     },
 
