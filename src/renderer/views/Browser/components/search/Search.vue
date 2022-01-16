@@ -3,7 +3,7 @@
     :items="contentRows"
     class="scroller"
     key-field="id"
-    :buffer="1000"
+    :buffer="800"
     page-mode
     ref="scroller"
     @resize="getScrollerWidth"
@@ -37,26 +37,6 @@
         isActive: false,
         itemSize: 3,
         scrollerWidth: 500
-      }
-    },
-
-    methods: {
-      //コンテンツを読み込む。すべての検索はここで行われる
-      async loadContents() {
-        const query = this.viewContext
-        this.contents = await this.$contents.search(query)
-      },
-      
-      //スクローラーの幅を取得
-      getScrollerWidth: debounce(function() {
-        this.scrollerWidth = this.$refs.scroller.$el.clientWidth
-      }, 200),
-
-      //各行の高さを算出する。かなりハードコーディングなので改善したい
-      getRowHeight(totalWithRatio, contentNum) {
-        //横マージンを考慮した場合に各画像が専有できる高さ
-        const practicalWidth = this.scrollerWidth - (contentNum - 1) * 4 - 4
-        return Math.ceil((practicalWidth / totalWithRatio) + 26)
       }
     },
 
@@ -101,7 +81,6 @@
           rows[currentRowNum].id = currentRowNum
           rows[currentRowNum].size = this.getRowHeight(totalWithRatio, row.length)
         }
-        console.log(rows)
         return rows
       },
 
@@ -130,7 +109,34 @@
 
     mounted() {
       this.scrollerWidth = this.$refs.scroller.$el.clientWidth
-    }
+      setTimeout(() => this.scrollTo(), 1000)
+    },
+
+    methods: {
+      //コンテンツを読み込む。すべての検索はここで行われる
+      async loadContents() {
+        const query = this.viewContext
+        this.contents = await this.$contents.search(query)
+      },
+      
+      //スクローラーの幅を取得
+      getScrollerWidth: debounce(function() {
+        this.scrollerWidth = this.$refs.scroller.$el.clientWidth
+      }, 200),
+
+      //各行の高さを算出する。かなりハードコーディングなので改善したい
+      getRowHeight(totalWithRatio, contentNum) {
+        //横マージンを考慮した場合に各画像が専有できる高さ
+        const practicalWidth = this.scrollerWidth - (contentNum - 1) * 4 - 4
+        return Math.ceil((practicalWidth / totalWithRatio) + 26)
+      },
+
+      scrollTo(contentID) {
+        this.$refs.scroller.scrollToPosition(500)
+        console.log("a")
+      }
+
+    },
 
   }
 </script>

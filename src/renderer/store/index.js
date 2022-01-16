@@ -1,6 +1,7 @@
 import Vue from "vue"
 import Vuex from "vuex"
 import { merge, cloneDeep } from "lodash"
+import ContentsRowVue from "../views/Browser/components/search/components/ContentsRow.vue"
 
 Vue.use(Vuex)
 
@@ -14,6 +15,8 @@ const store = new Vuex.Store({
       folders: [1],
       word: null,
     },
+    isSelectMode: false,
+    selectedItems: [],
   },
   mutations: {
     //レンダラー設定をまとめて保存する
@@ -32,6 +35,26 @@ const store = new Vuex.Store({
     },
     setContext(state, context) {
       state.viewContext = cloneDeep(merge(state.viewContext, context))
+    },
+    setSelectedItems(state, items) {
+      state.selectedItems = items
+    },
+    addSelectedItem(state, contentID) {
+      state.selectedItems.push(contentID)
+    },
+    removeSelectedItem(state, contentID) {
+      state.selectedItems = state.selectedItems.filter((item) => {
+        return item != contentID
+      })
+      console.log(contentID)
+      console.log(state.selectedItems)
+      //選択アイテム数が0になったら選択モードもオフにする
+      if (!state.selectedItems.length) {
+        state.isSelectMode = false
+      }
+    },
+    setSelectMode(state, boolean) {
+      state.isSelectMode = boolean
     },
   },
   actions: {
