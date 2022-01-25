@@ -46,8 +46,6 @@ const store = new Vuex.Store({
       state.selectedItems = state.selectedItems.filter((item) => {
         return item != contentID
       })
-      console.log(contentID)
-      console.log(state.selectedItems)
       //選択アイテム数が0になったら選択モードもオフにする
       if (!state.selectedItems.length) {
         state.isSelectMode = false
@@ -66,6 +64,12 @@ const store = new Vuex.Store({
       } else {
         commit("toggleSideMenu", sideBarStatus)
       }
+    },
+
+    //選択モードを終了する
+    endSelectMode({ commit }) {
+      commit("setSelectedItems", [])
+      commit("setSelectMode", false)
     },
   },
 })

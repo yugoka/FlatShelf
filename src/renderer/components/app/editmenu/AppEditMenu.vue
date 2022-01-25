@@ -27,13 +27,28 @@
 
     data() {
       return {
-        isShown: false
+
+      }
+    },
+
+    computed: {
+      isShown: {
+        get() {
+          return this.$store.state.isSelectMode
+        },
+        set(boolean) {
+          if (boolean) {
+            this.$store.commit("setSelectMode", true)
+          } else {
+            this.$store.dispatch('endSelectMode')
+          }
+        }
       }
     },
 
     methods: {
       close() {
-        this.isShown = false
+        this.$store.dispatch('endSelectMode')
       }
     }
   }

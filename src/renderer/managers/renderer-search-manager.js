@@ -13,7 +13,7 @@ class RendererSearchManager {
   //コンテキストを変更して検索ページへ飛ぶ(再検索時も使用)
   redirect(context = null) {
     //コンテンツの選択状態をリセット
-    this.resetSelectedItems()
+    store.dispatch("endSelectMode")
 
     if (context) {
       this.set(context)
@@ -22,12 +22,6 @@ class RendererSearchManager {
     if (router.currentRoute.name != "Search") {
       router.push({ name: "Search" })
     }
-  }
-
-  resetSelectedItems() {
-    store.commit("setSelectMode", false)
-    store.commit("setSelectedItems", [])
-    console.log(store.state)
   }
 }
 

@@ -39,12 +39,18 @@ export default {
     }
   },
 
+  computed: {
+
+  },
+
   methods: {
 
   },
 
-  computed: {
-
+  mounted() {
+    setTimeout(() => {
+      this.$el.scrollTop = 1000
+    }, 3090)
   }
 
 }
@@ -67,11 +73,6 @@ html {
 }
 
 #main-content::-webkit-scrollbar {
-  overflow:visible;
-  width: 8px;
-}
-#main-content::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,.3); 
-  border-radius: 4px;
+  display: none;
 }
 </style>

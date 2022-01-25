@@ -1,6 +1,7 @@
 <template>
     <div
       class="content-row-container"
+      :data-row-index = "contents.id"
     >
       <ContentCard
         v-for="content in contents"

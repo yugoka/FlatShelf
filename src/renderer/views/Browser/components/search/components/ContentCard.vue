@@ -23,23 +23,12 @@
       class="content-card-img-placeholder"
     />
 
-    <v-img
+    <img
       v-show="showImg"
-      class="rounded"
-      eager
-      draggable
-
+      class="content-card-img rounded"
       :src="`file://${content.thumbnailPath}`"
       @load="showImg=true"
-    >
-      <div 
-        :class="{
-          'fill-height': true, 
-          'top-gradient': true,
-          'top-gradient--show': showSelectButton
-        }"
-      />
-    </v-img>
+    />
 
     <v-btn
       v-if="showSelectButton"
@@ -111,6 +100,13 @@
       }
     },
 
+    watch: {
+      selectMode() {
+        //他の要因で選択モードがオフになった時自身の選択を解除する
+        if (!this.selectMode) this.selected = false
+      }
+    },
+
     methods: {
       clickSelectButton() {
         this.selected = !this.selected
@@ -151,7 +147,11 @@
   margin: 2px;
 }
 
-
+.content-card-img {
+  width: 100%;
+  margin: 0;
+  vertical-align:top;
+}
 
 .content-card-img-placeholder {
   background-color: #fafafa;
