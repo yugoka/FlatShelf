@@ -5,7 +5,7 @@
     key-field="id"
     :buffer="800"
     ref="scroller"
-    @resize="setScrollerWidth"
+    @resize="onResize"
   >
     <template v-slot="{ item }">
       <ContentsRow 
@@ -107,11 +107,8 @@
       },
 
       wrapperHeight(afterHeight, beforeHeight) {
-        console.log("aa")
         if (!beforeHeight) return
         const scroller = this.$refs.scroller.$el
-        console.log(beforeHeight, afterHeight)
-        console.log(afterHeight / beforeHeight)
         scroller.scrollTop = scroller.scrollTop * (afterHeight / beforeHeight)
       }
     },
@@ -123,10 +120,12 @@
         this.contents = await this.$contents.search(query)
       },
 
-      setScrollerWidth: debounce(function() {
+      onResize: debounce(function() {
         this.scrollerWidth = this.$refs.scroller.$el.clientWidth
-        const itemWrapper = this.$refs.scroller.$el.getElementsByClassName("vue-recycle-scroller__item-wrapper")[0]
-        this.wrapperHeight = itemWrapper.clientHeight
+        this.$nextTick(() => {
+          const itemWrapper = this.$refs.scroller.$el.getElementsByClassName("vue-recycle-scroller__item-wrapper")[0]
+          this.wrapperHeight = itemWrapper.clientHeight
+        })
       }, 100),
 
       //各行の高さを算出する。かなりハードコーディングなので改善したい
@@ -135,38 +134,6 @@
         const practicalWidth = this.scrollerWidth - (contentNum - 1) * 4 - 4
         return Math.ceil((practicalWidth / totalWithRatio) + 26)
       },
-      
-      //コンテンツIDから行の番号を取得する
-      findContentRow(contentID) {
-        for (let i=0; i < this.contentRows.length; i++) {
-          if(this.contentRows[i].find(content => content.contentID === contentID)) {
-            return i
-          }
-        }
-      },
-
-      scrollToRow(rowIndex) {
-        const scroller = this.$refs.scroller
-        scroller.scrollToItem(rowIndex)
-      },
-
-      scrollToContent(contentID) {
-        const rowIndex = this.findContentRow(contentID)
-        if (!rowIndex) return
-        this.scrollToRow(rowIndex)
-      },
-
-      //現在表示中の行のうち最も上にあるものを取得する
-      getCurrentRowPosition() {
-        const rows = Array.from(this.$el.getElementsByClassName("vue-recycle-scroller__item-view"))
-        const targetRow = rows.find(row => {
-          const translateYPx = row.style.transform.match(/translateY\(([0-9]+px)/)
-          if (!translateYPx) return
-          const translateY = translateYPx[1].slice( 0, -2 )
-          return translateY >= this.$el.scrollTop
-        })
-        return targetRow.getElementsByClassName("content-row-container")[0].dataset.rowIndex
-      }
 
     },
 
