@@ -5,7 +5,7 @@
       right
       id="editmenu"
       v-model="isShown"
-      width="250"
+      width="200"
     >
       <div>
         <v-btn
@@ -57,5 +57,6 @@
 <style>
 #editmenu {
   margin-top: 30px;
+  transition: unset;
 }
 </style>

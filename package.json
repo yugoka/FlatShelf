@@ -17,6 +17,7 @@
     "core-js": "^3.6.5",
     "electron-log": "^4.4.1",
     "electron-store": "^8.0.1",
+    "justified-layout": "^4.1.0",
     "lodash": "^4.17.21",
     "lodash.throttle": "^4.1.1",
     "sequelize": "^6.7.0",

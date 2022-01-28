@@ -87,7 +87,9 @@
 
 <style scoped>
 .main-browser-wrapper {
-  min-height: calc(100vh - 30px);
+  height: calc(100vh - 30px);
+  position: relative;
 }
+
 
 </style>

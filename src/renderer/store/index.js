@@ -41,6 +41,7 @@ const store = new Vuex.Store({
     },
     addSelectedItem(state, contentID) {
       state.selectedItems.push(contentID)
+      console.log(state.selectedItems)
     },
     removeSelectedItem(state, contentID) {
       state.selectedItems = state.selectedItems.filter((item) => {

@@ -9,7 +9,7 @@
     <NoticeChip/>
 
     <div id="main-content">
-      <v-main>
+      <v-main id="main">
         <router-view/>
       </v-main>
     </div>
@@ -64,6 +64,11 @@ export default {
 html {
   overflow: hidden;
 }
+
+#main {
+  transition: unset;
+}
+
 #main-content {
   margin-top: 30px;
   width: 100vw;

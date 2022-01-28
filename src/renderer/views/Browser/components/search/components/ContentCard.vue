@@ -1,32 +1,40 @@
 <template>
   <v-card
-    v-if="!content.isDummy"
     :class="{
       'content-card': true,
       'text-center': true,
       'elevation-2': !selected,
       'elevation-1': selected,
     }"
-    ripple
     :style="{
-      width: width,
-      flexGrow: flexGrow, 
+      width: card.width + 'px',
+      height: card.height + 'px',
+      top: card.top + 'px',
+      left: card.left + 'px'
     }"
+
+    ripple
     @mouseenter="hover=true"
     @mouseleave="hover=false"
     @click="clickCard"
   >
 
     <v-responsive
-      :aspect-ratio="flexGrow"
       v-if="!showImg"
       class="content-card-img-placeholder"
+    />
+
+    <div 
+      :class="{
+        'top-gradient': true,
+        'top-gradient--show': showSelectButton
+      }"
     />
 
     <img
       v-show="showImg"
       class="content-card-img rounded"
-      :src="`file://${content.thumbnailPath}`"
+      :src="`file://${card.content.thumbnailPath}`"
       @load="showImg=true"
     />
 
@@ -51,16 +59,7 @@
         {{selectButtonIcon}}
       </v-icon>
     </v-btn>
-
-    <v-card-text class="py-0 text-truncate">
-      {{content.name}}
-    </v-card-text>
   </v-card>
-
-  <div
-    v-else
-    class="content-card-dummy"
-  />
 </template>
 
 <script>
@@ -71,7 +70,7 @@
     name:"ContentsThumbnail",
 
     props: {
-      content: Object,
+      card: Object,
     },
 
     data() {
@@ -97,7 +96,7 @@
         } else {
           return "mdi-checkbox-blank-circle-outline"
         }
-      }
+      },
     },
 
     watch: {
@@ -113,9 +112,9 @@
         this.$store.commit("setSelectMode", true)
 
         if (this.selected) {
-          this.$store.commit("addSelectedItem", this.content.contentID)
+          this.$store.commit("addSelectedItem", this.card.content.contentID)
         } else {
-          this.$store.commit("removeSelectedItem", this.content.contentID)
+          this.$store.commit("removeSelectedItem", this.card.content.contentID)
         }
       },
       clickCard() {
@@ -123,18 +122,16 @@
         if (this.selectMode) {
           this.clickSelectButton()
         }
+      },
+
+      checkSelected() {
+        this.selected = this.$store.state.selectedItems.includes(this.card.content.contentID)
       }
     },
 
     created() {
-      const res = this.content
-      this.flexGrow = res.thumbnailWidth / res.thumbnailHeight
-      this.width = (res.thumbnailWidth / res.thumbnailHeight) + "px"
-
       //選択されたコンテンツにこれが含まれるなら表示時に選択
-      if (this.$store.state.selectedItems.includes(this.content.contentID)) {
-        this.selected = true
-      }
+      this.checkSelected()
     }
 
   }
@@ -142,9 +139,9 @@
 
 <style scoped>
 .content-card {
+  position: absolute;
   min-width: 0;
   cursor: pointer;
-  margin: 2px;
 }
 
 .content-card-img {
@@ -189,6 +186,10 @@
 }
 
 .top-gradient {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  border-radius: 4px;
   opacity: 0;
   transition: 0.1s;
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, transparent 20%);
