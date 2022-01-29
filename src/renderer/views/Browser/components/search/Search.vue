@@ -78,9 +78,6 @@
         deep: true
       },
 
-      selectMode() {
-        this.getLayouts()
-      }
     },
 
     methods: {
@@ -118,7 +115,8 @@
 
       onScroll: debounce(function() {
         this.scrollTop = this.$refs.scroller.scrollTop
-      }, 50),
+        console.log("stop")
+      }, 20),
     },
 
     async created() {

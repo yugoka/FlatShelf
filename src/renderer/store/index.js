@@ -1,7 +1,6 @@
 import Vue from "vue"
 import Vuex from "vuex"
 import { merge, cloneDeep } from "lodash"
-import ContentsRowVue from "../views/Browser/components/search/components/ContentsRow.vue"
 
 Vue.use(Vuex)
 

@@ -24,8 +24,8 @@ export const getDate = () => {
 //------------------------------------
 // 画像サムネイルの作成
 //------------------------------------
-const maxThumbnailWidth = 500
-const maxThumbnailHeight = 500
+const maxThumbnailWidth = 200
+const maxThumbnailHeight = 200
 const maxAspectRatio = 2
 
 export const generateThumbnail = async (targetImage, targetDirectory) => {

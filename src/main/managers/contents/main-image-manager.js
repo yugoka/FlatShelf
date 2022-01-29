@@ -7,7 +7,7 @@ const fs = require("fs").promises
 const path = require("path")
 const { v4: UUID } = require("uuid")
 const log = require("electron-log")
-const {generateThumbnail} = require("./contents-manager-util")
+const { generateThumbnail } = require("./contents-manager-util")
 
 class ImageManager {
   //------------------------------------
@@ -29,7 +29,7 @@ class ImageManager {
     //↓は共通する可能性が高いので今後リファクタリングの余地あり
     const targetFile = path.join(targetDirectory, fileName)
     log.info(`[fileImport]creating ${type} content:${targetFile}`)
-    
+
     //ディレクトリを作成
     await fs.mkdir(targetDirectory, { recursive: true })
     //サムネイルを生成
@@ -47,7 +47,7 @@ class ImageManager {
       thumbnailPath: thumbnail.path,
       thumbnailWidth: thumbnail.width,
       thumbnailHeight: thumbnail.height,
-      folderId: data.folderID
+      folderId: data.folderID,
     })
     return newContent
   }

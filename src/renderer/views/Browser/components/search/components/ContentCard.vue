@@ -1,5 +1,5 @@
 <template>
-  <v-card
+  <div
     :class="{
       'content-card': true,
       'text-center': true,
@@ -13,7 +13,7 @@
       left: card.left + 'px'
     }"
 
-    ripple
+    v-ripple
     @mouseenter="hover=true"
     @mouseleave="hover=false"
     @click="clickCard"
@@ -34,8 +34,12 @@
     <img
       v-show="showImg"
       class="content-card-img rounded"
-      :src="`file://${card.content.thumbnailPath}`"
+      :src="imgSrc"
       @load="showImg=true"
+      loading="eager"
+      :width="card.width"
+      :height="card.height"
+      decoding="async"
     />
 
     <v-btn
@@ -59,7 +63,7 @@
         {{selectButtonIcon}}
       </v-icon>
     </v-btn>
-  </v-card>
+  </div>
 </template>
 
 <script>
@@ -80,6 +84,7 @@
         showImg: false,
         hover: false,
         selected:false,
+        imgSrc: null
       }
     },
 
@@ -132,7 +137,8 @@
     created() {
       //選択されたコンテンツにこれが含まれるなら表示時に選択
       this.checkSelected()
-    }
+      this.imgSrc = `file://${this.card.content.thumbnailPath}`
+    },
 
   }
 </script>
@@ -142,12 +148,12 @@
   position: absolute;
   min-width: 0;
   cursor: pointer;
+  border-radius: 4px;
 }
 
 .content-card-img {
-  width: 100%;
-  margin: 0;
-  vertical-align:top;
+  vertical-align: top;
+  image-rendering: auto;
 }
 
 .content-card-img-placeholder {
