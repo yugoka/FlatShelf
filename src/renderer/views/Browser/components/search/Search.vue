@@ -10,7 +10,7 @@
       <ContentCard
         class="card"
         v-for="card in visibleCards"
-        :key="card.content.contentID"
+        :key="card.index"
         :card="card"
       />
     </div>
@@ -19,6 +19,7 @@
 
 <script>
   import debounce from 'lodash.debounce'
+  import throttle from 'lodash.throttle'
   import justifiedLayout from 'justified-layout'
   import ContentCard from './components/ContentCard'
 
@@ -39,28 +40,15 @@
         scrollerWidth: null,
         scrollTop: 0,
         layouts: null,
+        visibleCards: [],
+        visibleCardIndex: 0
       }
     },
 
     computed: {
-      selectMode() {
-        return this.$store.state.isSelectMode
-      },
 
       viewContext() {
         return this.$store.state.viewContext
-      },
-
-      visibleCards() {
-        if (!this.layouts) return []
-        return this.layouts.boxes.reduce((array, value, index) => {
-          if(this.scrollTop - this.buffer < value.top && value.top < this.scrollTop + 1000 + this.buffer) {
-            const card = value
-            card.content = this.contents[index]
-            array.push(card)
-          }
-          return array
-        }, [])
       },
 
       containerHeight() {
@@ -78,6 +66,11 @@
         deep: true
       },
 
+      scrollTop(after, before) {
+        const direction = (before <= after) ? 1 : -1
+        this.updateVisibleCards(direction)
+      }
+
     },
 
     methods: {
@@ -91,7 +84,7 @@
       //レイアウトを更新する
       getLayouts() {
         this.layouts =  justifiedLayout(
-          this.contents.map(data => data.thumbnailWidth / (data.thumbnailHeight)),
+          this.getAspectRatios(),
           {
             containerWidth: this.scrollerWidth,
             boxSpacing: 3,
@@ -104,7 +97,51 @@
             }
           }
         )
+        //コンテンツをboxに紐付ける
+        for (let i=0; i < this.layouts.boxes.length; i++) {
+          this.layouts.boxes[i].content = this.contents[i]
+          this.layouts.boxes[i].index = i
+        }
         console.log(this.layouts)
+        this.updateVisibleCards()
+      },
+
+      getAspectRatios() {
+        const result = []
+        for (let i=0; i < this.contents.length; i++) {
+          result[i] = this.contents[i].thumbnailWidth / this.contents[i].thumbnailHeight
+        }
+        return result
+      },
+
+      //表示対象のカードを更新
+      updateVisibleCards(direction=1) {
+        if (!this.layouts) return
+        const cards = this.layouts.boxes
+        const result = []
+        const searchStartIndex = (direction === 1)
+          ? this.visibleCardIndex 
+          : this.visibleCardIndex + this.visibleCards.length
+
+        for (let i=searchStartIndex; 0<=i && i<cards.length; i+=direction) {
+          if(this.checkVisible(cards[i])) {
+            result[result.length] = cards[i]
+          } else if (result.length) {
+            break
+          }
+        }
+
+        if (result.length) {
+          this.visibleCardIndex = (direction === 1)
+          ? result[0].index
+          : result[result.length-1].index
+        }
+        
+        this.visibleCards = result
+      },
+
+      checkVisible(card) {
+        return this.scrollTop - this.buffer < card.top && card.top < this.scrollTop + 1000 + this.buffer
       },
 
       onResize: debounce(function() {
@@ -113,10 +150,9 @@
         this.getLayouts()
       }, 50),
 
-      onScroll: debounce(function() {
+      onScroll: throttle(function() {
         this.scrollTop = this.$refs.scroller.scrollTop
-        console.log("stop")
-      }, 20),
+      }, 100),
     },
 
     async created() {

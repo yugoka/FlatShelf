@@ -137,7 +137,9 @@
     created() {
       //選択されたコンテンツにこれが含まれるなら表示時に選択
       this.checkSelected()
-      this.imgSrc = `file://${this.card.content.thumbnailPath}`
+      setTimeout(() => {
+        this.imgSrc = `file://${this.card.content.thumbnailPath}`
+      }, Math.random() *500)
     },
 
   }
