@@ -22,7 +22,7 @@ module.exports = {
       preload: "src/main/ipc/ipc-renderer.js",
 
       //sequelizeをWebpackのバンドル対象から外す
-      externals: ["sequelize"]
-    }
-  }
+      externals: ["sequelize"],
+    },
+  },
 }

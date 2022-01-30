@@ -10,7 +10,7 @@
       <ContentCard
         class="card"
         v-for="card in visibleCards"
-        :key="card.index"
+        :key="card.content.contentID"
         :card="card"
       />
     </div>
@@ -40,8 +40,7 @@
         scrollerWidth: null,
         scrollTop: 0,
         layouts: null,
-        visibleCards: [],
-        visibleCardIndex: 0
+        visibleCards: []
       }
     },
 
@@ -65,11 +64,6 @@
         },
         deep: true
       },
-
-      scrollTop(after, before) {
-        const direction = (before <= after) ? 1 : -1
-        this.updateVisibleCards(direction)
-      }
 
     },
 
@@ -100,10 +94,9 @@
         //コンテンツをboxに紐付ける
         for (let i=0; i < this.layouts.boxes.length; i++) {
           this.layouts.boxes[i].content = this.contents[i]
-          this.layouts.boxes[i].index = i
         }
         console.log(this.layouts)
-        this.updateVisibleCards()
+        this.getVisibleCards()
       },
 
       getAspectRatios() {
@@ -114,49 +107,32 @@
         return result
       },
 
-      //表示対象のカードを更新
-      updateVisibleCards(direction=1) {
-        if (!this.layouts) return
-        const cards = this.layouts.boxes
-        const result = []
-        const searchStartIndex = (direction === 1)
-          ? this.visibleCardIndex 
-          : this.visibleCardIndex + this.visibleCards.length
-
-        for (let i=searchStartIndex; 0<=i && i<cards.length; i+=direction) {
-          if(this.checkVisible(cards[i])) {
-            result[result.length] = cards[i]
-          } else if (result.length) {
-            break
-          }
-        }
-
-        if (result.length) {
-          this.visibleCardIndex = (direction === 1)
-          ? result[0].index
-          : result[result.length-1].index
-        }
-        
-        this.visibleCards = result
-      },
-
-      checkVisible(card) {
-        return this.scrollTop - this.buffer < card.top && card.top < this.scrollTop + 1000 + this.buffer
-      },
-
       onResize: debounce(function() {
         if (!this.$refs.scroller) return
         this.scrollerWidth = this.$refs.scroller.getBoundingClientRect().width
         this.getLayouts()
+        this.getVisibleCards()
       }, 50),
 
-      onScroll: throttle(function() {
+      onScroll: debounce(function() {
         this.scrollTop = this.$refs.scroller.scrollTop
-      }, 100),
+        this.getVisibleCards()
+      }, 30),
+
+      getVisibleCards() {
+        if (!this.layouts) return
+        this.visibleCards = this.layouts.boxes.filter((box) => {
+          return (
+            this.scrollTop - this.buffer < box.top &&
+            box.top < this.scrollTop + 1000 + this.buffer
+          )
+        })
+      }
     },
 
     async created() {
       await this.loadContents()
+
     },
 
     mounted() {
