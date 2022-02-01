@@ -49,6 +49,8 @@ class SideBarDragger {
     if (self.minWidth < currentWidth && currentWidth < self.maxWidth) {
       //ドラッグ幅がしきい値以内ならサイズ変更する
       self.width = currentWidth
+      //幅をstoreとconfigに保存する
+      store.commit("setSideMenuWidth", currentWidth)
       saveConfigWidth(currentWidth)
     } else if (currentWidth < self.closeWidth) {
       //幅が一定以下なら閉じる

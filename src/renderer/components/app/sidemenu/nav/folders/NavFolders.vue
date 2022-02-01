@@ -174,7 +174,7 @@
 
         //フォルダが読み込まれた時一度だけ初期オープンフォルダを読み込む
         if (!this.hasInitiallyOpenFolderLoaded) {
-          this.openedFolders = this.$config.renderer.folders.initiallyOpened
+          this.openedFolders = this.$config.renderer().folders.initiallyOpened
           this.hasInitiallyOpenFolderLoaded = true
         }
 

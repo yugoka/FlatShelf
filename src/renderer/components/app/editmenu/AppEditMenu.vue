@@ -88,7 +88,6 @@
         this.name = (this.contents.length === 1) 
           ? this.contents[0].name 
           : null
-        console.log(this.contents[0])
       }
     },
 

@@ -6,37 +6,43 @@
     height="30"
     color="systemBar"
   >
-    FlatShelf
+    <span>FlatShelf</span>
+    
+    <div>
+      <SearchBar/>
+    </div>
+    
+    <div>
+      <SystemButton
+        icon="mdi-minus"
+        @click.native="minimizeWindow"
+      />
 
-    <v-spacer/>
+      <SystemButton
+        :icon="maximized ? 'mdi-checkbox-multiple-blank-outline' : 'mdi-checkbox-blank-outline'"
+        @click.native="toggleMaximized"
+      />
 
-    <SystemButton
-      icon="mdi-minus"
-      @click.native="minimizeWindow"
-    />
-
-    <SystemButton
-      :icon="maximized ? 'mdi-checkbox-multiple-blank-outline' : 'mdi-checkbox-blank-outline'"
-      @click.native="toggleMaximized"
-    />
-
-    <SystemButton
-      color="red"
-      icon="mdi-close"
-      @click.native="quitApp"
-    />
+      <SystemButton
+        color="red"
+        icon="mdi-close"
+        @click.native="quitApp"
+      />
+    </div>
 
   </v-system-bar>
 </template>
 
 <script>
   import SystemButton from "./SystemButton.vue"
+  import SearchBar from "./SearchBar.vue"
 
   export default {
     name: 'SystemBar',
 
     components: {
-      SystemButton
+      SystemButton,
+      SearchBar
     },
 
     data() {
@@ -46,8 +52,8 @@
     },
 
     computed: {
-      sideBarWidth() {
-        return this.$store.state.sidemenuWidth
+      sideMenuWidth() {
+        return this.$config.renderer().app.sideMenuWidth
       }
     },
 
@@ -78,6 +84,8 @@
   user-select: none;
   -webkit-user-select: none;
   -webkit-app-region: drag;
+  display: flex;
+  justify-content: space-between;
 }
 
 #systembar .clickable {
@@ -85,4 +93,5 @@
   -webkit-user-select: all;
   -webkit-app-region: no-drag;
 }
+
 </style>

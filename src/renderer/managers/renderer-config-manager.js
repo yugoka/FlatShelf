@@ -23,6 +23,14 @@ class RendererConfigManager {
       console.log(`設定の保存に失敗しました：${key}:${value}`)
     }
   }
+
+  renderer() {
+    return store.state.settings.renderer
+  }
+
+  main() {
+    return store.state.settings.main
+  }
 }
 
 const configManager = new RendererConfigManager()

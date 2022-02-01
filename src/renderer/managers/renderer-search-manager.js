@@ -6,17 +6,25 @@ import router from "../router"
 
 class RendererSearchManager {
   //検索コンテキストの変更
-  set(context) {
+  mergeContext(context) {
+    store.commit("mergeContext", context)
+  }
+
+  setContext(context) {
     store.commit("setContext", context)
   }
 
-  //コンテキストを変更して検索ページへ飛ぶ(再検索時も使用)
+  reset() {
+    store.commit("overwriteContext", { folders: [1] })
+  }
+
+  //コンテキストを変更して検索ページへ飛ぶ
   redirect(context = null) {
     //コンテンツの選択状態をリセット
     store.dispatch("endSelectMode")
 
     if (context) {
-      this.set(context)
+      this.setContext(context)
     }
 
     if (router.currentRoute.name != "Search") {

@@ -9,6 +9,7 @@ const store = new Vuex.Store({
     settings: {},
     folders: {},
     isSideMenuShown: true,
+    sideMenuWidth: 0,
     notice: {},
     viewContext: {
       folders: [1],
@@ -28,12 +29,18 @@ const store = new Vuex.Store({
     toggleSideMenu(state, sideBarStatus) {
       state.isSideMenuShown = sideBarStatus
     },
+    setSideMenuWidth(state, sideMenuWidth) {
+      state.sideMenuWidth = sideMenuWidth
+    },
     //通知を追加する
     setNotice(state, notice) {
       state.notice = notice
     },
-    setContext(state, context) {
+    mergeContext(state, context) {
       state.viewContext = cloneDeep(merge(state.viewContext, context))
+    },
+    setContext(state, context) {
+      state.viewContext = context
     },
     setSelectedItems(state, items) {
       state.selectedItems = items

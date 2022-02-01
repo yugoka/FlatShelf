@@ -62,7 +62,7 @@
     mounted() {
       //幅調整用クラスのインスタンスを代入
       this.sideBar = sideBar
-      this.sideBar.width = this.$config.renderer.app.sideMenuWidth
+      this.sideBar.width = this.$config.renderer().app.sideMenuWidth
 
       //幅調整開始のイベント登録
       const sideBarDragger = this.$el.querySelector(".v-navigation-drawer__border")

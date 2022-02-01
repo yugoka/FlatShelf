@@ -28,9 +28,6 @@ Vue.use(VueMasonryPlugin)
   //------------------------------------
   //設定ファイルを読み込む。今は同期的だけど起動速度が心配なので非同期にすることも要検討
   await rendererConfigManager.initSettings()
-  //this.$config.main, this.$config.rendererで設定にアクセスできるようにする
-  rendererConfigManager.main = store.state.settings.main
-  rendererConfigManager.renderer = store.state.settings.renderer
   //フォルダ構造を読み込んでstoreに格納する。(非同期的)
   rendererFoldersManager.getStructure()
 
