@@ -8,7 +8,7 @@
     }"
     :style="{
       width: card.width + 'px',
-      height: card.height + 'px',
+      height: cardHeight + 'px',
       top: card.top + 'px',
       left: card.left + 'px'
     }"
@@ -36,10 +36,8 @@
       class="content-card-img rounded"
       :src="imgSrc"
       @load="showImg=true"
-      loading="eager"
       :width="card.width"
       :height="card.height"
-      decoding="async"
     />
 
     <v-btn
@@ -63,6 +61,12 @@
         {{selectButtonIcon}}
       </v-icon>
     </v-btn>
+    <span 
+      :class="(card.height < 300) ? 'caption' : 'body--2'"
+      v-if="$store.state.settings.renderer.search.showItemName"
+    >
+      {{card.content.name}}
+    </span>
   </div>
 </template>
 
@@ -102,6 +106,9 @@
           return "mdi-checkbox-blank-circle-outline"
         }
       },
+      cardHeight() {
+        return this.card.height + 26
+      }
     },
 
     watch: {
@@ -149,11 +156,12 @@
   min-width: 0;
   cursor: pointer;
   border-radius: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .content-card-img {
   vertical-align: top;
-  image-rendering: auto;
 }
 
 .content-card-img-placeholder {

@@ -8,6 +8,7 @@
       <v-btn @click="toggleSideMenu(false)">閉じる</v-btn>
       <v-btn @click="toggleSideMenu(true)">開く</v-btn>
       <v-btn @click="toggleDarkMode">ダークモード</v-btn>
+      <v-btn @click="showItemName">コンテンツの名前</v-btn>
     </div>
     <div class="my-4">
       <v-text-field
@@ -93,6 +94,9 @@ export default {
     },
     setConfig() {
       this.$config.set(this.configKey, this.configValue)
+    },
+    showItemName() {
+      this.$config.set("renderer.search.showItemName", !this.$store.state.settings.renderer.search.showItemName)
     },
     async testSaveContent() {
       for (let i=0; i<50; i++) {

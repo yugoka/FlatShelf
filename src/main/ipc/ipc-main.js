@@ -9,7 +9,7 @@ const { executeSearch } = require("../managers/search/main-search-manager")
 // レンダラーからpreload.js経由で発火したイベントをこちらで受け取る
 // 要するにメインプロセス側の通信APIだよ
 //------------------------------------
-export const registerIpcHandlers = ({mainWindow}) => {
+export const registerIpcHandlers = ({ mainWindow }) => {
   //------------------------------------
   // 相互通信：レンダラー⇔メイン
   //------------------------------------
@@ -61,10 +61,13 @@ export const registerIpcHandlers = ({mainWindow}) => {
     return folders.getAll()
   })
 
-  ipcMain.handle("change-parent-folder", async (event, { folderID, parentFolderID }) => {
-    await folders.changeParent(folderID, parentFolderID)
-    return folders.getAll()
-  })
+  ipcMain.handle(
+    "change-parent-folder",
+    async (event, { folderID, parentFolderID }) => {
+      await folders.changeParent(folderID, parentFolderID)
+      return folders.getAll()
+    }
+  )
 
   ipcMain.handle("delete-folder", async (event, { folderID }) => {
     await folders.delete(folderID)
@@ -83,6 +86,10 @@ export const registerIpcHandlers = ({mainWindow}) => {
   // 片道通信：レンダラー→メイン
   //------------------------------------
 
+  //------------------------------------
+  // ウィンドウ関連
+  //------------------------------------
+
   ipcMain.on("quit-app", () => {
     app.quit()
   })
@@ -91,8 +98,27 @@ export const registerIpcHandlers = ({mainWindow}) => {
     mainWindow.minimize()
   })
 
-  ipcMain.on("maximize-main-window", () => {
-    mainWindow.maximize()
+  ipcMain.on("toggle-maximized", () => {
+    if (mainWindow.isMaximized()) {
+      mainWindow.restore()
+    } else {
+      mainWindow.maximize()
+    }
   })
 
+  //------------------------------------
+  // 片道通信：メイン→レンダラー
+  //------------------------------------
+
+  //------------------------------------
+  // ウィンドウ関連
+  //------------------------------------
+
+  mainWindow.on("maximize", () => {
+    mainWindow.send("toggle-maximized", { isMaximized: true })
+  })
+
+  mainWindow.on("unmaximize", () => {
+    mainWindow.send("toggle-maximized", { isMaximized: false })
+  })
 }

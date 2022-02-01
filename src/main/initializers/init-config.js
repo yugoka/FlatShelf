@@ -18,6 +18,9 @@ const defaults = {
       folders: {
         initiallyOpened: [],
       },
+      search: {
+        showItemName: false,
+      },
     },
 
     //=======メインプロセス設定=======//

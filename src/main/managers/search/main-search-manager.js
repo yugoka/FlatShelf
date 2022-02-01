@@ -34,11 +34,18 @@ class Search {
     this.queryAnd = this.queryObject.where[Op.or][0][Op.and]
 
     //各検索条件をクエリに登録する
+    this.registerSearchIDs()
     this.registerSearchWords()
     this.registerSearchFolders()
   }
 
-  //スペースやカンマで区切られたワードを展開して検索に登録する
+  //コンテンツID条件
+  registerSearchIDs() {
+    if (!this.query.contentIDs) return
+    this.queryAnd.push({ contentId: this.query.contentIDs })
+  }
+
+  //検索ワード条件
   registerSearchWords() {
     if (!this.query.word) return
 
@@ -51,7 +58,7 @@ class Search {
     }
   }
 
-  //フォルダ
+  //フォルダ条件
   registerSearchFolders() {
     if (!this.query.folders) return
     //クエリにフォルダ条件を追加する。複数のフォルダ条件がある場合or条件になる

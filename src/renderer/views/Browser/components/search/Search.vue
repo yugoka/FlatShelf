@@ -5,7 +5,7 @@
   >
     <div 
       class="contents-wrapper"
-      :style="{height: this.containerHeight + 'px'}"
+      :style="{ height: this.containerHeight + 'px' }"
     >
       <ContentCard
         class="card"
@@ -19,9 +19,8 @@
 
 <script>
   import debounce from 'lodash.debounce'
-  import throttle from 'lodash.throttle'
-  import justifiedLayout from 'justified-layout'
   import ContentCard from './components/ContentCard'
+  import layoutManager from './layout-manager'
 
   export default {
 
@@ -34,10 +33,11 @@
     data() {
       return {
         itemSize: 100,
-        buffer: 1000,
+        buffer: 2000,
         contents: [],
         isActive: false,
         scrollerWidth: null,
+        scrollerHeight: null,
         scrollTop: 0,
         layouts: null,
         visibleCards: []
@@ -64,7 +64,6 @@
         },
         deep: true
       },
-
     },
 
     methods: {
@@ -76,42 +75,25 @@
       },
 
       //レイアウトを更新する
-      getLayouts() {
-        this.layouts =  justifiedLayout(
-          this.getAspectRatios(),
-          {
-            containerWidth: this.scrollerWidth,
-            boxSpacing: 3,
-            targetRowHeight: this.itemSize,
-            containerPadding: {
-              top: 0,
-              right: 12,
-              left: 5,
-              bottom: 0
-            }
-          }
-        )
-        //コンテンツをboxに紐付ける
-        for (let i=0; i < this.layouts.boxes.length; i++) {
-          this.layouts.boxes[i].content = this.contents[i]
-        }
-        console.log(this.layouts)
-        this.getVisibleCards()
+      getLayouts(calculateVisibleCards=true) {
+        this.layouts = layoutManager.getLayouts("brick", this.contents, this.scrollerWidth, this.itemSize)
+        if (calculateVisibleCards) this.getVisibleCards()
       },
 
-      getAspectRatios() {
-        const result = []
-        for (let i=0; i < this.contents.length; i++) {
-          result[i] = this.contents[i].thumbnailWidth / this.contents[i].thumbnailHeight
-        }
-        return result
-      },
+
 
       onResize: debounce(function() {
         if (!this.$refs.scroller) return
-        this.scrollerWidth = this.$refs.scroller.getBoundingClientRect().width
-        this.getLayouts()
-        this.getVisibleCards()
+        const scrollerRect = this.$refs.scroller.getBoundingClientRect()
+        this.scrollerWidth = scrollerRect.width
+        this.scrollerHeight = scrollerRect.height
+        if (this.layouts) {
+          const scrollerHeightCache = this.layouts.containerHeight
+          this.getLayouts(false)
+          this.getVisibleCards(this.$refs.scroller.scrollTop * this.layouts.containerHeight / scrollerHeightCache)
+        } else {
+          this.getVisibleCards()
+        }
       }, 50),
 
       onScroll: debounce(function() {
@@ -119,12 +101,16 @@
         this.getVisibleCards()
       }, 30),
 
-      getVisibleCards() {
+      getVisibleCards(scrollTop) {
         if (!this.layouts) return
+        if (scrollTop) {
+          this.$refs.scroller.scrollTop = scrollTop
+          this.scrollTop = scrollTop
+        }
         this.visibleCards = this.layouts.boxes.filter((box) => {
           return (
             this.scrollTop - this.buffer < box.top &&
-            box.top < this.scrollTop + 1000 + this.buffer
+            box.top < this.scrollTop + this.scrollerHeight + this.buffer
           )
         })
       }
@@ -132,7 +118,6 @@
 
     async created() {
       await this.loadContents()
-
     },
 
     mounted() {
@@ -140,6 +125,7 @@
         .observe(this.$refs.scroller)
       
       this.$refs.scroller.addEventListener('scroll', this.onScroll)
+
     },
 
     beforeDestroy () {

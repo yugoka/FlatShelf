@@ -29,12 +29,12 @@ contextBridge.exposeInMainWorld("ipc", {
 
   //コンテンツ作成
   //dataは必ずfilePathをプロパティに持つ
-  createContent: async data => {
+  createContent: async (data) => {
     return await ipcRenderer.invoke("create-content", { data })
   },
 
   //コンテンツ検索
-  searchContent: async query => {
+  searchContent: async (query) => {
     return await ipcRenderer.invoke("search-content", { query })
   },
 
@@ -57,7 +57,10 @@ contextBridge.exposeInMainWorld("ipc", {
   },
 
   changeParentFolder: async (folderID, parentFolderID) => {
-    return await ipcRenderer.invoke("change-parent-folder", { folderID, parentFolderID })
+    return await ipcRenderer.invoke("change-parent-folder", {
+      folderID,
+      parentFolderID,
+    })
   },
 
   deleteFolder: async (folderID) => {
@@ -74,11 +77,17 @@ contextBridge.exposeInMainWorld("ipc", {
   minimizeMainWindow: () => {
     ipcRenderer.send("minimize-main-window")
   },
-  maximizeMainWindow: () => {
-    ipcRenderer.send("maximize-main-window")
-  }
+  toggleMaximized: () => {
+    ipcRenderer.send("toggle-maximized")
+  },
 
   //------------------------------------
   // 片道通信：メイン→レンダラー
   //------------------------------------
+
+  onToggleMaximized: (callback) => {
+    ipcRenderer.on("toggle-maximized", (event, { isMaximized }) =>
+      callback(isMaximized)
+    )
+  },
 })

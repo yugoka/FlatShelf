@@ -3,21 +3,53 @@
       app
       stateless
       right
-      id="editmenu"
-      v-model="isShown"
-      width="200"
+      class="editmenu"
+      v-model="show"
+      width="250"
     >
       <div>
         <v-btn
           icon
-          small
+          x-small
           class="mt-1 ms-1"
           @click="close"
         >
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </div>
+
+      <div
+        v-if="contents.length"
+        class="mx-1"
+      >
       
+      <div
+        class="editmenu-img-wrapper"
+      >
+        <img
+          class="editmenu-img rounded elevation-4"
+          :src="contents[contents.length-1].mainFilePath"
+        />
+      </div>
+
+      <v-divider/>
+
+      <v-text-field
+        class="editmenu-textfield"
+        dense
+        label="タイトル"
+        v-model="name"
+        v-if="contents.length === 1"
+      />
+
+      <div
+        v-else
+        class="mt-2 body-2 text-center"
+      >
+        {{contents.length}}件のアイテムを選択中
+      </div>
+
+      </div>
     </v-navigation-drawer>
 </template>
 
@@ -27,12 +59,13 @@
 
     data() {
       return {
-
+        contents: [],
+        name: null
       }
     },
 
     computed: {
-      isShown: {
+      show: {
         get() {
           return this.$store.state.isSelectMode
         },
@@ -43,6 +76,19 @@
             this.$store.dispatch('endSelectMode')
           }
         }
+      },
+      contentIDs() {
+        return this.$store.state.selectedItems
+      },
+    },
+
+    watch: {
+      async contentIDs() {
+        this.contents = await this.$contents.getData(this.contentIDs)
+        this.name = (this.contents.length === 1) 
+          ? this.contents[0].name 
+          : null
+        console.log(this.contents[0])
       }
     },
 
@@ -54,9 +100,25 @@
   }
 </script>
 
-<style>
-#editmenu {
+<style scoped>
+.editmenu {
   margin-top: 30px;
   transition: unset;
+}
+.editmenu-img-wrapper {
+  display: flex;
+  align-items: center;
+  height: 150px;
+  margin: 5px 5px 10px
+}
+.editmenu-img {
+  vertical-align: top;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+}
+
+.editmenu-textfield {
+  margin: 20px 10px 10px
 }
 </style>

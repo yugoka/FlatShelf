@@ -1,9 +1,9 @@
 <template>
   <v-system-bar
     id="systembar"
+    class="pb-0 pe-0"
     fixed
     height="30"
-    class="pb-0 pe-0"
     color="systemBar"
   >
     FlatShelf
@@ -16,8 +16,8 @@
     />
 
     <SystemButton
-      icon="mdi-checkbox-blank-outline"
-      @click.native="maximizeWindow"
+      :icon="maximized ? 'mdi-checkbox-multiple-blank-outline' : 'mdi-checkbox-blank-outline'"
+      @click.native="toggleMaximized"
     />
 
     <SystemButton
@@ -39,25 +39,50 @@
       SystemButton
     },
 
+    data() {
+      return {
+        maximized: false
+      }
+    },
+
+    computed: {
+      sideBarWidth() {
+        return this.$store.state.sidemenuWidth
+      }
+    },
+
     methods: {
       minimizeWindow() {
         window.ipc.minimizeMainWindow()
       },
-      maximizeWindow() {
-        window.ipc.maximizeMainWindow()
+      toggleMaximized() {
+        window.ipc.toggleMaximized()
       },
       quitApp() {
         window.ipc.quitApp()
+      },
+      onToggleMaximized(isMaximized) {
+        this.maximized = isMaximized
       }
+    },
+
+    created() {
+      window.ipc.onToggleMaximized(this.onToggleMaximized)
     }
   }
 </script>
 
-<style>
+<style scoped>
 #systembar {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
   user-select: none;
   -webkit-user-select: none;
   -webkit-app-region: drag;
+}
+
+#systembar .clickable {
+  user-select: none;
+  -webkit-user-select: all;
+  -webkit-app-region: no-drag;
 }
 </style>

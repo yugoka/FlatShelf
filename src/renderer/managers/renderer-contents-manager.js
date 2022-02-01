@@ -40,6 +40,11 @@ class RendererContentsManager {
     const result = await window.ipc.searchContent(query)
     return result
   }
+
+  async getData(contentIDs) {
+    const result = await this.search({ contentIDs })
+    return result
+  }
 }
 
 const contentsManager = new RendererContentsManager()

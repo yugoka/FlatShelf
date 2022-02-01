@@ -1,5 +1,6 @@
 <template>
     <v-btn
+      class="clickable"
       height="30"
       tile
       text
@@ -20,5 +21,10 @@
   }
 </script>
 
-<style>
+<style scoped>
+.clickable {
+  user-select: none;
+  -webkit-user-select: all;
+  -webkit-app-region: no-drag;
+}
 </style>
