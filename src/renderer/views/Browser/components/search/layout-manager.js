@@ -50,8 +50,7 @@ class LayoutManager {
   getAspectRatios() {
     const result = []
     for (let i = 0; i < this.contents.length; i++) {
-      result[i] =
-        this.contents[i].thumbnailWidth / this.contents[i].thumbnailHeight
+      result[i] = this.contents[i].thumbnailAspectRatio
     }
     return result
   }

@@ -36,21 +36,25 @@ export const Content = sequelize.define("Content", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  folderId: {
+  folderID: {
     type: DataTypes.INTEGER,
     allowNull: false,
     //コンテンツはデフォルトではrootに所属する
     defaultValue: 1,
   },
-  thumbnailPath: {
+  thumbnailSmall: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  thumbnailWidth: {
-    type: DataTypes.INTEGER,
+  thumbnailMedium: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
-  thumbnailHeight: {
+  thumbnailLarge: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  thumbnailAspectRatio: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },

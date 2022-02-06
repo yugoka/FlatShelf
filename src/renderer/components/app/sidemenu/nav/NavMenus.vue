@@ -20,6 +20,13 @@
       />
 
       <NavItem 
+        title="すべて"
+        icon="mdi-archive-outline"
+        to="Search"
+        :context="contexts.all"
+      />
+
+      <NavItem 
         title="未分類"
         icon="mdi-archive-outline"
         to="Search"
@@ -57,6 +64,9 @@
 
         //各ボタンに対応する検索コンテキスト
         contexts: {
+          all: {
+            all: true
+          },
           noFolder: {
             folders: [1]
           },

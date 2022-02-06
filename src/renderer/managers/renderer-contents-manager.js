@@ -45,6 +45,10 @@ class RendererContentsManager {
     const result = await this.search({ contentIDs })
     return result
   }
+
+  async update(data) {
+    if (!data.contentID) return
+  }
 }
 
 const contentsManager = new RendererContentsManager()

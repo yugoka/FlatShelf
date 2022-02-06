@@ -63,7 +63,7 @@
     </v-btn>
     <span 
       :class="(card.height < 300) ? 'caption' : 'body--2'"
-      v-if="$store.state.settings.renderer.search.showItemName"
+      v-if="showItemName"
     >
       {{card.content.name}}
     </span>
@@ -106,8 +106,15 @@
           return "mdi-checkbox-blank-circle-outline"
         }
       },
+      showItemName() {
+        return this.$store.state.settings.renderer.search.showItemName
+      },
       cardHeight() {
-        return this.card.height + 26
+        if (this.showItemName) {
+          return this.card.height + 26
+        } else {
+          return this.card.height
+        }
       }
     },
 
@@ -144,7 +151,7 @@
     created() {
       //選択されたコンテンツにこれが含まれるなら表示時に選択
       this.checkSelected()
-        this.imgSrc = `file://${this.card.content.thumbnailPath}`
+        this.imgSrc = `file://${this.card.content.folderPath}/${this.card.content.thumbnailSmall}`
     },
 
   }

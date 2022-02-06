@@ -9,11 +9,11 @@ export const Folder = sequelize.define("Folder", {
     type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
 })
 
@@ -21,9 +21,8 @@ export const Folder = sequelize.define("Folder", {
 // 関係を定義するための関数
 //------------------------------------
 Folder.associate = (contentModel) => {
-  Folder.hasMany(contentModel, { 
+  Folder.hasMany(contentModel, {
     as: "contents",
-    foreignKey: "folderId",
-
+    foreignKey: "folderID",
   })
 }

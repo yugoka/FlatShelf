@@ -7,7 +7,7 @@ const fs = require("fs").promises
 const path = require("path")
 const { v4: UUID } = require("uuid")
 const log = require("electron-log")
-const { generateThumbnail } = require("./contents-manager-util")
+const { thumbnailGenerator } = require("./thumbnail.js")
 
 class ImageManager {
   //------------------------------------
@@ -33,7 +33,10 @@ class ImageManager {
     //ディレクトリを作成
     await fs.mkdir(targetDirectory, { recursive: true })
     //サムネイルを生成
-    const thumbnail = await generateThumbnail(file.path, targetDirectory)
+    const thumbnail = await thumbnailGenerator.generateAll(
+      file.path,
+      targetDirectory
+    )
     //画像本体をコピー
     await fs.copyFile(file.path, targetFile)
 
@@ -44,10 +47,11 @@ class ImageManager {
       mainFilePath: targetFile,
       folderPath: targetDirectory,
       UUID: fileUUID,
-      thumbnailPath: thumbnail.path,
-      thumbnailWidth: thumbnail.width,
-      thumbnailHeight: thumbnail.height,
-      folderId: data.folderID,
+      thumbnailSmall: thumbnail.names.small,
+      thumbnailMedium: thumbnail.names.medium,
+      thumbnailLarge: thumbnail.names.large,
+      thumbnailAspectRatio: thumbnail.aspectRatio,
+      folderID: data.folderID,
     })
     return newContent
   }

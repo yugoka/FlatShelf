@@ -16,10 +16,19 @@ class Search {
     log.info(`[contentSearch] Creating search instance`)
     this.query = query
 
+    if (query.all) {
+      this.queryObject = {
+        raw,
+      }
+      this.registerOrders()
+      return
+    }
+
     //検索オブジェクトを初期化
     this.queryObject = {
       //raw=trueならdataValuesだけが返る
       raw,
+      order: [],
       where: {
         [Op.or]: [
           {
@@ -37,6 +46,7 @@ class Search {
     this.registerSearchIDs()
     this.registerSearchWords()
     this.registerSearchFolders()
+    this.registerOrders()
   }
 
   //コンテンツID条件
@@ -65,12 +75,17 @@ class Search {
     this.queryAnd.push({ folderID: this.query.folders })
   }
 
+  //順番条件
+  registerOrders() {
+    this.queryObject.order = this.query.order || [["createdAt", "ASC"]]
+  }
+
   //検索を実行する
   async execute() {
     log.info(`[contentSearch] Start searching`)
-    const result = await Content.findAll(this.queryObject)
-    log.info(`[contentSearch] Found ${result.length} items`)
+    const result = await Content.findAndCountAll(this.queryObject)
+    log.info(`[contentSearch] Found ${result.count} items`)
 
-    return result
+    return result.rows
   }
 }
