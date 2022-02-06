@@ -38,8 +38,9 @@
         class="editmenu-textfield"
         dense
         label="タイトル"
-        v-model="name"
+        v-model.lazy="name"
         v-if="contents.length === 1"
+        @input="onChangeName"
       />
 
       <div
@@ -54,13 +55,16 @@
 </template>
 
 <script>
+  import debounce from 'lodash.debounce'
+  
   export default {
     name: 'EditMenu',
 
     data() {
       return {
         contents: [],
-        name: null
+        name: null,
+        changes: {}
       }
     },
 
@@ -86,14 +90,28 @@
       async contentIDs() {
         this.contents = await this.$contents.getData(this.contentIDs)
         this.name = (this.contents.length === 1) 
-          ? this.contents[0].name 
+          ? this.contents[0].name
           : null
-      }
+      },
     },
 
     methods: {
       close() {
         this.$store.dispatch('endSelectMode')
+      },
+
+      updateContents: debounce(async function() {
+        await this.$contents.update(this.contentIDs, this.changes)
+        this.$store.commit("setNotice", { 
+          message: "保存が完了しました。",
+          icon: "mdi-check"
+        })
+        this.changes = {}
+      }, 1500),
+
+      onChangeName() {
+        this.changes.name = this.name
+        if (this.name) this.updateContents()
       }
     }
   }

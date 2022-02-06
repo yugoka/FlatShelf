@@ -125,7 +125,9 @@
         .observe(this.$refs.scroller)
       
       this.$refs.scroller.addEventListener('scroll', this.onScroll)
-
+      
+      //これでコンテンツのupdateを検知してるけどあんまりいい実装じゃなさそう
+      window.addEventListener('onUpdateContents', this.loadContents)
     },
 
     beforeDestroy () {
@@ -134,6 +136,7 @@
       }
 
       this.$refs.scroller.removeEventListener('scroll', this.onScroll)
+      window.removeEventListener('onUpdateContents', this.loadContents, false)
     }
 
   }

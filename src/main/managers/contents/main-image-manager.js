@@ -47,6 +47,7 @@ class ImageManager {
       mainFilePath: targetFile,
       folderPath: targetDirectory,
       UUID: fileUUID,
+      thumbnailXSmall: thumbnail.names.xSmall,
       thumbnailSmall: thumbnail.names.small,
       thumbnailMedium: thumbnail.names.medium,
       thumbnailLarge: thumbnail.names.large,

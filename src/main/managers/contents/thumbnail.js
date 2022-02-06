@@ -11,6 +11,7 @@ class ThumbnailGenerator {
       { name: "large", value: 1024 },
       { name: "medium", value: 512 },
       { name: "small", value: 256 },
+      { name: "xSmall", value: 128 },
     ]
   }
 

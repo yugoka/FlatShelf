@@ -38,6 +38,11 @@ contextBridge.exposeInMainWorld("ipc", {
     return await ipcRenderer.invoke("search-content", { query })
   },
 
+  //コンテンツ更新
+  updateContent: async (data) => {
+    return await ipcRenderer.invoke("update-content", { data })
+  },
+
   //------------------------------------
   // フォルダ関連
   //------------------------------------

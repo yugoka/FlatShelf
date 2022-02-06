@@ -42,7 +42,9 @@ class ContentsManager {
   //コンテンツのメタデータを変更
   async update(data) {
     try {
-      await Content.update(data.values, { where: { contentId: data.id } })
+      await Content.update(data.values, {
+        where: { contentID: data.contentIDs },
+      })
     } catch (err) {
       log.error(`[contentUpdate]Error: ${err}`)
     }

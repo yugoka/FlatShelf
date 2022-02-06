@@ -61,22 +61,13 @@
         const files = event.dataTransfer.files
         const context = this.$store.state.viewContext
 
-        await this.$contents.createMany({
+        const result = await this.$contents.createMany({
           files,
           folderID: context.folders[0]
         })
         
         //検索結果をリロードする
         this.$refs.contents.loadContents()
-
-        //通知を表示する
-        let noticeMessage
-        if (files.length === 1) {
-          noticeMessage = `コンテンツの保存が完了しました。`
-        } else {
-          noticeMessage = `${files.length}件のコンテンツの保存が完了しました。`
-        }
-        this.$store.commit("setNotice", { message: noticeMessage, icon: "mdi-check" })
       }
     }
 

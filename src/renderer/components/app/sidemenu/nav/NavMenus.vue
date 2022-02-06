@@ -64,9 +64,7 @@
 
         //各ボタンに対応する検索コンテキスト
         contexts: {
-          all: {
-            all: true
-          },
+          all: {},
           noFolder: {
             folders: [1]
           },

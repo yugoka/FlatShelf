@@ -16,14 +16,6 @@ class Search {
     log.info(`[contentSearch] Creating search instance`)
     this.query = query
 
-    if (query.all) {
-      this.queryObject = {
-        raw,
-      }
-      this.registerOrders()
-      return
-    }
-
     //検索オブジェクトを初期化
     this.queryObject = {
       //raw=trueならdataValuesだけが返る
@@ -47,6 +39,11 @@ class Search {
     this.registerSearchWords()
     this.registerSearchFolders()
     this.registerOrders()
+
+    //検索条件が一切ない場合where句を削除する
+    if (!this.queryAnd.length && this.queryRoot.length === 1) {
+      delete this.queryObject.where
+    }
   }
 
   //コンテンツID条件

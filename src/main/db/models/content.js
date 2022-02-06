@@ -42,6 +42,10 @@ export const Content = sequelize.define("Content", {
     //コンテンツはデフォルトではrootに所属する
     defaultValue: 1,
   },
+  thumbnailXSmall: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   thumbnailSmall: {
     type: DataTypes.STRING,
     allowNull: false,

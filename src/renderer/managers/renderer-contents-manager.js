@@ -1,8 +1,15 @@
 //------------------------------------
 // コンテンツ管理 for レンダラープロセス
 //------------------------------------
+import store from "../store"
 
 class RendererContentsManager {
+  constructor() {
+    this.events = {
+      update: new CustomEvent("onUpdateContents"),
+    }
+  }
+
   async create(data) {
     const file = data.file
     //入力がそもそもファイル形式じゃないなら弾く
@@ -26,12 +33,17 @@ class RendererContentsManager {
 
   async createMany(data) {
     const files = data.files
-    for (const file of files) {
-      await this.create({
+    //保存に失敗した回数
+    let failedCount = 0
+    for await (const file of files) {
+      const result = await this.create({
         file,
         folderID: data.folderID || 1,
       })
+      if (!result) failedCount += 1
     }
+    this.createdNotice(failedCount, files.length)
+    return { failedCount }
   }
 
   //searchとCRUDはマネージャー分けるべきかも
@@ -46,8 +58,32 @@ class RendererContentsManager {
     return result
   }
 
-  async update(data) {
-    if (!data.contentID) return
+  async update(IDs, values) {
+    if (!values || !IDs) return
+    const result = await window.ipc.updateContent({
+      contentIDs: IDs,
+      values,
+    })
+    window.dispatchEvent(this.events.update)
+    return result
+  }
+
+  createdNotice(failedCount, length) {
+    //通知を表示する
+    let noticeMessage
+    if (length === 1) {
+      noticeMessage = failedCount
+        ? `コンテンツの保存に失敗しました。`
+        : `コンテンツの保存が完了しました。`
+    } else {
+      noticeMessage = failedCount
+        ? `${length}件中${failedCount}件のコンテンツの保存に失敗しました。`
+        : `${length}件のコンテンツの保存が完了しました。`
+    }
+    store.commit("setNotice", {
+      message: noticeMessage,
+      icon: failedCount ? "mdi-alert-circle-outline" : "mdi-check",
+    })
   }
 }
 

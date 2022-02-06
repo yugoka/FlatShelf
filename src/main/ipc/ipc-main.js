@@ -42,6 +42,11 @@ export const registerIpcHandlers = ({ mainWindow }) => {
     return contents.create(data)
   })
 
+  //コンテンツ更新
+  ipcMain.handle("update-content", (event, { data }) => {
+    return contents.update(data)
+  })
+
   //------------------------------------
   // フォルダ関連
   //------------------------------------

@@ -3,8 +3,8 @@
     :class="{
       'content-card': true,
       'text-center': true,
-      'elevation-2': !selected,
-      'elevation-1': selected,
+      'elevation-2': true,
+      'content-card--selected': selected,
     }"
     :style="{
       width: card.width + 'px',
@@ -19,16 +19,18 @@
     @click="clickCard"
   >
 
-    <v-responsive
-      v-if="!showImg"
-      class="content-card-img-placeholder"
-    />
-
     <div 
       :class="{
         'top-gradient': true,
         'top-gradient--show': showSelectButton
       }"
+    />
+
+    <SelectButton
+      v-if="showSelectButton"
+      :selected="selected"
+      :selectMode="selectMode"
+      @activate="clickSelectButton"
     />
 
     <img
@@ -39,28 +41,6 @@
       :width="card.width"
       :height="card.height"
     />
-
-    <v-btn
-      v-if="showSelectButton"
-      :class="{
-        'content-card-select-button': true,
-        'content-card-select-button--select-mode': selectMode
-      }"
-      absolute
-      icon
-      dark
-      @click.stop="clickSelectButton"
-    >
-      <v-icon
-        :class="{
-          'blue--text': selected,
-          'content-card-select-button-icon': true,
-          'content-card-select-button-icon--selected': selected,
-        }"
-      >
-        {{selectButtonIcon}}
-      </v-icon>
-    </v-btn>
     <span 
       :class="(card.height < 300) ? 'caption' : 'body--2'"
       v-if="showItemName"
@@ -71,14 +51,18 @@
 </template>
 
 <script>
-
+  import SelectButton from "./SelectButton"
 
   export default {
 
-    name:"ContentsThumbnail",
+    name:"ContentsCard",
 
     props: {
       card: Object,
+    },
+
+    components: {
+      SelectButton
     },
 
     data() {
@@ -87,24 +71,22 @@
         flexGrow: 0,
         showImg: false,
         hover: false,
-        selected:false,
-        imgSrc: null
+        selected: false,
+        sources: {
+          xSmall: `file://${this.card.content.folderPath}/${this.card.content.thumbnailXSmall}`,
+          small: `file://${this.card.content.folderPath}/${this.card.content.thumbnailSmall}`,
+          medium: `file://${this.card.content.folderPath}/${this.card.content.thumbnailMedium}`,
+          large: `file://${this.card.content.folderPath}/${this.card.content.thumbnailLarge}`
+        }
       }
     },
 
     computed: {
       showSelectButton() {
-        return this.showImg && (this.selectMode || this.hover || this.selected)
+        return this.showImg && (this.hover || this.selected)
       },
       selectMode() {
         return this.$store.state.isSelectMode
-      },
-      selectButtonIcon() {
-        if (this.selected || !this.selectMode) {
-          return "mdi-check-circle"
-        } else {
-          return "mdi-checkbox-blank-circle-outline"
-        }
       },
       showItemName() {
         return this.$store.state.settings.renderer.search.showItemName
@@ -114,6 +96,17 @@
           return this.card.height + 26
         } else {
           return this.card.height
+        }
+      },
+      imgSrc() {
+        if (this.card.height <= 128) {
+          return this.sources.xSmall
+        } else if (this.card.height <= 256) {
+          return this.sources.small
+        } else if (this.card.height <= 512) {
+          return this.sources.medium
+        } else {
+          return this.sources.large
         }
       }
     },
@@ -145,13 +138,12 @@
 
       checkSelected() {
         this.selected = this.$store.state.selectedItems.includes(this.card.content.contentID)
-      }
+      },
     },
 
     created() {
       //選択されたコンテンツにこれが含まれるなら表示時に選択
       this.checkSelected()
-        this.imgSrc = `file://${this.card.content.folderPath}/${this.card.content.thumbnailSmall}`
     },
 
   }
@@ -167,8 +159,13 @@
   text-overflow: ellipsis;
 }
 
+.content-card--selected {
+  border: 1px solid rgba(33, 150, 243, 1);
+}
+
 .content-card-img {
   vertical-align: top;
+  object-fit: contain;
 }
 
 .content-card-img-placeholder {
