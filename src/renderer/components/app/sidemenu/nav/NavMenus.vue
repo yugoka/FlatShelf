@@ -86,7 +86,6 @@
       },
       redirect(path) {
         this.$router.push(path)
-        console.log(path)
       }
     },
 

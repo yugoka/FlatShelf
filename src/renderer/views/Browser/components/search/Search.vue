@@ -32,7 +32,6 @@
 
     data() {
       return {
-        itemSize: 100,
         buffer: 2000,
         contents: [],
         isActive: false,
@@ -45,6 +44,9 @@
     },
 
     computed: {
+      itemSize() {
+        return this.$store.state.settings.renderer.search.itemSize
+      },
 
       viewContext() {
         return this.$store.state.viewContext
@@ -64,6 +66,10 @@
         },
         deep: true
       },
+
+      itemSize() {
+        this.getLayouts()
+      }
     },
 
     methods: {

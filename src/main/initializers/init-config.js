@@ -20,6 +20,7 @@ const defaults = {
       },
       search: {
         showItemName: false,
+        itemSize: 150,
       },
     },
 

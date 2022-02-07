@@ -8,10 +8,29 @@
   >
     <span>FlatShelf</span>
     
-    <div>
+    <div class="center-buttons-wrapper">
+
+      <v-btn
+        class="mx-1"
+        icon
+        x-small
+      >
+        <v-icon>mdi-filter</v-icon>
+      </v-btn>
+
+      <v-btn
+        class="mx-1"
+        icon
+        x-small
+      >
+        <v-icon>mdi-sort</v-icon>
+      </v-btn>
+
       <SearchBar/>
+
+      <Slider/>
     </div>
-    
+
     <div>
       <SystemButton
         icon="mdi-minus"
@@ -36,18 +55,21 @@
 <script>
 import SystemButton from "./SystemButton.vue"
 import SearchBar from "./SearchBar.vue"
+import Slider from "./Slider.vue"
 
 export default {
   name: 'SystemBar',
 
   components: {
     SystemButton,
-    SearchBar
+    SearchBar,
+    Slider
   },
 
   data() {
     return {
-      maximized: false
+      maximized: false,
+
     }
   },
 
@@ -94,4 +116,10 @@ export default {
   -webkit-app-region: no-drag;
 }
 
+#systembar .center-buttons-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+}
 </style>

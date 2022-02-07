@@ -34,16 +34,21 @@
     >
       <div ref="input">
         <v-text-field
+          autofocus
           flat
           solo
           dense
           hide-details
+
+          prepend-inner-icon="mdi-magnify"
+          placeholder="検索してみよう"
+          :persistent-placeholder="!searchWord.length"
+
           v-model="searchWord"
           @keydown.enter="executeSearch"
         />
       </div>
       <v-divider class="mb-3"/>
-      <span class="text-body-2">何をお探しかな？</span>
       <div>
         <span class="caption">ここに検索設定やタグ設定を入れる</span>
       </div>
@@ -66,13 +71,7 @@ export default {
 
   methods: {
     click() {
-      this.$nextTick(() => {
-        setTimeout(() => {
-          const searchField = this.$refs.input.querySelector('input:not([type=hidden]),textarea:not([type=hidden])')
-          searchField.focus()
-          searchField.select()
-        }, 100)
-      })
+      
     },
 
     executeSearch() {
