@@ -1,9 +1,9 @@
 <template>
   <v-menu
+    content-class="menu"
     v-model="menu"
     :close-on-content-click="false"
-    auto
-    eager
+    :nudge-left="cardNudgeLeft"
   >
     <template v-slot:activator="{ on: menu, attrs }">
       <v-tooltip
@@ -12,7 +12,6 @@
       >
         <template v-slot:activator="{ on: tooltip }">
           <v-chip
-            class="text-left"
             small
             label
             outlined
@@ -30,27 +29,38 @@
       </v-tooltip>
     </template>
     <v-card 
-      class="px-5 py-5 text-center"
+      ref="card"
+      class="menu-card px-1 pb-3 text-center"
     >
       <div ref="input">
         <v-text-field
-          v-model="searchWord"
+          flat
+          solo
           dense
-          @blur="executeSearch"
+          hide-details
+          v-model="searchWord"
           @keydown.enter="executeSearch"
         />
       </div>
-      <span>検索してみよう</span>
+      <v-divider class="mb-3"/>
+      <span class="text-body-2">何をお探しかな？</span>
+      <div>
+        <span class="caption">ここに検索設定やタグ設定を入れる</span>
+      </div>
     </v-card>
   </v-menu>
 </template>
 
 <script>
+
+import debounce from 'lodash.debounce'
+
 export default {
   data() {
     return {
       menu: false,
-      searchWord: ""
+      searchWord: "",
+      cardNudgeLeft: 0
     }
   },
 
@@ -70,12 +80,39 @@ export default {
         this.$search.mergeContext({word: this.searchWord})
         this.menu = false
       }
-    }
+    },
+
+    getCardNudgeLeft: debounce(function () {
+      let cardWidth = window.innerWidth * 0.4
+      if (cardWidth > 600) cardWidth = 600
+      this.cardNudgeLeft = (cardWidth / 2) - 86.5
+    }, 500)
   },
+
+  mounted() {
+    this.getCardNudgeLeft()
+    window.addEventListener('resize', this.getCardNudgeLeft)
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.getCardNudgeLeft)
+  }
 }
 </script>
 
 <style scoped>
+.menu {
+  top: 5px !important;
+  width: 40%;
+  max-width: 600px;
+  transform: translateX(100);
+}
+.menu-card {
+  width: 100%;
+}
+.menu-input-field {
+  border: none !important;
+}
 .search-chip-text-wrapper {
   margin-inline-end: 100px;
 }

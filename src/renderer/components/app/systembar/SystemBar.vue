@@ -34,48 +34,48 @@
 </template>
 
 <script>
-  import SystemButton from "./SystemButton.vue"
-  import SearchBar from "./SearchBar.vue"
+import SystemButton from "./SystemButton.vue"
+import SearchBar from "./SearchBar.vue"
 
-  export default {
-    name: 'SystemBar',
+export default {
+  name: 'SystemBar',
 
-    components: {
-      SystemButton,
-      SearchBar
-    },
+  components: {
+    SystemButton,
+    SearchBar
+  },
 
-    data() {
-      return {
-        maximized: false
-      }
-    },
-
-    computed: {
-      sideMenuWidth() {
-        return this.$config.renderer().app.sideMenuWidth
-      }
-    },
-
-    methods: {
-      minimizeWindow() {
-        window.ipc.minimizeMainWindow()
-      },
-      toggleMaximized() {
-        window.ipc.toggleMaximized()
-      },
-      quitApp() {
-        window.ipc.quitApp()
-      },
-      onToggleMaximized(isMaximized) {
-        this.maximized = isMaximized
-      }
-    },
-
-    created() {
-      window.ipc.onToggleMaximized(this.onToggleMaximized)
+  data() {
+    return {
+      maximized: false
     }
+  },
+
+  computed: {
+    sideMenuWidth() {
+      return this.$config.renderer().app.sideMenuWidth
+    }
+  },
+
+  methods: {
+    minimizeWindow() {
+      window.ipc.minimizeMainWindow()
+    },
+    toggleMaximized() {
+      window.ipc.toggleMaximized()
+    },
+    quitApp() {
+      window.ipc.quitApp()
+    },
+    onToggleMaximized(isMaximized) {
+      this.maximized = isMaximized
+    }
+  },
+
+  created() {
+    window.ipc.onToggleMaximized(this.onToggleMaximized)
   }
+}
 </script>
 
 <style scoped>

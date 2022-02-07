@@ -17,13 +17,16 @@ export const Content = sequelize.define("Content", {
   },
   name: {
     type: DataTypes.STRING,
+    len: [1, 255],
     allowNull: false,
   },
   description: {
     type: DataTypes.STRING,
+    len: [0, 1000],
   },
   author: {
     type: DataTypes.STRING,
+    len: [0, 50],
   },
   mainFilePath: {
     type: DataTypes.STRING,

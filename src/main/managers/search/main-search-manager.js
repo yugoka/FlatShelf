@@ -74,7 +74,7 @@ class Search {
 
   //順番条件
   registerOrders() {
-    this.queryObject.order = this.query.order || [["createdAt", "ASC"]]
+    this.queryObject.order = this.query.order || [["createdAt", "DESC"]]
   }
 
   //検索を実行する
