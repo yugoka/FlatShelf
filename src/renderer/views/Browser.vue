@@ -29,7 +29,7 @@
 </template>
 
 <script>
-  import SearchContents from "./components/search/Search"
+  import SearchContents from "../components/browser/Search"
 
   export default {
 

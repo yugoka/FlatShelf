@@ -7,11 +7,11 @@ const path = require("path")
 class ThumbnailGenerator {
   constructor() {
     this.maxAspectRatio = 2
+    //(サイズ * ↓の値)以上のサイズを持つ画像はサムネイルが生成される
+    this.thumbnailGenerateThreshold = 1.2
     this.sizes = [
-      { name: "large", value: 1024 },
       { name: "medium", value: 512 },
       { name: "small", value: 256 },
-      { name: "xSmall", value: 128 },
     ]
   }
 
@@ -32,7 +32,6 @@ class ThumbnailGenerator {
         size
       )
     }
-    console.log(imageNames)
     return {
       names: imageNames,
       aspectRatio,
@@ -58,8 +57,8 @@ class ThumbnailGenerator {
     if (
       this.fit != "cover" &&
       //画像が十分に小さい場合でもアスペクト比が上限を超える場合サムネを生成する
-      metadata.width <= size.value &&
-      metadata.height <= size.value
+      metadata.width <= size.value * this.thumbnailGenerateThreshold &&
+      metadata.height <= size.value * this.thumbnailGenerateThreshold
     ) {
       return path.basename(imagePath)
     }

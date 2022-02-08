@@ -73,10 +73,8 @@
         hover: false,
         selected: false,
         sources: {
-          xSmall: `file://${this.card.content.folderPath}/${this.card.content.thumbnailXSmall}`,
           small: `file://${this.card.content.folderPath}/${this.card.content.thumbnailSmall}`,
           medium: `file://${this.card.content.folderPath}/${this.card.content.thumbnailMedium}`,
-          large: `file://${this.card.content.folderPath}/${this.card.content.thumbnailLarge}`
         }
       }
     },
@@ -99,15 +97,9 @@
         }
       },
       imgSrc() {
-        if (this.card.height <= 128) {
-          return this.sources.xSmall
-        } else if (this.card.height <= 256) {
-          return this.sources.small
-        } else if (this.card.height <= 512) {
-          return this.sources.medium
-        } else {
-          return this.sources.large
-        }
+        return (this.card.height <= 200)
+          ? this.sources.small
+          : this.sources.medium
       }
     },
 

@@ -19,8 +19,8 @@
 
 <script>
   import debounce from 'lodash.debounce'
-  import ContentCard from './components/ContentCard'
-  import layoutManager from './layout-manager'
+  import ContentCard from './ContentCard'
+  import layoutManager from './scripts/layout-manager'
 
   export default {
 
@@ -37,6 +37,7 @@
         isActive: false,
         scrollerWidth: null,
         scrollerHeight: null,
+        contentsHeight: null,
         scrollTop: 0,
         layouts: null,
         visibleCards: []
@@ -69,6 +70,16 @@
 
       itemSize() {
         this.getLayouts()
+      },
+
+
+      //コンテンツ合計の高さが変化した時スクロール位置を保持する
+      contentsHeight(after, before) {
+        if (before <= 0) return
+        this.scrollTop = this.scrollTop * after / before
+        this.$nextTick(() => {
+          this.$refs.scroller.scrollTop = this.scrollTop
+        })
       }
     },
 
@@ -81,9 +92,12 @@
       },
 
       //レイアウトを更新する
-      getLayouts(calculateVisibleCards=true) {
+      getLayouts() {
         this.layouts = layoutManager.getLayouts("brick", this.contents, this.scrollerWidth, this.itemSize)
-        if (calculateVisibleCards) this.getVisibleCards()
+        this.contentsHeight = this.layouts.containerHeight
+        this.$nextTick(() => {
+          this.getVisibleCards()
+        })
       },
 
 
@@ -93,13 +107,7 @@
         const scrollerRect = this.$refs.scroller.getBoundingClientRect()
         this.scrollerWidth = scrollerRect.width
         this.scrollerHeight = scrollerRect.height
-        if (this.layouts) {
-          const scrollerHeightCache = this.layouts.containerHeight
-          this.getLayouts(false)
-          this.getVisibleCards(this.$refs.scroller.scrollTop * this.layouts.containerHeight / scrollerHeightCache)
-        } else {
-          this.getVisibleCards()
-        }
+        this.getLayouts(!!this.layouts.boxes.length)
       }, 50),
 
       onScroll: debounce(function() {
@@ -107,12 +115,9 @@
         this.getVisibleCards()
       }, 30),
 
-      getVisibleCards(scrollTop) {
+      getVisibleCards() {
         if (!this.layouts) return
-        if (scrollTop) {
-          this.$refs.scroller.scrollTop = scrollTop
-          this.scrollTop = scrollTop
-        }
+
         this.visibleCards = this.layouts.boxes.filter((box) => {
           return (
             this.scrollTop - this.buffer < box.top &&
