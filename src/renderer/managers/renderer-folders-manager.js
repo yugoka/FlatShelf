@@ -4,7 +4,11 @@
 import store from "../store"
 
 class RendererFoldersManager {
-  constructor() {}
+  constructor() {
+    this.events = {
+      reloadContents: new CustomEvent("reloadContents"),
+    }
+  }
 
   //フォルダ構造を取得してstoreに格納する
   //main.jsで初期化時に一度呼ばれる(同期的)
@@ -39,6 +43,9 @@ class RendererFoldersManager {
       Number(parentFolderID)
     )
     this.setFolders(foldersStructure)
+
+    //Browserを再読み込みする
+    window.dispatchEvent(this.events.reloadContents)
   }
 
   async delete(folderID) {
@@ -46,6 +53,9 @@ class RendererFoldersManager {
     if (folderID === 1) return
     const foldersStructure = await window.ipc.deleteFolder(Number(folderID))
     this.setFolders(foldersStructure)
+
+    //Browserを再読み込みする
+    window.dispatchEvent(this.events.reloadContents)
   }
 
   setFolders(structure) {

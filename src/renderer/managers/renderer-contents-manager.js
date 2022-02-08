@@ -6,7 +6,7 @@ import store from "../store"
 class RendererContentsManager {
   constructor() {
     this.events = {
-      update: new CustomEvent("onUpdateContents"),
+      reloadContents: new CustomEvent("reloadContents"),
     }
   }
 
@@ -64,7 +64,16 @@ class RendererContentsManager {
       contentIDs: IDs,
       values,
     })
-    window.dispatchEvent(this.events.update)
+    //Browserを再読み込みする
+    window.dispatchEvent(this.events.reloadContents)
+    return result
+  }
+
+  async delete(IDs) {
+    if (!IDs) return
+    const result = await window.ipc.deleteContent(IDs)
+    //Browserを再読み込みする
+    window.dispatchEvent(this.events.reloadContents)
     return result
   }
 

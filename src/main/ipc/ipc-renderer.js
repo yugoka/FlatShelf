@@ -43,6 +43,11 @@ contextBridge.exposeInMainWorld("ipc", {
     return await ipcRenderer.invoke("update-content", { data })
   },
 
+  //コンテンツ削除
+  deleteContent: async (data) => {
+    return await ipcRenderer.invoke("delete-content", { data })
+  },
+
   //------------------------------------
   // フォルダ関連
   //------------------------------------

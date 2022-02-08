@@ -7,6 +7,7 @@ const { Node } = require("./folder-node")
 const { Folder } = require("../../db/models/folder")
 const { Content } = require("../../db/models/content")
 const fs = require("fs").promises
+const log = require("electron-log")
 
 class FoldersManager {
   constructor() {
@@ -17,15 +18,18 @@ class FoldersManager {
   }
 
   //フォルダを作成する
-  async create(parentID=1) {
+  async create(parentID = 1) {
     const parent = this.root.getChildById(parentID)
     if (!parent) return
 
     const newFolder = await Folder.create({
-      name: "新規フォルダ"
+      name: "新規フォルダ",
     })
 
-    const folderNode = new Node(newFolder.dataValues.folderID, newFolder.dataValues.name)
+    const folderNode = new Node(
+      newFolder.dataValues.folderID,
+      newFolder.dataValues.name
+    )
     parent.appendChild(folderNode)
 
     this.saveStructure()
@@ -36,22 +40,25 @@ class FoldersManager {
   //フォルダの所属先を変更する。バグを生む可能性がかなり高い部分なので注意すること
   //後でテストする
   changeParent(targetID, newParentID) {
-    const target = this.root.getChildById(targetID)
-    const oldParent = this.root.getChildById(target.parentID)
-    const newParent = this.root.getChildById(newParentID)
+    try {
+      const target = this.root.getChildById(targetID)
+      const oldParent = this.root.getChildById(target.parentID)
+      const newParent = this.root.getChildById(newParentID)
 
-    //いずれかのフォルダーが見つからなかったらキャンセル
-    if (!target || !oldParent || !newParent) return
-    //移動先のフォルダがターゲットフォルダの子孫要素ならキャンセル
-    if (target.getChildById(newParentID)) return
+      //いずれかのフォルダーが見つからなかったらキャンセル
+      if (!target || !oldParent || !newParent) return
+      //移動先のフォルダがターゲットフォルダの子孫要素ならキャンセル
+      if (target.getChildById(newParentID)) return
 
-    //元のフォルダから削除
-    oldParent.deleteChild(targetID)
-    //新しい親に追加
-    newParent.appendChild(target)
+      //元のフォルダから削除
+      oldParent.deleteChild(targetID)
+      //新しい親に追加
+      newParent.appendChild(target)
 
-    this.saveStructure()
-
+      this.saveStructure()
+    } catch (err) {
+      log.error(`[folderMove] Error: ${err}`)
+    }
   }
 
   //バリデーションつける。レンダラー側にも
@@ -70,30 +77,35 @@ class FoldersManager {
 
   //フォルダを削除する(子フォルダ含む)
   async delete(folderID) {
-    //安全対策:rootフォルダを削除できないようにする
-    if (Number(folderID) === 1) return
+    try {
+      log.info(`[folderDelete] Deleting folder${folderID}`)
+      //安全対策:rootフォルダを削除できないようにする
+      if (Number(folderID) === 1) return
 
-    const folderNode = this.root.getChildById(folderID)
-    const parentNode = this.root.getChildById(folderNode.parentID)
+      const folderNode = this.root.getChildById(folderID)
+      const parentNode = this.root.getChildById(folderNode.parentID)
 
-    if(!folderNode || !parentNode) return
+      if (!folderNode || !parentNode) return
 
-    const childrenIDs = folderNode.getAllAffiliatedID()
-    
-    //子孫フォルダ＋自身に属するコンテンツを削除
-    //ごみ箱フォルダを設けてそこに移動する実装も検討するべき
-    await this.deleteChildContents(childrenIDs)
+      const childrenIDs = folderNode.getAllAffiliatedID()
 
-    //DBから削除
-    await Folder.destroy({
-      where: {
-        folderId: childrenIDs
-      }
-    })
+      //子孫フォルダ＋自身に属するコンテンツを削除
+      //ごみ箱フォルダを設けてそこに移動する実装も検討するべき
+      await this.deleteChildContents(childrenIDs)
 
-    //フォルダ構造から削除
-    parentNode.deleteChild(folderID)
-    this.saveStructure()
+      //DBから削除
+      await Folder.destroy({
+        where: {
+          folderId: childrenIDs,
+        },
+      })
+
+      //フォルダ構造から削除
+      parentNode.deleteChild(folderID)
+      this.saveStructure()
+    } catch (err) {
+      log.error(`[folderDelete] Error: ${err}`)
+    }
   }
 
   getAll() {
@@ -107,7 +119,7 @@ class FoldersManager {
     rootNode.appendAllChildren(structure[0])
     return rootNode
   }
-  
+
   saveStructure() {
     store.set("structure", [this.root])
   }
@@ -117,13 +129,13 @@ class FoldersManager {
     const folderPaths = await Content.findAll({
       raw: true,
       where: {
-        folderId: folderIDs
+        folderId: folderIDs,
       },
-      attributes: ["folderPath"]
+      attributes: ["folderPath"],
     })
-    for (const folder of folderPaths) {
-      console.log(folder.folderPath)
-      await fs.rmdir(folder.folderPath, { recursive: true });
+    for await (const folder of folderPaths) {
+      log.info(`[contentDelete] Deleting ${folder.folderPath}`)
+      await fs.rmdir(folder.folderPath, { recursive: true })
     }
   }
 }
@@ -137,14 +149,14 @@ const defaults = {
     {
       id: 1,
       name: "root",
-      children: []
-    }
-  ]
+      children: [],
+    },
+  ],
 }
 const store = new Store({
   name: "folders",
   cwd: WORKING_SPACE,
-  defaults
+  defaults,
 })
 
 export const folders = new FoldersManager()

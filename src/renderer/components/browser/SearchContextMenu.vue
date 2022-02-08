@@ -18,10 +18,9 @@
     </MenuButton>
 
     <MenuButton
-      @click.native="rename"
-      v-if="$store.state.settings.renderer.search.showItemName"
+      @click.native="moveFolder"
     >
-      名前の変更
+      フォルダを選択
     </MenuButton>
 
     <v-divider 
@@ -68,12 +67,12 @@ export default {
       this.$store.commit("setSelectedItems", [this.contentID])
     },
 
-    rename() {
+    moveFolder() {
       console.log("rename")
     },
 
     remove() {
-      console.log("remove")
+      this.$contents.delete([this.contentID])
     }
   }
 }

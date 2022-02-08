@@ -4,6 +4,7 @@
 const { Content } = require("../../db/models/content")
 const { imageManager } = require("./main-image-manager")
 const log = require("electron-log")
+const fs = require("fs").promises
 const imageFileExts = ["png", "jpg", "jpeg", "webp", "gif", "bmp"]
 
 class ContentsManager {
@@ -46,7 +47,40 @@ class ContentsManager {
         where: { contentID: data.contentIDs },
       })
     } catch (err) {
-      log.error(`[contentUpdate]Error: ${err}`)
+      log.error(`[contentUpdate] Error: ${err}`)
+    }
+  }
+
+  async delete(IDs) {
+    try {
+      log.info(`[contentDelete] Deleting ${IDs.length} items`)
+      await this.deleteDatas(IDs)
+      await Content.destroy({
+        where: {
+          contentID: IDs,
+        },
+      })
+
+      return true
+    } catch (err) {
+      log.error(`[contentDelete] Error: ${err}`)
+      return false
+    }
+  }
+
+  //コンテンツの実データを削除する
+  async deleteDatas(IDs) {
+    const targetContents = await Content.findAll({
+      raw: true,
+      where: {
+        contentID: IDs,
+      },
+      attributes: ["folderPath"],
+    })
+
+    for await (const content of targetContents) {
+      log.info(`[contentDelete] Deleting ${content.folderPath}`)
+      await fs.rmdir(content.folderPath, { recursive: true })
     }
   }
 }

@@ -47,6 +47,11 @@ export const registerIpcHandlers = ({ mainWindow }) => {
     return contents.update(data)
   })
 
+  //コンテンツ削除
+  ipcMain.handle("delete-content", (event, { data }) => {
+    return contents.delete(data)
+  })
+
   //------------------------------------
   // フォルダ関連
   //------------------------------------
