@@ -17,6 +17,7 @@
     @mouseenter="hover=true"
     @mouseleave="hover=false"
     @click="clickCard"
+    @contextmenu="showContextMenu"
   >
 
     <div 
@@ -100,7 +101,7 @@
         return (this.card.height <= 200)
           ? this.sources.small
           : this.sources.medium
-      }
+      },
     },
 
     watch: {
@@ -131,6 +132,10 @@
       checkSelected() {
         this.selected = this.$store.state.selectedItems.includes(this.card.content.contentID)
       },
+
+      showContextMenu() {
+        this.$emit("contextMenu", this.card.content.contentID)
+      }
     },
 
     created() {

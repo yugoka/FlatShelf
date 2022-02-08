@@ -3,6 +3,11 @@
     class="scroller"
     ref="scroller"
   >
+
+    <SearchContextMenu
+      ref="contextMenu"
+    />
+
     <div 
       class="contents-wrapper"
       :style="{ height: this.containerHeight + 'px' }"
@@ -12,6 +17,7 @@
         v-for="card in visibleCards"
         :key="card.content.contentID"
         :card="card"
+        @contextMenu="openContextMenu($event)"
       />
     </div>
   </div>
@@ -19,7 +25,8 @@
 
 <script>
   import debounce from 'lodash.debounce'
-  import ContentCard from './ContentCard'
+  import ContentCard from './cards/ContentCard'
+  import SearchContextMenu from './SearchContextMenu'
   import layoutManager from './scripts/layout-manager'
 
   export default {
@@ -27,7 +34,8 @@
     name:"SearchContents",
 
     components: {
-      ContentCard
+      ContentCard,
+      SearchContextMenu
     },
 
     data() {
@@ -124,6 +132,10 @@
             box.top < this.scrollTop + this.scrollerHeight + this.buffer
           )
         })
+      },
+
+      openContextMenu(contentID) {
+        this.$refs.contextMenu.show(contentID)
       }
     },
 

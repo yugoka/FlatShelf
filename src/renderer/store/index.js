@@ -44,6 +44,7 @@ const store = new Vuex.Store({
     },
     setSelectedItems(state, items) {
       state.selectedItems = items
+      state.isSelectMode = !!items.length
     },
     addSelectedItem(state, contentID) {
       state.selectedItems.push(contentID)
