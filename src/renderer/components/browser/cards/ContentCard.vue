@@ -2,9 +2,10 @@
   <div
     :class="{
       'content-card': true,
+      'rounded': true,
       'text-center': true,
       'elevation-2': true,
-      'content-card--selected': selected,
+      'content-card--highlighted': selected || highlighted,
     }"
     :style="{
       width: card.width + 'px',
@@ -14,7 +15,7 @@
     }"
 
     v-ripple
-    @mouseenter="hover=true"
+    @mouseenter="onHover"
     @mouseleave="hover=false"
     @click="clickCard"
     @contextmenu="showContextMenu"
@@ -28,10 +29,10 @@
     />
 
     <SelectButton
-      v-if="showSelectButton"
+      v-if="showSelectButton || highlighted"
       :selected="selected"
       :editMode="editMode"
-      @activate="clickSelectButton"
+      @activate="onClickSelectButton"
     />
 
     <img
@@ -73,10 +74,11 @@ import SelectButton from "./SelectButton"
         showImg: false,
         hover: false,
         selected: false,
+        highlighted: false,
         sources: {
           small: this.$contents.getThumbnail(this.card.content, "small"),
           medium: this.$contents.getThumbnail(this.card.content, "medium"),
-        }
+        },
       }
     },
 
@@ -104,7 +106,7 @@ import SelectButton from "./SelectButton"
       },
       selectedIDs() {
         return this.$store.state.edit.selectedIDs
-      }
+      },
     },
 
     watch: {
@@ -123,7 +125,12 @@ import SelectButton from "./SelectButton"
     },
 
     methods: {
-      clickSelectButton() {
+      onHover() {
+        this.hover = true
+        this.$emit("hover")
+      },
+
+      onClickSelectButton() {
         this.selected = !this.selected
         this.$emit(
           "setContentSelect",
@@ -137,7 +144,7 @@ import SelectButton from "./SelectButton"
       clickCard() {
         //選択モードなら画像クリックで選択追加
         if (this.editMode) {
-          this.clickSelectButton()
+          this.onClickSelectButton()
         }
       },
 
@@ -147,13 +154,12 @@ import SelectButton from "./SelectButton"
 
       showContextMenu() {
         this.$emit("contextMenu", this.card.content.contentID)
-      }
+      },
     },
 
     created() {
       //選択されたコンテンツにこれが含まれるなら表示時に選択
       this.checkSelected()
-      console.log(this.sources)
     },
 
   }
@@ -164,13 +170,12 @@ import SelectButton from "./SelectButton"
   position: absolute;
   min-width: 0;
   cursor: pointer;
-  border-radius: 4px;
   overflow: hidden;
   text-overflow: ellipsis;
   user-select: none;
 }
 
-.content-card--selected {
+.content-card--highlighted {
   border: 1px solid rgba(33, 150, 243, 1);
 }
 

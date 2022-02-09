@@ -20,6 +20,7 @@
         :card="card"
         @contextMenu="openContextMenu($event)"
         @setContentSelect="setContentSelect"
+        @hover="onHoverCard(card.index)"
       />
     </div>
   </div>
@@ -52,9 +53,13 @@
         layouts: null,
         visibleCards: [],
         selectStartIndex: null,
+        hoverCardIndex: null,
         keys: {
           Shift: false,
           Ctrl: false
+        },
+        tips: {
+          selectMany: true
         }
       }
     },
@@ -66,6 +71,10 @@
 
       viewContext() {
         return this.$store.state.viewContext
+      },
+
+      editMode() {
+        return this.$store.state.edit.editMode
       },
 
       containerHeight() {
@@ -82,8 +91,8 @@
       //検索条件が変わった時コンテンツをロードし直す
       viewContext: {
         async handler(){
-          this.setScrollTop(0)
           await this.loadContents()
+          this.setScrollTop(0)
         },
         deep: true
       },
@@ -120,11 +129,15 @@
 
       onResize: debounce(function() {
         if (!this.$refs.scroller) return
+        this.getScrollerSize()
+        this.getLayouts()
+      }, 50),
+
+      getScrollerSize() {
         const scrollerRect = this.$refs.scroller.getBoundingClientRect()
         this.scrollerWidth = scrollerRect.width
         this.scrollerHeight = scrollerRect.height
-        this.getLayouts(!!this.layouts.boxes.length)
-      }, 50),
+      },
 
       onScroll: debounce(function() {
         this.scrollTop = this.$refs.scroller.scrollTop
@@ -154,6 +167,18 @@
       },
 
       setContentSelect({ contentID, cardIndex, isSelected }) {
+        if (this.tips.selectMany) {
+          this.$store.commit(
+            "setNotice", 
+            {
+              message: "Shiftキーを押しながらクリックすると、一度に複数アイテムを選択できます",
+              position: "left",
+              timeout: 5000
+            }
+          )
+          this.tips.selectMany = false
+        }
+
         //選択解除の場合
         if (!isSelected) {
           this.$store.dispatch("removeSelectedItems", contentID)
@@ -176,6 +201,7 @@
         for (const keyName in this.keys) {
           if (e.key === keyName) this.keys[keyName] = false
         }
+        if (e.key === "Shift" && this.editMode) this.endHighlight()
       },
 
       onKeyDown(e) {
@@ -184,7 +210,40 @@
             this.keys[keyName] = true
           } 
         }
+        if (e.key === "Shift" && this.editMode) this.highlightSelectCards()
       },
+
+      onHoverCard(index) {
+        this.hoverCardIndex = index
+        if (this.keys.Shift) this.highlightSelectCards()
+      },
+
+      //Shiftを押している場合に複数選択対象のカードをハイライトする
+      highlightSelectCards() {
+        if (
+          !this.keys.Shift 
+          || this.hoverCardIndex === null 
+          || this.selectStartIndex === null
+        ) return
+
+        const upperIndex = Math.max(this.selectStartIndex, this.hoverCardIndex)
+        const lowerIndex = Math.min(this.selectStartIndex, this.hoverCardIndex)
+
+        for (const card of this.$refs.cards) {
+          if (lowerIndex <= card.card.index && card.card.index <= upperIndex) {
+            card.highlighted = true
+          } else {
+            card.highlighted = false
+          }
+        }
+      },
+
+      endHighlight() {
+        if (!this.editMode) return
+        for (const card of this.$refs.cards) {
+          card.highlighted = false
+        }
+      }
     },
 
     async created() {
@@ -197,6 +256,8 @@
     },
 
     mounted() {
+      this.getScrollerSize()
+
       this.resizeObserver = new ResizeObserver(this.onResize)
         .observe(this.$refs.scroller)
 

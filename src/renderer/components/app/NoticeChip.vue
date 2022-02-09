@@ -10,7 +10,8 @@
     min-width="50"
 
     transition="slide-y-reverse-transition"
-    right
+    :right="notice.position==='right'"
+    :left="notice.position==='left'"
   >
   <div 
     @click="show = false"
@@ -45,7 +46,8 @@ export default {
         message: notice.message || null,
         icon: notice.icon || null,
         color: notice.color || "primary",
-        timeout: notice.timeout || 3000
+        timeout: notice.timeout || 3000,
+        position: notice.position || "right"
       }
     }
   },
