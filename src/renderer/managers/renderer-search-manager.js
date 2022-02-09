@@ -21,7 +21,7 @@ class RendererSearchManager {
   //コンテキストを変更して検索ページへ飛ぶ
   redirect(context = null) {
     //コンテンツの選択状態をリセット
-    store.dispatch("endSelectMode")
+    store.dispatch("endEditMode")
 
     if (context) {
       this.setContext(context)

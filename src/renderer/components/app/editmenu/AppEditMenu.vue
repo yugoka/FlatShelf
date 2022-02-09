@@ -28,7 +28,7 @@
         >
           <img
             class="editmenu-img rounded elevation-4"
-            :src="contents[contents.length-1].mainFilePath"
+            :src="$contents.getThumbnail(contents[contents.length-1])"
           />
         </div>
 
@@ -37,13 +37,13 @@
         <div class="mx-3">
 
           <v-text-field
+            v-if="contents.length === 1"
+            v-model.lazy="name"
+            @input="onChange('name')"
             class="mt-6 mb-2"
             dense
             outlined
             label="タイトル"
-            v-model.lazy="name"
-            v-if="contents.length === 1"
-            @input="onChange('name')"
             counter="255"
           />
 
@@ -55,24 +55,23 @@
           </div>
 
           <v-textarea
+            @input="onChange('description')"
+            counter="1000"
             class="mt-3 mb-2"
             outlined
             label="説明"
             v-model.lazy="description"
-            @input="onChange('description')"
-            counter="1000"
           />
 
           <v-text-field
+            v-model.lazy="author"
+            @input="onChange('author')"
             class="my-2"
             dense
             outlined
             label="作者名"
-            v-model.lazy="author"
-            @input="onChange('author')"
             counter="50"
           />
-
         </div>
       </div>
     </v-navigation-drawer>
@@ -97,24 +96,25 @@
     computed: {
       show: {
         get() {
-          return this.$store.state.isSelectMode
+          return this.$store.state.edit.editMode
         },
         set(boolean) {
           if (boolean) {
-            this.$store.commit("setSelectMode", true)
+            this.$store.commit("setEditMode", true)
           } else {
-            this.$store.dispatch('endSelectMode')
+            this.$store.dispatch('endEditMode')
           }
         }
       },
       contentIDs() {
-        return this.$store.state.selectedItems
+        return this.$store.state.edit.selectedIDs
       },
     },
 
     watch: {
-      async contentIDs() {
+      async contentIDs(after, before) {
         this.contents = await this.$contents.getData(this.contentIDs)
+        this.getDiffers(after, before)
 
         //それぞれの設定項目について選択数が1なら保存項目を読み込み、選択数が2以上なら空欄にする
         for (const valueName of ["name", "description", "author"]) {
@@ -127,21 +127,21 @@
 
     methods: {
       close() {
-        this.$store.dispatch('endSelectMode')
+        this.$store.dispatch('endEditMode')
       },
-
-      updateContents: debounce(async function() {
-        await this.$contents.update(this.contentIDs, this.changes)
-        this.$store.commit("setNotice", { 
-          message: "保存が完了しました。",
-          icon: "mdi-check"
-        })
-        this.changes = {}
-      }, 1500),
 
       onChange(valueName) {
         this.changes[valueName] = this[valueName]
-        if (this[valueName]) this.updateContents()
+        this.save()
+      },
+
+      save: debounce(async function() {
+        await this.$contents.update(this.contentIDs, this.changes)
+        this.changes = {}
+      }, 500),
+
+      getDiffers(after, before) {
+        console.log(before, after)
       }
     }
   }

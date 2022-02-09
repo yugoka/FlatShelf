@@ -15,8 +15,11 @@ const store = new Vuex.Store({
       folders: [1],
       word: null,
     },
-    isSelectMode: false,
-    selectedItems: [],
+    edit: {
+      editMode: false,
+      selectedIDs: [],
+      selectedContents: [],
+    },
   },
   mutations: {
     //レンダラー設定をまとめて保存する
@@ -43,23 +46,23 @@ const store = new Vuex.Store({
       state.viewContext = context
     },
     setSelectedItems(state, items) {
-      state.selectedItems = items
-      state.isSelectMode = !!items.length
+      state.edit.selectedIDs = items
+      state.edit.editMode = !!items.length
     },
     addSelectedItem(state, contentID) {
-      state.selectedItems.push(contentID)
+      state.edit.selectedIDs.push(contentID)
     },
     removeSelectedItem(state, contentID) {
-      state.selectedItems = state.selectedItems.filter((item) => {
+      state.edit.selectedIDs = state.edit.selectedIDs.filter((item) => {
         return item != contentID
       })
       //選択アイテム数が0になったら選択モードもオフにする
-      if (!state.selectedItems.length) {
-        state.isSelectMode = false
+      if (!state.edit.selectedIDs.length) {
+        state.edit.editMode = false
       }
     },
-    setSelectMode(state, boolean) {
-      state.isSelectMode = boolean
+    setEditMode(state, boolean) {
+      state.edit.editMode = boolean
     },
   },
   actions: {
@@ -74,9 +77,9 @@ const store = new Vuex.Store({
     },
 
     //選択モードを終了する
-    endSelectMode({ commit }) {
+    endEditMode({ commit }) {
       commit("setSelectedItems", [])
-      commit("setSelectMode", false)
+      commit("setEditMode", false)
     },
   },
 })

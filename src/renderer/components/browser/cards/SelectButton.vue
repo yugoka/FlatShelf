@@ -2,7 +2,7 @@
   <v-btn
     :class="{
       'button': true,
-      'button--select-mode': selectMode
+      'button--edit-mode': editMode
     }"
     absolute
     icon
@@ -25,12 +25,12 @@
   export default {
     props: {
       selected: Boolean,
-      selectMode: Boolean
+      editMode: Boolean
     },
 
     computed: {
       icon() {
-        if (this.selected || !this.selectMode) {
+        if (this.selected || !this.editMode) {
           return "mdi-check-circle"
         } else {
           return "mdi-checkbox-blank-circle-outline"
@@ -56,7 +56,7 @@
 .button:hover {
   opacity: 0.95;
 }
-.button--select-mode {
+.button--edit-mode {
   opacity: 0.8;
 }
 .button-icon {

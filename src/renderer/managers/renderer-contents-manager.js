@@ -77,6 +77,14 @@ class RendererContentsManager {
     return result
   }
 
+  getThumbnail(content, size = "medium") {
+    if (size === "small" || size === "s") {
+      return `file://${content.folderPath}/${content.thumbnailSmall}`
+    } else {
+      return `file://${content.folderPath}/${content.thumbnailMedium}`
+    }
+  }
+
   createdNotice(failedCount, length) {
     //通知を表示する
     let noticeMessage

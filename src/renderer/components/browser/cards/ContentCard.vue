@@ -30,7 +30,7 @@
     <SelectButton
       v-if="showSelectButton"
       :selected="selected"
-      :selectMode="selectMode"
+      :editMode="editMode"
       @activate="clickSelectButton"
     />
 
@@ -74,8 +74,8 @@
         hover: false,
         selected: false,
         sources: {
-          small: `file://${this.card.content.folderPath}/${this.card.content.thumbnailSmall}`,
-          medium: `file://${this.card.content.folderPath}/${this.card.content.thumbnailMedium}`,
+          small: this.$contents.getThumbnail(this.card.content, "medium"),
+          medium: this.$contents.getThumbnail(this.card.content, "small"),
         }
       }
     },
@@ -84,8 +84,8 @@
       showSelectButton() {
         return this.showImg && (this.hover || this.selected)
       },
-      selectMode() {
-        return this.$store.state.isSelectMode
+      editMode() {
+        return this.$store.state.edit.editMode
       },
       showItemName() {
         return this.$store.state.settings.renderer.search.showItemName
@@ -105,16 +105,20 @@
     },
 
     watch: {
-      selectMode() {
-        //他の要因で選択モードがオフになった時自身の選択を解除する
-        if (!this.selectMode) this.selected = false
+      editMode() {
+        if (this.editMode) {
+          this.checkSelected()
+        } else {
+          //他の要因で選択モードがオフになった時自身の選択を解除する
+          this.selected = false
+        }
       }
     },
 
     methods: {
       clickSelectButton() {
         this.selected = !this.selected
-        this.$store.commit("setSelectMode", true)
+        this.$store.commit("setEditMode", true)
 
         if (this.selected) {
           this.$store.commit("addSelectedItem", this.card.content.contentID)
@@ -124,13 +128,13 @@
       },
       clickCard() {
         //選択モードなら画像クリックで選択追加
-        if (this.selectMode) {
+        if (this.editMode) {
           this.clickSelectButton()
         }
       },
 
       checkSelected() {
-        this.selected = this.$store.state.selectedItems.includes(this.card.content.contentID)
+        this.selected = this.$store.state.edit.selectedIDs.includes(this.card.content.contentID)
       },
 
       showContextMenu() {

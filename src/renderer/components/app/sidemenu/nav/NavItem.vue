@@ -14,6 +14,7 @@
 </template>
 
 <script>
+  import search from "../../../../managers/renderer-search-manager"
   export default {
     name: 'SideMenuMainMenuItem',
 
@@ -26,14 +27,19 @@
 
     methods: {
       redirect() {
-        //ボタンに対し検索コンテキストが設定されているなら検索条件を変更
-        if (this.context) {
-          this.$store.commit("setContext", this.context)
-        }
+        //行き先が検索画面の場合
+        if(this.to === "Search") {
+          search.redirect(this.context)
+        } else {
+          //ボタンに対し検索コンテキストが設定されているなら検索条件を変更
+          if (this.context) {
+            this.$store.commit("setContext", this.context)
+          }
 
-        //現在ページから遷移
-        if (this.to && this.to != this.$route.name) {
-          this.$router.push({ name: this.to })
+          //現在ページから遷移
+          if (this.to && this.to != this.$route.name) {
+            this.$router.push({ name: this.to })
+          }
         }
       },
     }

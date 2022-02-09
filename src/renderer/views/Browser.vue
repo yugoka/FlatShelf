@@ -60,10 +60,14 @@
         
         const files = event.dataTransfer.files
         const context = this.$store.state.viewContext
+        //コンテキストにフォルダが設定されていない場合未分類にインポートする
+        const folderID = context.folders
+          ? context.folders[0]
+          : 1
 
-        const result = await this.$contents.createMany({
+        await this.$contents.createMany({
           files,
-          folderID: context.folders[0]
+          folderID
         })
         
         //検索結果をリロードする

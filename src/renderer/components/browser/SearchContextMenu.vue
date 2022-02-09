@@ -28,8 +28,15 @@
     />
 
     <MenuButton
-      @click.native="remove"
-      color="red"
+      @click.native="remove(selectedItems)"
+      v-if="isManySelected"
+    >
+      {{selectedItems.length}}件のアイテムを削除
+    </MenuButton>
+
+    <MenuButton
+      @click.native="remove(contentID)"
+      v-else
     >
       削除
     </MenuButton>
@@ -53,6 +60,17 @@ export default {
     }
   },
 
+  computed: {
+    selectedItems() {
+      return this.$store.state.edit.selectedIDs
+    },
+
+    //複数項目を選択中かつ選択している項目を右クリックしたかどうか
+    isManySelected() {
+      return this.selectedItems.length >= 2 && this.selectedItems.includes(this.contentID)
+    }
+  },
+
   methods: {
     show(contentID) {
       this.contentID = contentID
@@ -71,8 +89,11 @@ export default {
       console.log("rename")
     },
 
-    remove() {
-      this.$contents.delete([this.contentID])
+    remove(IDs) {
+      this.$contents.delete(IDs)
+      if (this.selectedItems.includes(this.contentID)) {
+        this.$store.dispatch("endEditMode")
+      } 
     }
   }
 }

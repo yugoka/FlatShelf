@@ -78,6 +78,7 @@ export default {
       if (this.menu) {
         this.$search.mergeContext({word: this.searchWord})
         this.menu = false
+        this.searchWord = ""
       }
     },
 
