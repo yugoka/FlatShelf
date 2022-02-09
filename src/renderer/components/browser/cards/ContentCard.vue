@@ -52,14 +52,14 @@
 </template>
 
 <script>
-  import SelectButton from "./SelectButton"
+import SelectButton from "./SelectButton"
 
   export default {
 
     name:"ContentsCard",
 
     props: {
-      card: Object,
+      card: Object
     },
 
     components: {
@@ -74,8 +74,8 @@
         hover: false,
         selected: false,
         sources: {
-          small: this.$contents.getThumbnail(this.card.content, "medium"),
-          medium: this.$contents.getThumbnail(this.card.content, "small"),
+          small: this.$contents.getThumbnail(this.card.content, "small"),
+          medium: this.$contents.getThumbnail(this.card.content, "medium"),
         }
       }
     },
@@ -102,6 +102,9 @@
           ? this.sources.small
           : this.sources.medium
       },
+      selectedIDs() {
+        return this.$store.state.edit.selectedIDs
+      }
     },
 
     watch: {
@@ -112,18 +115,24 @@
           //他の要因で選択モードがオフになった時自身の選択を解除する
           this.selected = false
         }
+      },
+
+      selectedIDs() {
+        this.checkSelected()
       }
     },
 
     methods: {
       clickSelectButton() {
         this.selected = !this.selected
-
-        if (this.selected) {
-          this.$store.dispatch("addSelectedItems", this.card.content.contentID)
-        } else {
-          this.$store.dispatch("removeSelectedItems", this.card.content.contentID)
-        }
+        this.$emit(
+          "setContentSelect",
+          {
+            contentID: this.card.content.contentID, 
+            isSelected: this.selected,
+            cardIndex: this.card.index
+          }
+        )
       },
       clickCard() {
         //選択モードなら画像クリックで選択追加
@@ -133,7 +142,7 @@
       },
 
       checkSelected() {
-        this.selected = this.$store.state.edit.selectedIDs.includes(this.card.content.contentID)
+        this.selected = this.selectedIDs.includes(this.card.content.contentID)
       },
 
       showContextMenu() {
@@ -144,6 +153,7 @@
     created() {
       //選択されたコンテンツにこれが含まれるなら表示時に選択
       this.checkSelected()
+      console.log(this.sources)
     },
 
   }
@@ -157,6 +167,7 @@
   border-radius: 4px;
   overflow: hidden;
   text-overflow: ellipsis;
+  user-select: none;
 }
 
 .content-card--selected {
@@ -165,7 +176,7 @@
 
 .content-card-img {
   vertical-align: top;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .content-card-img-placeholder {

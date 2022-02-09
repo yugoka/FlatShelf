@@ -13,11 +13,13 @@
       :style="{ height: this.containerHeight + 'px' }"
     >
       <ContentCard
+        ref="cards"
         class="card"
         v-for="card in visibleCards"
         :key="card.content.contentID"
         :card="card"
         @contextMenu="openContextMenu($event)"
+        @setContentSelect="setContentSelect"
       />
     </div>
   </div>
@@ -48,7 +50,12 @@
         contentsHeight: null,
         scrollTop: 0,
         layouts: null,
-        visibleCards: []
+        visibleCards: [],
+        selectStartIndex: null,
+        keys: {
+          Shift: false,
+          Ctrl: false
+        }
       }
     },
 
@@ -64,6 +71,10 @@
       containerHeight() {
         if (!this.layouts) return 0
         return this.layouts.containerHeight
+      },
+
+      contentIDs() {
+        return this.contents.map(content => content.contentID)
       }
     },
 
@@ -71,6 +82,7 @@
       //検索条件が変わった時コンテンツをロードし直す
       viewContext: {
         async handler(){
+          this.setScrollTop(0)
           await this.loadContents()
         },
         deep: true
@@ -84,10 +96,7 @@
       //コンテンツ合計の高さが変化した時スクロール位置を保持する
       contentsHeight(after, before) {
         if (before <= 0) return
-        this.scrollTop = this.scrollTop * after / before
-        this.$nextTick(() => {
-          this.$refs.scroller.scrollTop = this.scrollTop
-        })
+        this.setScrollTop(this.scrollTop * after / before)
       }
     },
 
@@ -97,6 +106,7 @@
         const query = this.viewContext
         this.contents = await this.$contents.search(query)
         this.getLayouts()
+        this.selectStartIndex = null
       },
 
       //レイアウトを更新する
@@ -107,8 +117,6 @@
           this.getVisibleCards()
         })
       },
-
-
 
       onResize: debounce(function() {
         if (!this.$refs.scroller) return
@@ -134,23 +142,65 @@
         })
       },
 
+      setScrollTop(scrollTop) {
+        this.scrollTop = scrollTop
+        this.$nextTick(() => {
+          this.$refs.scroller.scrollTop = this.scrollTop
+        })
+      },
+
       openContextMenu(contentID) {
         this.$refs.contextMenu.show(contentID)
-      }
+      },
+
+      setContentSelect({ contentID, cardIndex, isSelected }) {
+        //選択解除の場合
+        if (!isSelected) {
+          this.$store.dispatch("removeSelectedItems", contentID)
+          return
+        }
+
+        //新規選択の場合
+        if (!this.keys.Shift || this.selectStartIndex === null) {
+          this.$store.dispatch("addSelectedItems", contentID)
+        } else {
+          const newSelectItem = this.selectStartIndex < cardIndex
+            ? this.contentIDs.slice(this.selectStartIndex, cardIndex + 1)
+            : this.contentIDs.slice(cardIndex, this.selectStartIndex + 1)
+          this.$store.dispatch("addSelectedItems", newSelectItem)
+        }
+        this.selectStartIndex = cardIndex
+      },
+
+      onKeyUp(e) {
+        for (const keyName in this.keys) {
+          if (e.key === keyName) this.keys[keyName] = false
+        }
+      },
+
+      onKeyDown(e) {
+        for (const keyName in this.keys) {
+          if (e.key === keyName) {
+            this.keys[keyName] = true
+          } 
+        }
+      },
     },
 
     async created() {
       await this.loadContents()
+
+      //これでコンテンツのupdateを検知してるけどあんまりいい実装じゃなさそう
+      window.addEventListener('reloadContents', this.loadContents)
+      window.addEventListener("keydown", this.onKeyDown)
+      window.addEventListener("keyup", this.onKeyUp)
     },
 
     mounted() {
       this.resizeObserver = new ResizeObserver(this.onResize)
         .observe(this.$refs.scroller)
-      
+
       this.$refs.scroller.addEventListener('scroll', this.onScroll)
-      
-      //これでコンテンツのupdateを検知してるけどあんまりいい実装じゃなさそう
-      window.addEventListener('reloadContents', this.loadContents)
     },
 
     beforeDestroy () {
@@ -158,8 +208,11 @@
         this.resizeObserver.unobserve(this.$refs.scroller)
       }
 
-      this.$refs.scroller.removeEventListener('scroll', this.onScroll)
+      this.$refs.scroller.removeEventListener('scroll', this.onScroll, false)
+
       window.removeEventListener('reloadContents', this.loadContents, false)
+      window.removeEventListener("keydown", this.onKeyDown)
+      window.removeEventListener("keyup", this.onKeyUp)
     }
 
   }

@@ -20,7 +20,7 @@
     <MenuButton
       @click.native="moveFolder"
     >
-      フォルダを選択
+      移動
     </MenuButton>
 
     <v-divider 
