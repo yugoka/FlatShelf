@@ -1,6 +1,7 @@
 import Vue from "vue"
 import Vuex from "vuex"
 import { merge, cloneDeep } from "lodash"
+import contentsManager from "../managers/renderer-contents-manager"
 
 Vue.use(Vuex)
 
@@ -45,21 +46,10 @@ const store = new Vuex.Store({
     setContext(state, context) {
       state.viewContext = context
     },
-    setSelectedItems(state, items) {
-      state.edit.selectedIDs = items
-      state.edit.editMode = !!items.length
-    },
-    addSelectedItem(state, contentID) {
-      state.edit.selectedIDs.push(contentID)
-    },
-    removeSelectedItem(state, contentID) {
-      state.edit.selectedIDs = state.edit.selectedIDs.filter((item) => {
-        return item != contentID
-      })
-      //選択アイテム数が0になったら選択モードもオフにする
-      if (!state.edit.selectedIDs.length) {
-        state.edit.editMode = false
-      }
+    setSelectedItems(state, contents) {
+      state.edit.selectedContents = contents
+      state.edit.selectedIDs = contents.map((content) => content.contentID)
+      state.edit.editMode = !!contents.length
     },
     setEditMode(state, boolean) {
       state.edit.editMode = boolean
@@ -76,10 +66,30 @@ const store = new Vuex.Store({
       }
     },
 
+    async setSelectedItems({ commit, state }, inputValue) {
+      const IDs = Array.isArray(inputValue) ? inputValue : [inputValue]
+      const contents = await contentsManager.getData(IDs)
+      commit("setSelectedItems", contents)
+    },
+
+    async addSelectedItems({ commit, state }, inputValue) {
+      const IDs = Array.isArray(inputValue) ? inputValue : [inputValue]
+      const contents = await contentsManager.getData(IDs)
+      commit("setSelectedItems", [...state.edit.selectedContents, ...contents])
+    },
+
+    removeSelectedItems({ commit, state }, inputValue) {
+      const IDs = Array.isArray(inputValue) ? inputValue : [inputValue]
+      const contents = state.edit.selectedContents.filter((content) => {
+        return !IDs.includes(content.contentID)
+      })
+
+      commit("setSelectedItems", contents)
+    },
+
     //選択モードを終了する
     endEditMode({ commit }) {
       commit("setSelectedItems", [])
-      commit("setEditMode", false)
     },
   },
 })

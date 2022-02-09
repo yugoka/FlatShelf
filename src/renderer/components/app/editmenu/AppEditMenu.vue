@@ -85,7 +85,6 @@
 
     data() {
       return {
-        contents: [],
         changes: {},
         name: null,
         description: null,
@@ -106,16 +105,16 @@
           }
         }
       },
+      contents() {
+        return this.$store.state.edit.selectedContents
+      },
       contentIDs() {
         return this.$store.state.edit.selectedIDs
       },
     },
 
     watch: {
-      async contentIDs(after, before) {
-        this.contents = await this.$contents.getData(this.contentIDs)
-        this.getDiffers(after, before)
-
+      async contents() {
         //それぞれの設定項目について選択数が1なら保存項目を読み込み、選択数が2以上なら空欄にする
         for (const valueName of ["name", "description", "author"]) {
           this[valueName] = (this.contents.length === 1) 
@@ -139,10 +138,6 @@
         await this.$contents.update(this.contentIDs, this.changes)
         this.changes = {}
       }, 500),
-
-      getDiffers(after, before) {
-        console.log(before, after)
-      }
     }
   }
 </script>

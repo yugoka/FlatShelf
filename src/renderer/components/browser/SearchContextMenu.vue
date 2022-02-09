@@ -82,7 +82,7 @@ export default {
     },
 
     edit() {
-      this.$store.commit("setSelectedItems", [this.contentID])
+      this.$store.dispatch("setSelectedItems", [this.contentID])
     },
 
     moveFolder() {

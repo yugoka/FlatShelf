@@ -118,12 +118,11 @@
     methods: {
       clickSelectButton() {
         this.selected = !this.selected
-        this.$store.commit("setEditMode", true)
 
         if (this.selected) {
-          this.$store.commit("addSelectedItem", this.card.content.contentID)
+          this.$store.dispatch("addSelectedItems", this.card.content.contentID)
         } else {
-          this.$store.commit("removeSelectedItem", this.card.content.contentID)
+          this.$store.dispatch("removeSelectedItems", this.card.content.contentID)
         }
       },
       clickCard() {
