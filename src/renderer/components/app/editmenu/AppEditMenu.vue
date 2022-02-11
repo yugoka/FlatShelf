@@ -3,9 +3,9 @@
       app
       stateless
       right
-      class="editmenu"
+      id="editmenu"
       v-model="show"
-      width="250"
+      :width="sideBar.width"
     >
       <div>
         <v-btn
@@ -79,6 +79,7 @@
 
 <script>
   import debounce from 'lodash.debounce'
+  import { SideMenuDragger } from '../side-menu-dragger'
   
   export default {
     name: 'EditMenu',
@@ -89,6 +90,9 @@
         name: null,
         description: null,
         author: null,
+        sideBar: {
+          width: 250
+        }
       }
     },
 
@@ -138,42 +142,80 @@
         await this.$contents.update(this.contentIDs, this.changes)
         this.changes = {}
       }, 500),
+    },
+
+    mounted() {
+      //幅調整用クラス
+      this.sideBar = new SideMenuDragger({
+        menuID: "#editmenu",
+        menuName: "editMenu",
+        defaultWidth: this.$config.renderer().app.editMenuWidth,
+        minWidth: 125,
+        maxWidth: 600,
+        right: true
+      })
+
+      //幅調整開始のイベント登録
+      const sideBarDragger = this.$el.querySelector(".v-navigation-drawer__border")
+      sideBarDragger.addEventListener('mousedown', () => {
+        this.sideBar.startDragging()
+      })
     }
   }
 </script>
 
-<style scoped>
-.editmenu {
+<style>
+#editmenu {
   margin-top: 30px;
   transition: unset;
 }
-.editmenu-img-wrapper {
+#editmenu .editmenu-img-wrapper {
   display: flex;
   align-items: center;
   height: 150px;
   margin: 5px 5px 10px
 }
-.editmenu-img {
+#editmenu .editmenu-img {
   vertical-align: top;
   max-width: 100%;
   max-height: 100%;
   margin: 0 auto;
 }
 
-.editmenu ::-webkit-scrollbar {
-  overflow:visible;
+#editmenu ::-webkit-scrollbar {
+  overflow: visible;
   width: 4px;
   opacity: 0;
 }
-.editmenu ::-webkit-scrollbar-thumb {
+#editmenu ::-webkit-scrollbar-thumb {
   background: rgba(0,0,0,0); 
   border-radius: 2px;
 }
-.editmenu:hover ::-webkit-scrollbar {
+#editmenu:hover ::-webkit-scrollbar {
   opacity: 1;
 }
-.editmenu:hover ::-webkit-scrollbar-thumb {
+#editmenu:hover ::-webkit-scrollbar-thumb {
   background: rgba(0,0,0,.15)
+}
+
+/*サイドメニュー幅調整*/
+#editmenu .v-navigation-drawer__border {
+  background-color: transparent; 
+  width: 5px !important;
+  cursor: col-resize;
+  border-left: 1px solid rgba(0, 0, 0, 0.12);
+  user-select: none;
+}
+#editmenu .v-navigation-drawer__border:hover, 
+#editmenu .v-navigation-drawer__border.dragging {
+  /*この色はハードコーディングなので注意*/
+  background-color: #489aeb !important;
+  cursor: col-resize;
+  transition: 0.2s;
+  transition-delay: 150ms;
+}
+#editmenu.no-transition {
+  transition: none;
 }
 
 </style>

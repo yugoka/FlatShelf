@@ -1,7 +1,7 @@
 //------------------------------------
 // フォルダのドラッグ＆ドロップ管理
 //------------------------------------
-import foldersManager from "../../../../../managers/renderer-folders-manager"
+import foldersManager from "../../managers/renderer-folders-manager"
 
 class FolderDragger {
   constructor() {}

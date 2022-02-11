@@ -14,6 +14,7 @@ const defaults = {
       darkmode: false,
       app: {
         sideMenuWidth: 250,
+        editMenuWidth: 250,
       },
       folders: {
         initiallyOpened: [],

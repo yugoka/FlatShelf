@@ -5,6 +5,8 @@
       ref="folderContextMenu"
       @rename="startRenaming"
       @create-folder="createNewFolder"
+      @open-folder="activatedFolder = [$event]"
+      :mode="mode"
     />
 
     <v-subheader class="my-1">
@@ -68,6 +70,10 @@
 
     name: 'SideMenuFolders',
 
+    props: {
+      mode: String
+    },
+
     components: {
       NewFolderButton,
       FolderContextMenu,
@@ -118,11 +124,8 @@
           this.isSelectingNavFolder = true
           this.currentActiveFolder = folderID
 
-          //このイベントはAppSideMenuを経由してNavMenusの選択を解除する
-          this.$emit("select")
-
-          //検索コンテキストを変更＆ページを遷移する
-          this.$search.redirect({folders: this.currentActiveFolder})
+          //このイベントが親コンポーネントとやりとりする
+          this.$emit("select", this.currentActiveFolder[0])
         }
       },
 

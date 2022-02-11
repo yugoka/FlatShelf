@@ -2,14 +2,15 @@
   <ContextMenu ref="contextMenu">
 
     <MenuButton
-      v-if="folderID != 1"
+      v-if="showOpenButton"
+      @click.native="openFolder"
     >
       開く
     </MenuButton>
 
     <v-divider 
       class="my-1"
-      v-if="folderID != 1"
+      v-if="showOpenButton"
     />
 
     <MenuButton 
@@ -36,10 +37,14 @@
 </template>
 
 <script>
-import ContextMenu from '../../../contextmenu/ContextMenu.vue'
-import MenuButton from '../../../contextmenu/ContextMenuButton.vue'
+import ContextMenu from '../app/contextmenu/ContextMenu.vue'
+import MenuButton from '../app/contextmenu/ContextMenuButton.vue'
 
 export default {
+  props: {
+    mode: String
+  },
+
   components: {
     ContextMenu,
     MenuButton
@@ -51,10 +56,20 @@ export default {
     }
   },
 
+  computed: {
+    showOpenButton() {
+      return this.mode === 'SideMenu' && this.folderID != 1
+    }
+  },
+
   methods: {
     show(folderID) {
       this.folderID = folderID
       this.$refs.contextMenu.show()
+    },
+
+    openFolder() {
+      this.$emit("open-folder", this.folderID)
     },
 
     createFolder() {

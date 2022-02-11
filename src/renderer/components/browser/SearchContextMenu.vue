@@ -20,7 +20,14 @@
     <MenuButton
       @click.native="moveFolder"
     >
-      移動
+      フォルダを選択
+    </MenuButton>
+
+    <MenuButton 
+      v-if="isCardSelected"
+      @click.native="unselect"
+    >
+      選択を解除
     </MenuButton>
 
     <v-divider 
@@ -28,10 +35,10 @@
     />
 
     <MenuButton
-      @click.native="remove(selectedItems)"
+      @click.native="remove(selectedIDs)"
       v-if="isManySelected"
     >
-      {{selectedItems.length}}件のアイテムを削除
+      {{selectedIDs.length}}件のアイテムを削除
     </MenuButton>
 
     <MenuButton
@@ -61,13 +68,17 @@ export default {
   },
 
   computed: {
-    selectedItems() {
+    selectedIDs() {
       return this.$store.state.edit.selectedIDs
+    },
+
+    isCardSelected() {
+      return this.selectedIDs.includes(this.contentID)
     },
 
     //複数項目を選択中かつ選択している項目を右クリックしたかどうか
     isManySelected() {
-      return this.selectedItems.length >= 2 && this.selectedItems.includes(this.contentID)
+      return this.selectedIDs.length >= 2 && this.selectedIDs.includes(this.contentID)
     }
   },
 
@@ -75,6 +86,10 @@ export default {
     show(contentID) {
       this.contentID = contentID
       this.$refs.contextMenu.show()
+    },
+
+    hide() {
+      this.$refs.contextMenu.hide()
     },
 
     open() {
@@ -85,13 +100,17 @@ export default {
       this.$store.dispatch("setSelectedItems", [this.contentID])
     },
 
+    unselect() {
+      this.$store.dispatch("endEditMode")
+    },
+
     moveFolder() {
       console.log("rename")
     },
 
     remove(IDs) {
       this.$contents.delete(IDs)
-      if (this.selectedItems.includes(this.contentID)) {
+      if (this.isCardSelected) {
         this.$store.dispatch("endEditMode")
       } 
     }

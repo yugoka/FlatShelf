@@ -10,7 +10,6 @@ const store = new Vuex.Store({
     settings: {},
     folders: {},
     isSideMenuShown: true,
-    sideMenuWidth: 0,
     notice: {},
     viewContext: {
       folders: [1],

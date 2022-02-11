@@ -38,6 +38,10 @@
           this.showMenu = true
         })
       },
+
+      hide() {
+        this.showMenu = false
+      }
     },
   }
 </script>

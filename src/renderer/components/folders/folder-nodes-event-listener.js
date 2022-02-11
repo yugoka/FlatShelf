@@ -9,10 +9,14 @@ import folderDragger from "./folder-drag-drop"
 export const registerNodeEventListeners = ({ rightClick }) => {
   const foldersRoot = document.getElementById("side-menu-folders")
   //各フォルダの実体要素
-  const folderNodes = foldersRoot.getElementsByClassName("v-treeview-node__root")
+  const folderNodes = foldersRoot.getElementsByClassName(
+    "v-treeview-node__root"
+  )
 
   for (const node of folderNodes) {
-    const folderID = node.getElementsByClassName("side-menu-folders-folder-id")[0].value
+    const folderID = node.getElementsByClassName(
+      "side-menu-folders-folder-id"
+    )[0].value
 
     //各nodeにHTML5 draggableを追加する
     node.setAttribute("draggable", true)
@@ -23,7 +27,7 @@ export const registerNodeEventListeners = ({ rightClick }) => {
     node.addEventListener("dragenter", preventDefault)
     node.addEventListener("dragover", preventDefault)
 
-    //event.currentTarget.folderIDにアクセスできるようにする 
+    //event.currentTarget.folderIDにアクセスできるようにする
     node.folderID = folderID
     node.eventType = "folder"
   }
@@ -40,7 +44,7 @@ export const initFolderEventListeners = ({ rightClick }) => {
   folderWrapper.addEventListener("dragenter", preventDefault)
   folderWrapper.addEventListener("dragover", preventDefault)
 
-  folderWrapper.folderID = "1"//rootフォルダの扱い
+  folderWrapper.folderID = "1" //rootフォルダの扱い
   folderWrapper.eventType = "folder"
 }
 

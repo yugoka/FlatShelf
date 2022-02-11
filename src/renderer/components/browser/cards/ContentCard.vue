@@ -116,6 +116,7 @@ import SelectButton from "./SelectButton"
         } else {
           //他の要因で選択モードがオフになった時自身の選択を解除する
           this.selected = false
+          this.highlighted = false
         }
       },
 

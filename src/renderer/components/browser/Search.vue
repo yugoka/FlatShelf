@@ -142,6 +142,7 @@
       onScroll: debounce(function() {
         this.scrollTop = this.$refs.scroller.scrollTop
         this.getVisibleCards()
+        this.hideContextMenu()
       }, 30),
 
       getVisibleCards() {
@@ -164,6 +165,10 @@
 
       openContextMenu(contentID) {
         this.$refs.contextMenu.show(contentID)
+      },
+
+      hideContextMenu() { 
+        this.$refs.contextMenu.hide()
       },
 
       setContentSelect({ contentID, cardIndex, isSelected }) {
@@ -201,7 +206,7 @@
         for (const keyName in this.keys) {
           if (e.key === keyName) this.keys[keyName] = false
         }
-        if (e.key === "Shift" && this.editMode) this.endHighlight()
+        if (e.key === "Shift") this.endHighlight()
       },
 
       onKeyDown(e) {
@@ -210,18 +215,19 @@
             this.keys[keyName] = true
           } 
         }
-        if (e.key === "Shift" && this.editMode) this.highlightSelectCards()
+        this.highlightCards()
       },
 
       onHoverCard(index) {
         this.hoverCardIndex = index
-        if (this.keys.Shift) this.highlightSelectCards()
+        if (this.keys.Shift) this.highlightCards()
       },
 
       //Shiftを押している場合に複数選択対象のカードをハイライトする
-      highlightSelectCards() {
+      highlightCards() {
         if (
           !this.keys.Shift 
+          || !this.editMode
           || this.hoverCardIndex === null 
           || this.selectStartIndex === null
         ) return

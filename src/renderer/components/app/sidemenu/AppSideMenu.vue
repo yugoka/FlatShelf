@@ -13,9 +13,10 @@
 
       <v-divider class="mx-2"/>
 
-      <NavFolders
+      <Folders
         ref="folders"
-        @select="unselectMainMenu"
+        @select="selectFolder($event)"
+        mode="SideMenu"
       />
       
     </v-navigation-drawer>
@@ -23,18 +24,17 @@
 
 <script>
   import MainMenus from "./nav/NavMenus.vue"
-  import NavFolders from "./nav/folders/NavFolders.vue"
+  import Folders from "../../folders/Folders.vue"
 
   //サイドバーのドラッグ関連の動きは別クラスで定義している
-  import { sideBar } from './side-bar-dragger'
+  import { SideMenuDragger } from '../side-menu-dragger'
 
   export default {
     name: 'SideMenu',
 
-
     components: {
       MainMenus,
-      NavFolders
+      Folders
     },
 
     data() {
@@ -43,7 +43,7 @@
           width: 300
         },
         sideBarDragger: {},
-        selectedItem: {item: null}
+        selectedItem: { item: null }
       }
     },
 
@@ -59,24 +59,7 @@
       },
     },
 
-    mounted() {
-      //幅調整用クラスのインスタンスを代入
-      this.sideBar = sideBar
-      this.sideBar.width = this.$config.renderer().app.sideMenuWidth
-
-      //幅調整開始のイベント登録
-      const sideBarDragger = this.$el.querySelector(".v-navigation-drawer__border")
-      sideBarDragger.addEventListener('mousedown', () => {
-        this.startDragging()
-      })
-    },
-
     methods: {
-      //サイドバーのドラッグ開始時に発生する
-      //幅の変更やイベントの終了はSideBarDragger.jsに委託する
-      startDragging() {
-        this.sideBar.startDragging()
-      },
 
       //メインメニューの選択を解除する
       unselectMainMenu() {
@@ -84,7 +67,30 @@
       },
       unselectFolders() {
         this.$refs.folders.unselect()
+      },
+
+      selectFolder(folderID) {
+        this.unselectMainMenu()
+        //検索コンテキストを変更＆ページを遷移する
+        this.$search.redirect({ folders: [folderID] })
       }
+    },
+
+    mounted() {
+      //幅調整用クラスのインスタンスを代入
+      this.sideBar = new SideMenuDragger({
+        menuID: "#sidemenu",
+        menuName: "sideMenu",
+        defaultWidth: this.$config.renderer().app.sideMenuWidth,
+        minWidth: 125,
+        maxWidth: 600,
+      })
+
+      //幅調整開始のイベント登録
+      const sideBarDragger = this.$el.querySelector(".v-navigation-drawer__border")
+      sideBarDragger.addEventListener('mousedown', () => {
+        this.sideBar.startDragging()
+      })
     },
   }
 </script>
