@@ -13,6 +13,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "animate.css": "^4.1.1",
     "babel-eslint": "^10.1.0",
     "core-js": "^3.6.5",
     "electron-log": "^4.4.1",

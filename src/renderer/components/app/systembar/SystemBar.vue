@@ -6,16 +6,22 @@
     height="30"
     color="systemBar"
   >
-    <span>FlatShelf</span>
+    <div
+      class="group-wrapper"
+    >
+      <span>FlatShelf</span>
+      <SideMenuOpenButton
+        class="clickable"
+      />
+    </div>
     
-    <div class="center-buttons-wrapper">
-
+    <div class="group-wrapper clickable">
       <v-btn
         class="mx-1"
         icon
         x-small
       >
-        <v-icon>mdi-filter</v-icon>
+        <v-icon class="mini-button-icon">mdi-filter</v-icon>
       </v-btn>
 
       <v-btn
@@ -23,12 +29,16 @@
         icon
         x-small
       >
-        <v-icon>mdi-sort</v-icon>
+        <v-icon class="mini-button-icon">mdi-sort</v-icon>
       </v-btn>
 
-      <SearchBar/>
+      <SearchBar
+        class="clickable"
+      />
 
-      <Slider/>
+      <Slider
+        class="clickable"
+      />
     </div>
 
     <div>
@@ -56,6 +66,7 @@
 import SystemButton from "./SystemButton.vue"
 import SearchBar from "./SearchBar.vue"
 import Slider from "./Slider.vue"
+import SideMenuOpenButton from "./SideMenuOpenButton.vue"
 
 export default {
   name: 'SystemBar',
@@ -63,7 +74,8 @@ export default {
   components: {
     SystemButton,
     SearchBar,
-    Slider
+    Slider,
+    SideMenuOpenButton
   },
 
   data() {
@@ -116,10 +128,15 @@ export default {
   -webkit-app-region: no-drag;
 }
 
-#systembar .center-buttons-wrapper {
+#systembar .group-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 30px;
+}
+
+#systembar .mini-button-icon {
+  margin: 0;
+  padding: 0;
 }
 </style>

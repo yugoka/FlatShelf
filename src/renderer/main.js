@@ -4,6 +4,7 @@ import Vuex from "vuex"
 import vuetify from "./plugins/vuetify"
 import store from "./store"
 import router from "./router"
+import AnimateCss from "animate.css"
 
 //------------------------------------
 // マネージャー類の読み込み
@@ -20,6 +21,7 @@ Vue.prototype.$search = rendererSearchManager
 
 Vue.config.productionTip = false
 Vue.use(Vuex)
+Vue.use(AnimateCss)
 ;(async () => {
   //------------------------------------
   // 初期設定読み込み
