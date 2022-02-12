@@ -26,10 +26,10 @@
         <div
           class="editmenu-img-wrapper"
         >
-          <img
-            class="editmenu-img rounded elevation-4"
-            :src="$contents.getThumbnail(contents[contents.length-1])"
-          />
+            <img
+              class="editmenu-img rounded elevation-4"
+              :src="$contents.getThumbnail(contents[contents.length-1])"
+            />
         </div>
 
         <v-divider/>
@@ -149,7 +149,7 @@
       this.sideBar = new SideMenuDragger({
         menuID: "#editmenu",
         menuName: "editMenu",
-        defaultWidth: this.$config.renderer().app.editMenuWidth,
+        width: this.$config.renderer().app.editMenuWidth,
         minWidth: 125,
         maxWidth: 600,
         right: true
@@ -181,7 +181,9 @@
   max-height: 100%;
   margin: 0 auto;
 }
-
+#editmenu .editmenu-img-chip {
+  position: absolute;
+}
 #editmenu ::-webkit-scrollbar {
   overflow: visible;
   width: 4px;

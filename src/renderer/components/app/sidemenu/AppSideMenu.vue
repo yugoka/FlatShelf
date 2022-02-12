@@ -81,9 +81,11 @@
       this.sideBar = new SideMenuDragger({
         menuID: "#sidemenu",
         menuName: "sideMenu",
-        defaultWidth: this.$config.renderer().app.sideMenuWidth,
+        width: this.$config.renderer().app.sideMenuWidth,
+        defaultWidth: 250,
         minWidth: 125,
         maxWidth: 600,
+        closeWidth: 85
       })
 
       //幅調整開始のイベント登録

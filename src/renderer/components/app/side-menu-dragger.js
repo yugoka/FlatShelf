@@ -10,15 +10,18 @@ export class SideMenuDragger {
   constructor({
     menuName = "sideMenu",
     menuID = "#sidemenu",
+    width = 250,
     defaultWidth = 250,
     minWidth = 125,
+    closeWidth = 75,
     maxWidth = 600,
     right = false,
   } = {}) {
     this.menuName = menuName
-    this.width = defaultWidth
+    this.width = width
+    this.defaultWidth = defaultWidth
     //マウスによって指定されたwidthがこれ以下ならサイドメニューを閉じる
-    this.closeWidth = 50
+    this.closeWidth = closeWidth
     //サイドメニュー幅の最大、最小
     this.minWidth = minWidth
     this.maxWidth = maxWidth
@@ -67,7 +70,7 @@ export class SideMenuDragger {
       this.saveConfigWidth(currentWidth)
     } else if (currentWidth < this.closeWidth) {
       //幅が一定以下なら閉じる
-      this.width = 250
+      this.width = this.defaultWidth
       this.endDragging()
       if (this.menuName === "sideMenu") {
         store.dispatch("toggleSideMenu", false)

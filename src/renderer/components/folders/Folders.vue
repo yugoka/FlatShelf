@@ -1,5 +1,10 @@
 <template>
-  <div id="side-menu-folders-wrapper">
+  <div class="app-folders-menu-wrapper"
+    @contextmenu="rightClickFolder(rootFolder)"
+    @drop="onDrop({ event:$event, dropFolder: rootFolder })"
+    @dragover.prevent
+    @dragenter.prevent
+  >
 
     <FolderContextMenu
       ref="folderContextMenu"
@@ -11,11 +16,13 @@
 
     <v-subheader class="my-1">
       フォルダ
-      <NewFolderButton @click="createNewFolder"/>
+      <NewFolderButton 
+        @click="createNewFolder"
+      />
     </v-subheader>
 
     <v-treeview
-      id="side-menu-folders"
+      class="app-folders-menu"
       dense
       hoverable
       activatable
@@ -24,14 +31,22 @@
       item-key="id"
       :active.sync="activatedFolder"
       :open.sync="openedFolders"
-
-      @update:active="clickFolder"
-      @update:open="openFolder"
+      @update:open="onOpenFolder"
     >
       <!-- labelスロット -->
       <template v-slot:label="{ item }"> 
         <!-- 通常時 -->
-        <template v-if="renamingFolderID != item.id">{{item.name}}</template>
+        <div
+          draggable
+          @dragstart="onDragStart($event, item)"
+        >
+          <FolderNode
+            v-if="renamingFolderID != item.id"
+            :folder="item"
+            @click="clickFolder"
+            @contextmenu="rightClickFolder"
+            @drop="onDrop"
+          />
 
         <!-- このnodeがリネーム対象の場合 -->
         <FolderRenameTextField
@@ -39,6 +54,7 @@
           @end="endRenaming"
           :current-name="item.name"
         />
+        </div>
       </template>
 
       <!-- prependスロット -->
@@ -60,11 +76,12 @@
 
 <script>
   import debounce from 'lodash.debounce'
-  import { registerNodeEventListeners, initFolderEventListeners } from "./folder-nodes-event-listener"
-
   import NewFolderButton from "./NewFolderButton.vue"
   import FolderContextMenu from "./FolderContextMenu.vue"
   import FolderRenameTextField from "./FolderRenameTextField.vue"
+  import FolderNode from './FolderNode.vue'
+
+  import foldersManager from "../../managers/renderer-folders-manager"
 
   export default {
 
@@ -75,23 +92,27 @@
     },
 
     components: {
-      NewFolderButton,
-      FolderContextMenu,
-      FolderRenameTextField
-    },
+    NewFolderButton,
+    FolderContextMenu,
+    FolderRenameTextField,
+    FolderNode
+},
 
     data() {
       return {
         activatedFolder: [],
         openedFolders: [],
-        //選択解除時にactivatedFolderを↓に戻す
-        currentActiveFolder: null,
         isSelectingNavFolder: false,
         //初期オープンなフォルダを一度だけ読み込むためのフラグ
         hasInitiallyOpenFolderLoaded: false,
-        renamingFolderID: null
+        renamingFolderID: null,
+        rootFolder: {
+          id: 1,
+          name: "root"
+        }
       }
     },
+
 
     computed: {
       folders() {
@@ -106,39 +127,20 @@
         this.activatedFolder = []
       },
 
-      registerEventListeners() {
-        registerNodeEventListeners({
-          rightClick: this.rightClickFolder
-        })
+      clickFolder(folder) {
+        this.isSelectingNavFolder = true
+        this.activatedFolder = [folder.id]
+
+        //このイベントが親コンポーネントとやりとりする
+        this.$emit("select", folder.id)
       },
 
-      clickFolder(folderID) {
-        //ダブルクリックなどで選択解除を試みた場合再度アクティベートする
-        if(!folderID[0] && this.isSelectingNavFolder) {
-          this.activatedFolder[0] = this.currentActiveFolder
-          return
-        }
-
-        //フォルダーを普通に選択した場合
-        if (folderID[0]) {
-          this.isSelectingNavFolder = true
-          this.currentActiveFolder = folderID
-
-          //このイベントが親コンポーネントとやりとりする
-          this.$emit("select", this.currentActiveFolder[0])
-        }
+      rightClickFolder(folder) {
+        this.$refs.folderContextMenu.show(folder.id)
       },
 
-      rightClickFolder(event) {
-        event.stopPropagation()
-        this.$refs.folderContextMenu.show(event.currentTarget.folderID)
-      },
-
-      openFolder() {
+      onOpenFolder() {
         this.saveOpenedFolders()
-        this.$nextTick(() => {
-          this.registerEventListeners()
-        })
       },
 
       //開いたフォルダの情報を保存。5秒間操作しなかった場合に実行
@@ -166,49 +168,67 @@
         await this.$folders.rename(this.renamingFolderID, input)
         this.renamingFolderID = null
       },
+
+      onDragStart(event, folder) {
+        event.dataTransfer.effectAllowed = 'move'
+        event.dataTransfer.dropEffect = 'move'
+        event.dataTransfer.setData('type', 'folder')
+        event.dataTransfer.setData('folder', JSON.stringify(folder))
+      },
+
+      async onDrop({ event, dropFolder }) {
+        const dropType = event.dataTransfer.getData('type')
+        if (dropType === "folder") {
+          const dragFolder = JSON.parse(event.dataTransfer.getData("folder"))
+          await this.dropFolder(dragFolder, dropFolder)
+        }
+      },
+
+      //フォルダからフォルダにドラッグ＆ドロップした場合
+      async dropFolder(dragTarget, dropTarget) {
+        await foldersManager.changeParent(dragTarget.id, dropTarget.id)
+      }
     },
 
     watch: {
       folders() {
-        this.$nextTick(() => {
-          //フォルダ構造が変更されるたびに右クリックイベントを登録し直す
-          this.registerEventListeners()
-        })
-
         //フォルダが読み込まれた時一度だけ初期オープンフォルダを読み込む
         if (!this.hasInitiallyOpenFolderLoaded) {
           this.openedFolders = this.$config.renderer().folders.initiallyOpened
           this.hasInitiallyOpenFolderLoaded = true
         }
-
       }
     },
 
     mounted() {
-      //フォルダノード以外の固定イベントを登録する
-      initFolderEventListeners({ rightClick: this.rightClickFolder })
     }
   }
 
 </script>
 
 <style>
-#side-menu-folders-wrapper {
+.app-folders-menu-wrapper {
   min-height: 300px;
   padding-bottom: 50px;
 }
 
-#side-menu-folders-wrapper .v-subheader {
+.app-folders-menu-wrapper .v-subheader {
     margin: 0;
 }
-#side-menu-folders .v-treeview-node__root {
+.app-folders-menu .v-treeview-node__root {
   font-size: 14px;
   margin: 1px 0;
   cursor: pointer;
   user-select: none;
 }
-#side-menu-folders .v-treeview-node__root:before {
+
+.app-folders-menu .v-treeview-node__root:before {
   border-radius: 4px;
   margin: 0 8px;
+  transition-duration: 0.4s;
+}
+
+.app-folders-menu .v-treeview-node__toggle {
+  z-index: 2;
 }
 </style>
