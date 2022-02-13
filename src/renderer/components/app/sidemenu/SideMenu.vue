@@ -69,10 +69,10 @@
         this.$refs.folders.unselect()
       },
 
-      selectFolder(folderID) {
+      selectFolder(folder) {
         this.unselectMainMenu()
         //検索コンテキストを変更＆ページを遷移する
-        this.$search.redirect({ folders: [folderID] })
+        this.$search.redirect({ folders: [folder.id] })
       }
     },
 
@@ -100,6 +100,11 @@
 <style>
 #sidemenu {
   margin-top: 30px;
+}
+
+#sidemenu .v-navigation-drawer__content {
+  display: flex;
+  flex-direction: column;
 }
 
 /*スクロールバー*/

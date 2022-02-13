@@ -132,7 +132,7 @@
         this.activatedFolder = [folder.id]
 
         //このイベントが親コンポーネントとやりとりする
-        this.$emit("select", folder.id)
+        this.$emit("select", folder)
       },
 
       rightClickFolder(folder) {
@@ -208,8 +208,8 @@
 
 <style>
 .app-folders-menu-wrapper {
+  flex: 1 1 100%;
   min-height: 300px;
-  padding-bottom: 50px;
 }
 
 .app-folders-menu-wrapper .v-subheader {

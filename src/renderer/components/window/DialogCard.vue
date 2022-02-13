@@ -1,12 +1,48 @@
 <template>
   <v-dialog
+    class="dialog"
     v-model="visible"
     :persistent="persistent"
-    scrollable
     :max-width="maxWidth"
+    scrollable
   >
-    <v-card>
+    <v-card
+      class="card"
+      :max-height="maxHeight"
+    >
+      <v-card-title
+        class="body-1"
+      >
+        <span v-if="title">
+          {{title}}
+        </span>
+
+        <v-spacer/>
+
+        <v-btn 
+          v-if="showCloseButton"
+          icon
+          small
+          @click="hide"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+
+      <v-card-subtitle
+        v-if="caption"
+        class="pb-1 primary--text"
+      >
+        <span
+          class="caption"
+        >
+          {{caption}}
+        </span>
+      </v-card-subtitle>
+
+      <v-divider/>
       <slot/>
+
     </v-card>
   </v-dialog>
 </template>
@@ -25,6 +61,24 @@ export default {
       type: Number,
       default: 500
     },
+    maxHeight: {
+      type: Number,
+      default: 500
+    },
+    title: {
+      type: String,
+      default: null,
+      required: false
+    },
+    caption: {
+      type: String,
+      default: null,
+      required: false
+    },
+    showCloseButton: {
+      type: Boolean,
+      default: true
+    }
   },
 
   data() {
@@ -36,6 +90,10 @@ export default {
   methods: {
     show() {
       this.visible = true
+    },
+
+    hide() {
+      this.visible = false
     }
   }
   
@@ -43,6 +101,13 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.card ::-webkit-scrollbar {
+  overflow:visible;
+  width: 4px;
+}
+.card ::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,.15); 
+  border-radius: 2px;
+}
 </style>

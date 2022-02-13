@@ -19,7 +19,7 @@
 <script>
 
 import SystemBar from "./components/app/systembar/SystemBar"
-import SideMenu from "./components/app/sidemenu/AppSideMenu"
+import SideMenu from "./components/app/sidemenu/SideMenu"
 import ContentsEditMenu from "./components/app/editmenu/AppEditMenu"
 import NoticeChip from "./components/app/NoticeChip"
 
