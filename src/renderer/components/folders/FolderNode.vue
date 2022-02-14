@@ -1,37 +1,61 @@
 <template>
   <div class="folder-node">
     <div 
-      class="folder-node-click-observer"
+      :class="{
+        'folder-node-click-observer': true,
+        highlighted: highlighted
+      }"
       @click.stop="click"
       @contextmenu.stop="rightClick"
       @drop.stop="onDrop($event)"
-      @dragover.prevent
-      @dragenter.prevent
+      @dragover="onDragOver"
+      @dragleave="onDragLeave"
     />
-    {{folder.name}}
+      {{folder.name}}
   </div>
 </template>
 
 <script>
-export default {
-  props: {
-    folder: Object
-  },
+  import debounce from 'lodash.debounce'
 
-  methods: {
-    click() {
-      this.$emit("click", this.folder)
+  export default {
+    props: {
+      folder: Object
     },
 
-    rightClick() {
-      this.$emit("contextmenu", this.folder)
+    data() {
+      return {
+        highlighted: false
+      }
     },
 
-    onDrop(event) {
-      this.$emit("drop", { event, dropFolder: this.folder })
-    },
+    methods: {
+      click() {
+        this.$emit("click", this.folder)
+      },
+
+      rightClick() {
+        this.$emit("contextmenu", this.folder)
+      },
+
+      onDrop(event) {
+        this.$emit("drop", { event, dropFolder: this.folder })
+      },
+
+      onDragOver() {
+        this.unHighlight()
+        this.highlighted = true
+      },
+
+      onDragLeave() {
+        this.highlighted = false
+      },
+
+      unHighlight: debounce(function() {
+        this.highlighted = false
+      }, 100)
+    }
   }
-}
 </script>
 
 <style scoped>
@@ -45,5 +69,9 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 1;
+}
+
+.folder-node-click-observer.highlighted {
+  background-color: rgba(33, 150, 243, .1)
 }
 </style>

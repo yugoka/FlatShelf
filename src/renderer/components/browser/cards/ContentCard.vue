@@ -15,10 +15,13 @@
     }"
 
     v-ripple
+    draggable
     @mouseenter="onHover"
     @mouseleave="hover=false"
     @click="clickCard"
     @contextmenu="showContextMenu"
+    @dragstart="onDragStart"
+    @dragend="onDragEnd"
   >
 
     <div 
@@ -156,13 +159,30 @@ import SelectButton from "./SelectButton"
       showContextMenu() {
         this.$emit("contextMenu", this.card.content.contentID)
       },
+
+      onDragStart(e) {
+        //ドラッグ操作の対象
+        const targets = this.selected
+          ? this.selectedIDs
+          : [this.card.content.contentID]
+        
+        e.dataTransfer.effectAllowed = 'move'
+        e.dataTransfer.dropEffect = 'move'
+        e.dataTransfer.setDragImage(new Image(), 0, 0)
+        e.dataTransfer.setData('type', 'content')
+        e.dataTransfer.setData('targetContents', JSON.stringify(targets))
+        this.$emit('dragstart', this.card.content)
+      },
+
+      onDragEnd() {
+        this.$emit('dragend')
+      }
     },
 
     created() {
       //選択されたコンテンツにこれが含まれるなら表示時に選択
       this.checkSelected()
     },
-
   }
 </script>
 

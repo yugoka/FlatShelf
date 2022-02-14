@@ -74,14 +74,20 @@ export default {
     hide() {
       this.$refs.dialog.hide()
     },
-    save() {
+    async save() {
       if (!this.selectedFolder || !this.contentIDs.length) return
-      this.$contents.update(
+      const result = await this.$contents.update(
         this.contentIDs, 
         {
           folderID: this.selectedFolder.id
         }
       )
+
+      const message = result
+        ? `${this.contentIDs.length}件のアイテムを${this.selectedFolder.name}に移動しました。`
+        : `アイテムの移動に失敗しました`
+
+      this.$store.commit("setNotice", { message })
       this.hide()
     },
     select(folderID) {

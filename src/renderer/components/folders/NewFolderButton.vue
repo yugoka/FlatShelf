@@ -7,7 +7,11 @@
     <v-btn
       icon
       small
-      class="ms-auto folder-create-button"
+      :class="{
+        'ms-auto': true,
+        'button': true,
+        'visible': visible
+      }"
       @click="click"
 
       v-bind="attrs"
@@ -22,6 +26,11 @@
 
 <script>
 export default {
+
+  props: {
+    visible: Boolean
+  },
+
   methods: {
     click() {
       this.$emit("click")
@@ -31,10 +40,11 @@ export default {
 </script>
 
 <style scoped>
-#side-menu-folders-wrapper .folder-create-button {
+.button {
   opacity: 0;
 }
-#side-menu-folders-wrapper:hover .folder-create-button {
+
+.button.visible {
   opacity: 1;
 }
 </style>

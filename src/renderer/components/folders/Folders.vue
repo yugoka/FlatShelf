@@ -4,6 +4,8 @@
     @drop="onDrop({ event:$event, dropFolder: rootFolder })"
     @dragover.prevent
     @dragenter.prevent
+    @mouseenter="hover=true"
+    @mouseleave="hover=false"
   >
 
     <FolderContextMenu
@@ -17,7 +19,9 @@
     <v-subheader class="my-1">
       フォルダ
       <NewFolderButton 
+        class="new-folder-button"
         @click="createNewFolder"
+        :visible="hover"
       />
     </v-subheader>
 
@@ -81,8 +85,6 @@
   import FolderRenameTextField from "./FolderRenameTextField.vue"
   import FolderNode from './FolderNode.vue'
 
-  import foldersManager from "../../managers/renderer-folders-manager"
-
   export default {
 
     name: 'SideMenuFolders',
@@ -100,6 +102,7 @@
 
     data() {
       return {
+        hover: false,
         activatedFolder: [],
         openedFolders: [],
         isSelectingNavFolder: false,
@@ -109,7 +112,7 @@
         rootFolder: {
           id: 1,
           name: "root"
-        }
+        },
       }
     },
 
@@ -178,15 +181,36 @@
 
       async onDrop({ event, dropFolder }) {
         const dropType = event.dataTransfer.getData('type')
+
         if (dropType === "folder") {
+
           const dragFolder = JSON.parse(event.dataTransfer.getData("folder"))
           await this.dropFolder(dragFolder, dropFolder)
+
+        } else if (dropType === "content") {
+
+          const targetContents = JSON.parse(event.dataTransfer.getData("targetContents"))
+          await this.dropContents(targetContents, dropFolder)
+
         }
       },
 
       //フォルダからフォルダにドラッグ＆ドロップした場合
       async dropFolder(dragTarget, dropTarget) {
-        await foldersManager.changeParent(dragTarget.id, dropTarget.id)
+        await this.$folders.changeParent(dragTarget.id, dropTarget.id)
+      },
+
+      async dropContents(contents, folder) {
+        await this.$contents.update(
+          contents,
+          {
+            folderID: folder.id
+          }
+        )
+
+        if (contents.length === this.$store.state.edit.selectedIDs.length) {
+          this.$store.dispatch("endEditMode")
+        }
       }
     },
 

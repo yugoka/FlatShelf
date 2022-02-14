@@ -3,6 +3,9 @@
     class="scroller"
     ref="scroller"
   >
+    <CardDragGhost
+      ref="dragGhost"
+    />
 
     <SearchContextMenu
       ref="contextMenu"
@@ -21,6 +24,8 @@
         @contextMenu="openContextMenu($event)"
         @setContentSelect="setContentSelect"
         @hover="onHoverCard(card.index)"
+        @dragstart="onCardDragStart"
+        @dragend="onCardDragEnd"
       />
     </div>
   </div>
@@ -31,15 +36,17 @@
   import ContentCard from './cards/ContentCard'
   import SearchContextMenu from './SearchContextMenu'
   import layoutManager from './scripts/layout-manager'
+  import CardDragGhost from './cards/CardDragGhost.vue'
 
   export default {
 
     name:"SearchContents",
 
     components: {
-      ContentCard,
-      SearchContextMenu
-    },
+    ContentCard,
+    SearchContextMenu,
+    CardDragGhost
+},
 
     data() {
       return {
@@ -249,6 +256,14 @@
         for (const card of this.$refs.cards) {
           card.highlighted = false
         }
+      },
+
+      onCardDragStart(content) {
+        this.$refs.dragGhost.show(content)
+      },
+
+      onCardDragEnd() {
+        this.$refs.dragGhost.hide()
       }
     },
 
@@ -291,6 +306,7 @@
   height: 100%;
   overflow-y: scroll;
   position: relative;
+  user-select: none;
 }
 
 .scroller::-webkit-scrollbar {

@@ -46,8 +46,10 @@ class ContentsManager {
       await Content.update(data.values, {
         where: { contentID: data.contentIDs },
       })
+      return true
     } catch (err) {
       log.error(`[contentUpdate] Error: ${err}`)
+      return false
     }
   }
 
