@@ -69,9 +69,6 @@
           files,
           folderID
         })
-        
-        //検索結果をリロードする
-        this.$refs.contents.loadContents()
       }
     }
 

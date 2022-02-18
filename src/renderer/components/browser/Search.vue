@@ -117,10 +117,9 @@
     },
 
     methods: {
-      //コンテンツを読み込む。すべての検索はここで行われる
+      //storeに格納されたcontextに従ってコンテンツを読み込む。Browser上すべての検索はここで行われる
       async loadContents() {
-        const query = this.viewContext
-        this.contents = await this.$contents.search(query)
+        this.contents = await this.$contents.search(this.viewContext)
         this.getLayouts()
         this.selectStartIndex = null
       },

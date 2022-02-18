@@ -72,9 +72,9 @@ class Search {
     this.queryAnd.push({ folderID: this.query.folders })
   }
 
-  //順番条件
+  //順番条件。記載がない場合は作成日の降順になる
   registerOrders() {
-    this.queryObject.order = this.query.order || [["createdAt", "DESC"]]
+    this.queryObject.order = this.query.order
   }
 
   //検索を実行する

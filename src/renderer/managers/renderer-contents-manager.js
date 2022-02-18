@@ -2,6 +2,7 @@
 // コンテンツ管理 for レンダラープロセス
 //------------------------------------
 import store from "../store"
+import searchManager from "./renderer-search-manager"
 
 class RendererContentsManager {
   constructor() {
@@ -33,23 +34,29 @@ class RendererContentsManager {
 
   async createMany(data) {
     const files = data.files
-    //保存に失敗した回数
-    let failedCount = 0
+    //保存に成功した回数
+    let successCount = 0
+
     for await (const file of files) {
       const result = await this.create({
         file,
         folderID: data.folderID || 1,
       })
-      if (!result) failedCount += 1
+      if (result) successCount += 1
+
+      //保存枚数30枚ごとにBrowser画面を更新する
+      if (successCount % 30 === 0) {
+        window.dispatchEvent(this.events.reloadContents)
+      }
     }
-    this.createdNotice(failedCount, files.length)
-    return { failedCount }
+    this.createdNotice(successCount, files.length)
+    window.dispatchEvent(this.events.reloadContents)
+    return { successCount }
   }
 
-  //searchとCRUDはマネージャー分けるべきかも
-  //→根幹は同じで委託する形かな
+  //search.executeへのエイリアス
   async search(query) {
-    const result = await window.ipc.searchContent(query)
+    const result = await searchManager.execute(query)
     return result
   }
 
@@ -85,21 +92,23 @@ class RendererContentsManager {
     }
   }
 
-  createdNotice(failedCount, length) {
+  createdNotice(successCount, length) {
     //通知を表示する
     let noticeMessage
     if (length === 1) {
-      noticeMessage = failedCount
-        ? `コンテンツの保存に失敗しました。`
-        : `コンテンツの保存が完了しました。`
+      noticeMessage = successCount
+        ? `アイテムの保存が完了しました。`
+        : `アイテムの保存に失敗しました。`
     } else {
-      noticeMessage = failedCount
-        ? `${length}件中${failedCount}件のコンテンツの保存に失敗しました。`
-        : `${length}件のコンテンツの保存が完了しました。`
+      noticeMessage = successCount
+        ? `${length}件中${
+            length - successCount
+          }件のアイテムの保存に失敗しました。`
+        : `${length}件のアイテムの保存が完了しました。`
     }
     store.commit("setNotice", {
       message: noticeMessage,
-      icon: failedCount ? "mdi-alert-circle-outline" : "mdi-check",
+      icon: successCount ? "mdi-check" : "mdi-alert-circle-outline",
     })
   }
 }

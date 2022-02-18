@@ -105,7 +105,6 @@ export default {
   top: 5px !important;
   width: 40%;
   max-width: 600px;
-  transform: translateX(100);
 }
 .menu-card {
   width: 100%;

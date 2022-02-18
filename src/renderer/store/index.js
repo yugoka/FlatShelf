@@ -14,6 +14,7 @@ const store = new Vuex.Store({
     viewContext: {
       folders: [1],
       word: null,
+      order: [["createdAt", "ASC"]],
     },
     edit: {
       editMode: false,
@@ -42,8 +43,11 @@ const store = new Vuex.Store({
     mergeContext(state, context) {
       state.viewContext = cloneDeep(merge(state.viewContext, context))
     },
+    //コンテキストを直接指定する。ただし並び替えだけは保持
     setContext(state, context) {
+      const order = state.viewContext.order
       state.viewContext = context
+      state.viewContext.order = order
     },
     setSelectedItems(state, contents) {
       state.edit.selectedContents = contents

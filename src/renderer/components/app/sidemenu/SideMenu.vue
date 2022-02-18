@@ -132,6 +132,7 @@
   cursor: col-resize;
   border-right: 1px solid rgba(0, 0, 0, 0.12);
   user-select: none;
+  z-index: 2;
 }
 #sidemenu .v-navigation-drawer__border:hover, 
 #sidemenu .v-navigation-drawer__border.dragging {

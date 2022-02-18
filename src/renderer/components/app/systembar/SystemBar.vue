@@ -16,21 +16,9 @@
     </div>
     
     <div class="group-wrapper clickable">
-      <v-btn
-        class="mx-1"
-        icon
-        x-small
-      >
-        <v-icon class="mini-button-icon">mdi-filter</v-icon>
-      </v-btn>
-
-      <v-btn
-        class="mx-1"
-        icon
-        x-small
-      >
-        <v-icon class="mini-button-icon">mdi-sort</v-icon>
-      </v-btn>
+      <SortMenu
+        v-if="$route.name === 'Search'"
+      />
 
       <SearchBar
         class="clickable"
@@ -67,6 +55,7 @@ import SystemButton from "./SystemButton.vue"
 import SearchBar from "./SearchBar.vue"
 import Slider from "./Slider.vue"
 import SideMenuOpenButton from "./SideMenuOpenButton.vue"
+import SortMenu from "./SortMenu.vue"
 
 export default {
   name: 'SystemBar',
@@ -75,8 +64,9 @@ export default {
     SystemButton,
     SearchBar,
     Slider,
-    SideMenuOpenButton
-  },
+    SideMenuOpenButton,
+    SortMenu
+},
 
   data() {
     return {

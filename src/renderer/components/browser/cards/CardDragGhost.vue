@@ -55,6 +55,7 @@
         this.content = content
         this.imgSrc = this.$contents.getThumbnail(this.content, 'small')
         this.allowLoad = true
+        document.addEventListener("drag", this.setMousePosition)
         setTimeout(() => this.visible = true, 10)
       },
 
@@ -66,18 +67,18 @@
           x: -999,
           y: -999
         }
+        document.removeEventListener("drag", this.setMousePosition)
       },
 
       setMousePosition(e) {
         if (e.clientX === 0 && e.clientY === 0) return
-        this.position.x = e.clientX - 70
+        this.position.x = e.clientX - 80
         this.position.y = e.clientY
       }
     },
 
     created() {
       this.setMousePosition = this.setMousePosition.bind(this)
-      document.addEventListener("drag", this.setMousePosition)
     },
 
     beforeDestroy() {
@@ -90,8 +91,8 @@
 .drag-ghost {
   display: flex;
   pointer-events: none;
-  width: 140px;
-  height: 130px;
+  width: 160px;
+  height: 150px;
   justify-content: center;
   position: fixed;
   z-index: 100;
@@ -106,10 +107,8 @@
 }
 
 .drag-ghost-img {
-  margin: 0 auto;
-  vertical-align: top;
-  max-width: 120px;
-  max-height: 120px;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
   object-position: top center;
 }

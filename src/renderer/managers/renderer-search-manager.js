@@ -5,6 +5,12 @@ import store from "../store"
 import router from "../router"
 
 class RendererSearchManager {
+  //検索の実行
+  async execute(query) {
+    const result = await window.ipc.searchContent(query)
+    return result
+  }
+
   //検索コンテキストの変更
   mergeContext(context) {
     store.commit("mergeContext", context)

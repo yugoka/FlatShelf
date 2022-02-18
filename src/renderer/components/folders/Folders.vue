@@ -146,10 +146,10 @@
         this.saveOpenedFolders()
       },
 
-      //開いたフォルダの情報を保存。5秒間操作しなかった場合に実行
+      //開いたフォルダの情報を保存する。3秒間操作しなかった場合に実行
       saveOpenedFolders: debounce(function() {
         this.$config.set("renderer.folders.initiallyOpened", this.openedFolders)
-      }, 5000),
+      }, 3000),
 
       //フォルダを新規作成
       //parentID=1はすべての最上層フォルダが所属するrootフォルダ(非表示)
@@ -192,6 +192,10 @@
           const targetContents = JSON.parse(event.dataTransfer.getData("targetContents"))
           await this.dropContents(targetContents, dropFolder)
 
+        //ファイルを直接ドロップした場合
+        } else if (event.dataTransfer.types.includes("Files")) {
+          const files = event.dataTransfer.files
+          this.dropFiles(files, dropFolder)
         }
       },
 
@@ -211,6 +215,13 @@
         if (contents.length === this.$store.state.edit.selectedIDs.length) {
           this.$store.dispatch("endEditMode")
         }
+      },
+
+      async dropFiles(files, folder) {
+        await this.$contents.createMany({
+          files,
+          folderID: folder.id
+        })
       }
     },
 
