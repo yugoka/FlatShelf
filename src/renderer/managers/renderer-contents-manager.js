@@ -34,24 +34,29 @@ class RendererContentsManager {
 
   async createMany(data) {
     const files = data.files
-    //保存に成功した回数
-    let successCount = 0
+    const result = []
 
     for await (const file of files) {
-      const result = await this.create({
+      const response = await this.create({
         file,
         folderID: data.folderID || 1,
       })
-      if (result) successCount += 1
+      if (response) {
+        result.push(response.dataValues.contentID)
+      }
 
       //保存枚数30枚ごとにBrowser画面を更新する
-      if (successCount % 30 === 0) {
+      if (result.length % 30 === 0) {
         window.dispatchEvent(this.events.reloadContents)
       }
     }
-    this.createdNotice(successCount, files.length)
+
+    this.createdNotice(result.length, files.length)
     window.dispatchEvent(this.events.reloadContents)
-    return { successCount }
+    //保存したコンテンツを編集する
+    store.dispatch("setSelectedItems", result)
+
+    return result
   }
 
   //search.executeへのエイリアス
