@@ -33,9 +33,6 @@ const store = new Vuex.Store({
     toggleSideMenu(state, sideBarStatus) {
       state.isSideMenuShown = sideBarStatus
     },
-    setSideMenuWidth(state, sideMenuWidth) {
-      state.sideMenuWidth = sideMenuWidth
-    },
     //通知を追加する
     setNotice(state, notice) {
       state.notice = notice

@@ -22,7 +22,6 @@ export const Folder = sequelize.define("Folder", {
 //------------------------------------
 Folder.associate = (contentModel) => {
   Folder.hasMany(contentModel, {
-    as: "contents",
     foreignKey: "folderID",
   })
 }

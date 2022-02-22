@@ -3,7 +3,7 @@ const { contextBridge, ipcRenderer } = require("electron")
 //------------------------------------
 // プリロード設定
 // レンダラー側でNode APIにアクセスする場合はこれを使う
-// 要するにレンダラーロセス側の通信APIだよ
+// 要するにレンダラープロセス側の通信APIだよ
 //------------------------------------
 contextBridge.exposeInMainWorld("ipc", {
   //------------------------------------
@@ -62,6 +62,11 @@ contextBridge.exposeInMainWorld("ipc", {
     return await ipcRenderer.invoke("create-new-folder", { targetID })
   },
 
+  //フォルダの情報を取得
+  getFolderData: async (ids) => {
+    return await ipcRenderer.invoke("get-folder-data", { ids })
+  },
+
   renameFolder: async (folderID, name) => {
     return await ipcRenderer.invoke("rename-folder", { folderID, name })
   },
@@ -75,6 +80,14 @@ contextBridge.exposeInMainWorld("ipc", {
 
   deleteFolder: async (folderID) => {
     return await ipcRenderer.invoke("delete-folder", { folderID })
+  },
+
+  //------------------------------------
+  // タグ関連
+  //------------------------------------
+
+  setTag: async (contentIDs, tagName) => {
+    return await ipcRenderer.invoke("set-tag", { contentIDs, tagName })
   },
 
   //------------------------------------

@@ -7,6 +7,9 @@
       v-model="show"
       :width="sideBar.width"
     >
+      <FolderMoveDialog
+        ref="folderMoveDialog"
+      />
       <div>
         <v-btn
           icon
@@ -57,7 +60,7 @@
           <v-textarea
             @input="onChange('description')"
             counter="1000"
-            class="mt-3 mb-2"
+            class="my-2"
             outlined
             label="説明"
             v-model.lazy="description"
@@ -66,12 +69,31 @@
           <v-text-field
             v-model.lazy="author"
             @input="onChange('author')"
-            class="my-2"
+            class="mb-1"
             dense
             outlined
             label="作者名"
             counter="50"
           />
+
+          <div class="body-2">タグ</div>
+          <TagEditBox class="my-2"/>
+
+          <div class="body-2">フォルダ</div>
+          <v-chip
+            class="my-3"
+            small
+            block
+            @click="moveFolder"
+          >
+            <v-icon 
+              class="me-2"
+            >
+              mdi-folder
+            </v-icon>
+            <span v-if="folder">{{folder[0].name}}</span>
+            <span v-else>フォルダを選択</span>
+          </v-chip>
         </div>
       </div>
     </v-navigation-drawer>
@@ -80,9 +102,17 @@
 <script>
   import debounce from 'lodash.debounce'
   import { SideMenuDragger } from '../side-menu-dragger'
+  import FolderMoveDialog from '../../window/FolderMoveDialog.vue'
+  import TagEditBox from './TagEditBox.vue'
   
   export default {
+  
     name: 'EditMenu',
+
+    components: { 
+      FolderMoveDialog,
+      TagEditBox
+    },
 
     data() {
       return {
@@ -90,9 +120,10 @@
         name: null,
         description: null,
         author: null,
+        folder: null,
         sideBar: {
           width: 250
-        }
+        },
       }
     },
 
@@ -115,6 +146,9 @@
       contentIDs() {
         return this.$store.state.edit.selectedIDs
       },
+      selectedMany() {
+        return this.contentIDs.length >= 2
+      },
     },
 
     watch: {
@@ -125,6 +159,10 @@
             ? this.contents[0][valueName]
             : null
         }
+
+        this.folder = (this.contents.length === 1)
+          ? await this.$folders.getData(this.contents[0].folderID)
+          : null
       },
     },
 
@@ -142,6 +180,10 @@
         await this.$contents.update(this.contentIDs, this.changes)
         this.changes = {}
       }, 500),
+
+      moveFolder() {
+        this.$refs.folderMoveDialog.show(this.contentIDs)
+      },
     },
 
     mounted() {

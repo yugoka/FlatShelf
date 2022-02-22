@@ -61,7 +61,19 @@ class FoldersManager {
     }
   }
 
-  //バリデーションつける。レンダラー側にも
+  async getData(ids) {
+    try {
+      const result = await Folder.findAll({
+        where: { folderID: ids },
+        raw: true,
+      })
+      return result
+    } catch (err) {
+      log.error(`[folderRead] Error: ${err}`)
+    }
+  }
+
+  //todo:バリデーションつける。レンダラー側にも
   async rename(folderID, name) {
     const targetFolderData = await Folder.findByPk(folderID)
     const targetFolderNode = this.root.getChildById(folderID)

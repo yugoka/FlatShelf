@@ -26,6 +26,11 @@ class RendererFoldersManager {
     return result.newFolder
   }
 
+  async getData(ids) {
+    const result = await window.ipc.getFolderData(ids)
+    return result
+  }
+
   async rename(folderID, name) {
     if (!name || !folderID) return
     const foldersStructure = await window.ipc.renameFolder(

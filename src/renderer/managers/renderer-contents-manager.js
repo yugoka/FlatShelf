@@ -105,11 +105,12 @@ class RendererContentsManager {
         ? `アイテムの保存が完了しました。`
         : `アイテムの保存に失敗しました。`
     } else {
-      noticeMessage = successCount
-        ? `${length}件中${
-            length - successCount
-          }件のアイテムの保存に失敗しました。`
-        : `${length}件のアイテムの保存が完了しました。`
+      noticeMessage =
+        successCount - length < 0
+          ? `${length}件中${
+              length - successCount
+            }件のアイテムの保存に失敗しました。`
+          : `${length}件のアイテムの保存が完了しました。`
     }
     store.commit("setNotice", {
       message: noticeMessage,

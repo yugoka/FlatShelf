@@ -2,6 +2,7 @@ const { ipcMain, app } = require("electron")
 const { config } = require("../managers/main-config-manager")
 const { folders } = require("../managers/folders/main-folders-manager")
 const { contents } = require("../managers/contents/main-contents-manager")
+const { tags } = require("../managers/tags/main-tags-manager")
 const { executeSearch } = require("../managers/search/main-search-manager")
 
 //------------------------------------
@@ -66,6 +67,10 @@ export const registerIpcHandlers = ({ mainWindow }) => {
     return { structure: folders.getAll(), newFolder }
   })
 
+  ipcMain.handle("get-folder-data", (event, { ids }) => {
+    return folders.getData(ids)
+  })
+
   ipcMain.handle("rename-folder", async (event, { folderID, name }) => {
     await folders.rename(folderID, name)
     return folders.getAll()
@@ -82,6 +87,14 @@ export const registerIpcHandlers = ({ mainWindow }) => {
   ipcMain.handle("delete-folder", async (event, { folderID }) => {
     await folders.delete(folderID)
     return folders.getAll()
+  })
+
+  //------------------------------------
+  // タグ関連
+  //------------------------------------
+
+  ipcMain.handle("set-tag", (event, { contentIDs, tagName }) => {
+    return tags.set(contentIDs, tagName)
   })
 
   //------------------------------------
