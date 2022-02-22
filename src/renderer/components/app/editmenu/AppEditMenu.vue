@@ -1,5 +1,6 @@
 <template>
     <v-navigation-drawer
+      class="pb-10"
       app
       stateless
       right
@@ -76,11 +77,29 @@
             counter="50"
           />
 
-          <div class="body-2">タグ</div>
-          <TagEditBox
-            class="my-2"
-            :contentIDs="contentIDs"
-          />
+          <div class="tag-box">
+            <div>
+              <span class="body-2">タグ</span>
+
+              <v-btn
+                icon
+                small
+                class="tag-box-button mb-1"
+                @click="clickTagEditButton"
+              >
+                <v-icon
+                  small
+                >
+                  mdi-pencil
+                </v-icon>
+              </v-btn>
+            </div>
+            <TagBox
+              ref="tagBox"
+              class="mt-1 mb-2"
+              :contentIDs="contentIDs"
+            />
+          </div>
 
           <div class="body-2">フォルダ</div>
           <v-chip
@@ -106,7 +125,7 @@
   import debounce from 'lodash.debounce'
   import { SideMenuDragger } from '../side-menu-dragger'
   import FolderMoveDialog from '../../window/FolderMoveDialog.vue'
-  import TagEditBox from './TagEditBox.vue'
+  import TagBox from './TagBox.vue'
   
   export default {
   
@@ -114,7 +133,7 @@
 
     components: { 
       FolderMoveDialog,
-      TagEditBox
+      TagBox
     },
 
     data() {
@@ -187,6 +206,10 @@
       moveFolder() {
         this.$refs.folderMoveDialog.show(this.contentIDs)
       },
+
+      clickTagEditButton() {
+        this.$refs.tagBox.clickCard()
+      }
     },
 
     mounted() {
@@ -263,6 +286,15 @@
 }
 #editmenu.no-transition {
   transition: none;
+}
+
+#editmenu .tag-box-button {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+#editmenu .tag-box:hover .tag-box-button {
+  opacity: 1;
 }
 
 </style>

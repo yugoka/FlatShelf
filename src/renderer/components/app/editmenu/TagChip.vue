@@ -1,6 +1,6 @@
 <template>
   <v-chip 
-    class="tag-chip me-1 mt-1 px-1"
+    class="tag-chip me-1 mt-1 ps-3 pe-1"
     small
     ripple
     @click.stop="click"
@@ -9,8 +9,8 @@
     <v-btn
       class="close-button"
       icon
-      x-small
-      @click.stop=""
+      small
+      @click.stop="clickDeleteButton"
     >
       <v-icon
         x-small
@@ -38,6 +38,9 @@ export default {
   methods: {
     click() {
       console.log(this.tag.name)
+    },
+    clickDeleteButton() {
+      this.$emit("delete")
     }
   }
 

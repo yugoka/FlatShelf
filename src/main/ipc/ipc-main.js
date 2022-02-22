@@ -101,6 +101,10 @@ export const registerIpcHandlers = ({ mainWindow }) => {
     return tags.getCommonTags(contentIDs)
   })
 
+  ipcMain.handle("remove-tag-by-id", (event, { contentIDs, tagID }) => {
+    return tags.removeByID(contentIDs, tagID)
+  })
+
   //------------------------------------
   // 検索関連
   //------------------------------------

@@ -14,6 +14,11 @@ class RendererTagsManager {
     const result = await window.ipc.setTag(contentIDs, tagName)
     return result
   }
+
+  async removeByID(contentIDs, tagID) {
+    const result = await window.ipc.removeTagByID(contentIDs, tagID)
+    return result
+  }
 }
 
 const tagsManager = new RendererTagsManager()

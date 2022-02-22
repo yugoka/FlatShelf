@@ -19,6 +19,7 @@
     @mouseenter="onHover"
     @mouseleave="hover=false"
     @click="clickCard"
+    @click.middle="middleClickCard($event)"
     @contextmenu="showContextMenu"
     @dragstart="onDragStart"
     @dragend="onDragEnd"
@@ -145,11 +146,17 @@ import SelectButton from "./SelectButton"
           }
         )
       },
+
       clickCard() {
         //選択モードなら画像クリックで選択追加
         if (this.editMode) {
           this.onClickSelectButton()
         }
+      },
+
+      //ミドルクリックをした場合単体選択する
+      middleClickCard() {
+        this.$store.dispatch("setSelectedItems", this.card.content.contentID)
       },
 
       checkSelected() {

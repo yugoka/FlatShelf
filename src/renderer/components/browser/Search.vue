@@ -201,8 +201,8 @@
           this.$store.dispatch("addSelectedItems", contentID)
         } else {
           const newSelectItem = this.selectStartIndex < cardIndex
-            ? this.contentIDs.slice(this.selectStartIndex, cardIndex + 1)
-            : this.contentIDs.slice(cardIndex, this.selectStartIndex + 1)
+            ? this.contentIDs.slice(this.selectStartIndex + 1, cardIndex + 1)
+            : this.contentIDs.slice(cardIndex, this.selectStartIndex)
           this.$store.dispatch("addSelectedItems", newSelectItem)
         }
         this.selectStartIndex = cardIndex

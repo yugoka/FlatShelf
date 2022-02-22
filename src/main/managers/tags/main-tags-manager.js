@@ -24,6 +24,7 @@ class TagsManager {
           where: { contentID: contentIDs },
           attributes: ["contentID"],
         })
+        console.log(contentsWithTag.length)
         if (contentsWithTag.length === contentIDs.length) {
           result.push(tag.dataValues)
         }
@@ -52,6 +53,43 @@ class TagsManager {
         tag: tag[0].dataValues,
         created: tag[1],
       }
+    } catch (err) {
+      log.error(err)
+      return false
+    }
+  }
+
+  async removeByID(contentIDs, tagID) {
+    try {
+      const tag = await Tag.findOne({ where: { tagID: tagID } })
+      const contents = await Content.findAll({
+        where: { contentID: contentIDs },
+      })
+      await tag.removeContents(contents)
+
+      await this.checkExist(tag)
+
+      return true
+    } catch (err) {
+      log.error(err)
+      return false
+    }
+  }
+
+  //そのタグに属するコンテンツが存在するかどうかを確認する
+  async checkExist(tag) {
+    const contentWithTagCount = await tag.countContents()
+    if (contentWithTagCount === 0) {
+      await this.delete(tag.dataValues.tagID)
+    }
+  }
+
+  async delete(tagIDs) {
+    try {
+      await Tag.destroy({
+        where: { tagID: tagIDs },
+      })
+      return true
     } catch (err) {
       log.error(err)
       return false

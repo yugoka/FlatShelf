@@ -74,7 +74,11 @@ const store = new Vuex.Store({
 
     async addSelectedItems({ commit, state }, inputValue) {
       const IDs = Array.isArray(inputValue) ? inputValue : [inputValue]
-      const contents = await contentsManager.getData(IDs)
+      //追加するIDの内すでに存在するものは除く
+      const filteredIDs = IDs.filter(
+        (id) => !state.edit.selectedIDs.includes(id)
+      )
+      const contents = await contentsManager.getData(filteredIDs)
       commit("setSelectedItems", [...state.edit.selectedContents, ...contents])
     },
 

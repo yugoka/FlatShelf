@@ -92,6 +92,9 @@ contextBridge.exposeInMainWorld("ipc", {
   getCommonTags: async (contentIDs) => {
     return await ipcRenderer.invoke("get-common-tags", { contentIDs })
   },
+  removeTagByID: async (contentIDs, tagID) => {
+    return await ipcRenderer.invoke("remove-tag-by-id", { contentIDs, tagID })
+  },
 
   //------------------------------------
   // 片道通信：レンダラー→メイン
