@@ -8,55 +8,72 @@
 
     <TagEditDialog
       ref="dialog"
+      @update="onUpdate"
     />
 
-    <v-chip 
+    <TagChip
       v-for="tag in tags"
-      :key="tag"
+      :key="tag.tagID"
+      :tag="tag"
+    />
 
-      class="me-1 mt-1"
-      x-small
-      ripple
-    >
-      {{tag}}
-    </v-chip>
   </v-card>
 </template>
 
 <script>
   import TagEditDialog from "./TagEditDialog.vue"
+  import TagChip from "./TagChip.vue"
 
   export default {
 
-      name: "EditMenuTagEditBox",
+    name: "EditMenuTagEditBox",
 
-      components: { 
-        TagEditDialog
+    props: {
+      contentIDs: Array
+    },
+
+    components: {
+      TagEditDialog,
+      TagChip
+    },
+
+    data() {
+        return {
+            tags: []
+        }
+    },
+
+    watch: {
+      async contentIDs() {
+        await this.getCommonTags()
+      }
+    },
+
+    methods: {
+      clickCard() {
+        this.$refs.dialog.show(this.contentIDs)
       },
 
-      data() {
-          return {
-              tags: [
-                  "えろい",
-                  "えらい",
-                  "えろじい",
-                  "お気に入り",
-                  "ちくわ丼"
-              ]
-          }
+      async onUpdate() {
+        await this.getCommonTags()
       },
-      methods: {
-          clickCard() {
-              this.$refs.dialog.show(this.$store.state.edit.selectedIDs)
-          }
-      },
+
+      //メインプロセスに問い合わせて選択されたコンテンツ全てに共通するタグを抽出する
+      async getCommonTags() {
+        this.tags = await this.$tags.getCommonTags(this.contentIDs)
+      }
+    },
+
+    async created() {
+      await this.getCommonTags()
+    }
     
   }
 </script>
 
 <style scoped>
 .card {
-  height: 100px;
+  min-height: 100px;
   padding: 5px;
   overflow: hidden;
 }

@@ -97,6 +97,10 @@ export const registerIpcHandlers = ({ mainWindow }) => {
     return tags.set(contentIDs, tagName)
   })
 
+  ipcMain.handle("get-common-tags", (event, { contentIDs }) => {
+    return tags.getCommonTags(contentIDs)
+  })
+
   //------------------------------------
   // 検索関連
   //------------------------------------

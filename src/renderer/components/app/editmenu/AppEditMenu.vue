@@ -77,7 +77,10 @@
           />
 
           <div class="body-2">タグ</div>
-          <TagEditBox class="my-2"/>
+          <TagEditBox
+            class="my-2"
+            :contentIDs="contentIDs"
+          />
 
           <div class="body-2">フォルダ</div>
           <v-chip

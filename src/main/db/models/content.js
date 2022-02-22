@@ -63,9 +63,7 @@ export const Content = sequelize.define("Content", {
 // 関係を定義するための関数
 //------------------------------------
 Content.associate = (folderModel, tagModel) => {
-  Content.belongsTo(folderModel, {
-    foreignKey: "folderID",
-  })
+  Content.belongsTo(folderModel)
   Content.belongsToMany(tagModel, {
     through: "ContentTags",
   })

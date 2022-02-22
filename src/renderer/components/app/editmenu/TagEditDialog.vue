@@ -61,7 +61,8 @@ export default {
 
     async setTag() {
       const result = await this.$tags.set(this.contentIDs, this.input)
-      console.log(result)
+      this.input = ""
+      this.$emit("update")
     }
   }
 }
