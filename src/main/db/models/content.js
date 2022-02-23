@@ -57,6 +57,9 @@ export const Content = sequelize.define("Content", {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  lastSeen: {
+    type: DataTypes.DATE,
+  },
 })
 
 //------------------------------------

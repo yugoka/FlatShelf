@@ -5,6 +5,7 @@
 const { Content } = require("../../db/models/content")
 const { Tag } = require("../../db/models/tag")
 const log = require("electron-log")
+const { Op } = require("sequelize")
 
 class TagsManager {
   //対象のコンテンツ全てが共通して持つタグを抽出する
@@ -24,7 +25,6 @@ class TagsManager {
           where: { contentID: contentIDs },
           attributes: ["contentID"],
         })
-        console.log(contentsWithTag.length)
         if (contentsWithTag.length === contentIDs.length) {
           result.push(tag.dataValues)
         }
@@ -33,6 +33,30 @@ class TagsManager {
       return result
     } catch (err) {
       log.error(err)
+    }
+  }
+
+  async get(data) {
+    try {
+      const query = {
+        where: {},
+        order: data.order || [["lastUsed", "DESC"]],
+        raw: true,
+      }
+
+      //ワード条件が入力されているなら条件を追加
+      if (data.word) {
+        query.where.name = { [Op.like]: `%${data.word}%` }
+      }
+      if (data.limit) {
+        query.limit = data.limit
+      }
+
+      const result = await Tag.findAll(query)
+      return result
+    } catch (err) {
+      log.error(err)
+      return false
     }
   }
 
@@ -48,11 +72,32 @@ class TagsManager {
       })
 
       await tag[0].addContents(contents)
+      await this.setLastUsedTime(tag[0])
 
       return {
         tag: tag[0].dataValues,
         created: tag[1],
       }
+    } catch (err) {
+      log.error(err)
+      return false
+    }
+  }
+
+  async setLastUsedTime(tag) {
+    tag.update({
+      lastUsed: new Date(),
+    })
+  }
+
+  async setByID(contentIDs, tagID) {
+    try {
+      const tag = await Tag.findOne({ where: { tagID: tagID } })
+      const contents = await Content.findAll({
+        where: { contentID: contentIDs },
+      })
+      await tag.addContents(contents)
+      return true
     } catch (err) {
       log.error(err)
       return false
@@ -66,21 +111,10 @@ class TagsManager {
         where: { contentID: contentIDs },
       })
       await tag.removeContents(contents)
-
-      await this.checkExist(tag)
-
       return true
     } catch (err) {
       log.error(err)
       return false
-    }
-  }
-
-  //そのタグに属するコンテンツが存在するかどうかを確認する
-  async checkExist(tag) {
-    const contentWithTagCount = await tag.countContents()
-    if (contentWithTagCount === 0) {
-      await this.delete(tag.dataValues.tagID)
     }
   }
 

@@ -16,6 +16,9 @@ export const Tag = sequelize.define("Tag", {
     allowNull: false,
     unique: true,
   },
+  lastUsed: {
+    type: DataTypes.DATE,
+  },
 })
 
 //------------------------------------

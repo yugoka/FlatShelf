@@ -101,6 +101,14 @@ export const registerIpcHandlers = ({ mainWindow }) => {
     return tags.getCommonTags(contentIDs)
   })
 
+  ipcMain.handle("get-tags", (event, { data }) => {
+    return tags.get(data)
+  })
+
+  ipcMain.handle("set-tag-by-id", (event, { contentIDs, tagID }) => {
+    return tags.setByID(contentIDs, tagID)
+  })
+
   ipcMain.handle("remove-tag-by-id", (event, { contentIDs, tagID }) => {
     return tags.removeByID(contentIDs, tagID)
   })

@@ -9,6 +9,7 @@
     <TagEditDialog
       ref="dialog"
       @update="onUpdate"
+      :selectedTags="tags"
     />
 
     <TagChip
@@ -39,9 +40,9 @@
     },
 
     data() {
-        return {
-            tags: []
-        }
+      return {
+        tags: []
+      }
     },
 
     watch: {
@@ -61,7 +62,6 @@
 
       //メインプロセスに問い合わせて選択されたコンテンツ全てに共通するタグを抽出する
       async getCommonTags() {
-        console.log("getCommon")
         this.tags = await this.$tags.getCommonTags(this.contentIDs)
       },
 

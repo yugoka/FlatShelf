@@ -28,7 +28,7 @@ export const initDB = () => {
     //dbには初期化時に自動的に登録される。foldersはjsonとdbで二重に実体が存在するため注意が必要
     Folder.findOrCreate({
       where: { folderID: 1 },
-      defaults: { name: "root" },
+      defaults: { name: "未分類" },
     })
   })
 }

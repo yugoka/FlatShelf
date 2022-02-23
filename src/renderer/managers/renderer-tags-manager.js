@@ -10,8 +10,18 @@ class RendererTagsManager {
     return result
   }
 
+  async get(data) {
+    const result = await window.ipc.getTags(data)
+    return result
+  }
+
   async set(contentIDs, tagName) {
     const result = await window.ipc.setTag(contentIDs, tagName)
+    return result
+  }
+
+  async setByID(contentIDs, tagID) {
+    const result = await window.ipc.setTagByID(contentIDs, tagID)
     return result
   }
 
