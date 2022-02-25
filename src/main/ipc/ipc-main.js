@@ -79,6 +79,13 @@ export const registerIpcHandlers = ({ mainWindow }) => {
     return folders.getData(ids)
   })
 
+  ipcMain.handle(
+    "get-folder-decendants",
+    (event, { folderID, mode, includeMe }) => {
+      return folders.getDecendants(folderID, mode, includeMe)
+    }
+  )
+
   ipcMain.handle("rename-folder", async (event, { folderID, name }) => {
     await folders.rename(folderID, name)
     return folders.getAll()

@@ -72,7 +72,7 @@
       selectFolder(folder) {
         this.unselectMainMenu()
         //検索コンテキストを変更＆ページを遷移する
-        this.$search.redirect({ folders: [folder.id] })
+        this.$search.redirect({ folder: folder.id })
       }
     },
 

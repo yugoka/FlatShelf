@@ -12,7 +12,7 @@ const store = new Vuex.Store({
     isSideMenuShown: true,
     notice: {},
     viewContext: {
-      folders: [1],
+      folder: 1,
       word: null,
       order: [["createdAt", "ASC"]],
     },

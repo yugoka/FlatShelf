@@ -17,8 +17,12 @@ export class Node {
 
   deleteChild(id) {
     this.children = this.children.filter((child) => {
-      return (child.id != id)
+      return child.id != id
     })
+  }
+
+  getChildrenIDs() {
+    return this.children.map((child) => child.id)
   }
 
   //子孫フォルダのIDをすべて取得する
@@ -45,7 +49,7 @@ export class Node {
     if (!this.children.length) return false
 
     //少しでも高速化するために通常のfor文を使用
-    for (let i=0; i<this.children.length; i++) {
+    for (let i = 0; i < this.children.length; i++) {
       const result = this.children[i].getChildById(id)
       //IDが一致したらそのオブジェクトを返す
       if (result) return result

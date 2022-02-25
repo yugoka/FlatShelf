@@ -2,38 +2,27 @@ import store from "../../../store"
 import justifiedLayout from "justified-layout"
 
 class LayoutManager {
-  constructor() {
-    this.contents = []
-    this.layouts = []
-    this.scrollerWidth = null
-    this.itemSize = null
-  }
+  getLayouts(data) {
+    const layouts = this.brickLayout(data)
 
-  getLayouts(layoutName, contents, scrollerWidth, itemSize) {
-    this.contents = contents
-    this.scrollerWidth = scrollerWidth
-    this.itemSize = itemSize
-
-    this.layouts = this.brickLayout()
-
-    for (let i = 0; i < this.layouts.boxes.length; i++) {
-      this.layouts.boxes[i].content = this.contents[i]
-      this.layouts.boxes[i].index = i
+    for (let i = 0; i < layouts.boxes.length; i++) {
+      layouts.boxes[i].content = data.contents[i]
+      layouts.boxes[i].index = i
     }
 
-    return this.layouts
+    return layouts
   }
 
-  brickLayout() {
+  brickLayout(data) {
     const settings = {
-      containerWidth: this.scrollerWidth,
+      containerWidth: data.scrollerWidth,
       boxSpacing: {
         horizontal: 3,
         vertical: 3,
       },
-      targetRowHeight: this.itemSize,
+      targetRowHeight: data.itemSize,
       containerPadding: {
-        top: 0,
+        top: data.prependHeight,
         right: 12,
         left: 5,
         bottom: 0,
@@ -44,13 +33,13 @@ class LayoutManager {
       settings.boxSpacing.vertical = 30
     }
 
-    return justifiedLayout(this.getAspectRatios(), settings)
+    return justifiedLayout(this.getAspectRatios(data.contents), settings)
   }
 
-  getAspectRatios() {
+  getAspectRatios(contents) {
     const result = []
-    for (let i = 0; i < this.contents.length; i++) {
-      result[i] = this.contents[i].thumbnailAspectRatio
+    for (let i = 0; i < contents.length; i++) {
+      result[i] = contents[i].thumbnailAspectRatio
     }
     return result
   }

@@ -12,13 +12,12 @@ class RendererFoldersManager {
 
   //フォルダ構造を取得してstoreに格納する
   //main.jsで初期化時に一度呼ばれる(同期的)
-  //また、CRUDメソッドは変更後のフォルダ構造をまとめて返す
   async getStructure() {
     const foldersStructure = await window.ipc.getFoldersStructure()
     this.setFolders(foldersStructure)
   }
 
-  //この関数ではフォルダツリー全体に加えて作成されたノード単体も返される
+  //resultはフォルダ構造と新しいフォルダを両方含む
   async create(targetID) {
     const result = await window.ipc.createNewFolder(Number(targetID))
     const foldersStructure = result.structure
@@ -28,6 +27,15 @@ class RendererFoldersManager {
 
   async getData(ids) {
     const result = await window.ipc.getFolderData(ids)
+    return result
+  }
+
+  async getDecendants(folderID, mode = "decendants", includeMe = false) {
+    const result = await window.ipc.getFolderDecendants(
+      folderID,
+      mode,
+      includeMe
+    )
     return result
   }
 

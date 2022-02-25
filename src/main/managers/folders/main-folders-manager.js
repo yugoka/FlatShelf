@@ -124,6 +124,23 @@ class FoldersManager {
     return this.root
   }
 
+  async getDecendants(folderID, mode, includeMe) {
+    const targetFolder = this.root.getChildById(folderID)
+    if (!targetFolder) return []
+
+    const ids =
+      mode === "children"
+        ? targetFolder.getChildrenIDs()
+        : targetFolder.getAllDecendantsID()
+    if (includeMe) ids.unshift(folderID)
+
+    const result = await Folder.findAll({
+      where: { folderID: ids },
+      raw: true,
+    })
+    return result
+  }
+
   //jsonから読み込まれたフォルダ構造からNodeインスタンスで構成されたツリー構造を生成する
   initStructure(structure) {
     //rootフォルダーは常にid=1, name="root"になる。初回起動時にdbには自動登録済み

@@ -11,6 +11,11 @@
       ref="contextMenu"
     />
 
+    <!-- 検索結果の前に表示される要素 -->
+    <BeforeSearchContents
+      @resize="onResizePrependElements"
+    />
+
     <div 
       class="contents-wrapper"
       :style="{ height: this.containerHeight + 'px' }"
@@ -37,16 +42,18 @@
   import SearchContextMenu from './SearchContextMenu'
   import layoutManager from './scripts/layout-manager'
   import CardDragGhost from './cards/CardDragGhost.vue'
+  import BeforeSearchContents from './BeforeSearchContents.vue'
 
   export default {
 
     name:"SearchContents",
 
     components: {
-    ContentCard,
-    SearchContextMenu,
-    CardDragGhost
-},
+      ContentCard,
+      SearchContextMenu,
+      CardDragGhost,
+      BeforeSearchContents
+    },
 
     data() {
       return {
@@ -61,6 +68,7 @@
         visibleCards: [],
         selectStartIndex: null,
         hoverCardIndex: null,
+        prependHeight: 0,
         keys: {
           Shift: false,
           Ctrl: false
@@ -86,7 +94,7 @@
 
       containerHeight() {
         if (!this.layouts) return 0
-        return this.layouts.containerHeight
+        return this.layouts.containerHeight - this.prependHeight
       },
 
       contentIDs() {
@@ -118,19 +126,31 @@
 
     methods: {
       //storeに格納されたcontextに従ってコンテンツを読み込む。Browser上すべての検索はここで行われる
-      async loadContents() {
+      async loadContents({ getLayouts = true } = {}) {
         this.contents = await this.$contents.search(this.viewContext)
-        this.getLayouts()
         this.selectStartIndex = null
+        if (getLayouts) this.getLayouts()
       },
 
       //レイアウトを更新する
       getLayouts() {
-        this.layouts = layoutManager.getLayouts("brick", this.contents, this.scrollerWidth, this.itemSize)
+        this.layouts = layoutManager.getLayouts({
+          layoutName: "brick", 
+          contents: this.contents, 
+          scrollerWidth: this.scrollerWidth,
+          itemSize: this.itemSize,
+          prependHeight: this.prependHeight
+        })
+
         this.contentsHeight = this.layouts.containerHeight
         this.$nextTick(() => {
           this.getVisibleCards()
         })
+      },
+
+      onResizePrependElements(height) {
+        this.prependHeight = height
+        this.getLayouts()
       },
 
       onResize: debounce(function() {
@@ -267,7 +287,7 @@
     },
 
     async created() {
-      await this.loadContents()
+      await this.loadContents({ getLayouts: false })
 
       //これでコンテンツのupdateを検知してるけどあんまりいい実装じゃなさそう
       window.addEventListener('reloadContents', this.loadContents)

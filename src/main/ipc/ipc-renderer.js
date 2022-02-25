@@ -75,6 +75,14 @@ contextBridge.exposeInMainWorld("ipc", {
     return await ipcRenderer.invoke("get-folder-data", { ids })
   },
 
+  getFolderDecendants: async (folderID, mode, includeMe) => {
+    return await ipcRenderer.invoke("get-folder-decendants", {
+      folderID,
+      mode,
+      includeMe,
+    })
+  },
+
   renameFolder: async (folderID, name) => {
     return await ipcRenderer.invoke("rename-folder", { folderID, name })
   },

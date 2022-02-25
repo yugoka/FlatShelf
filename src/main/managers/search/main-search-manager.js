@@ -67,9 +67,9 @@ class Search {
 
   //フォルダ条件
   registerSearchFolders() {
-    if (!this.query.folders) return
+    if (!this.query.folder) return
     //クエリにフォルダ条件を追加する。複数のフォルダ条件がある場合or条件になる
-    this.queryAnd.push({ folderID: this.query.folders })
+    this.queryAnd.push({ folderID: this.query.folder })
   }
 
   //順番条件。記載がない場合は作成日の降順になる

@@ -66,7 +66,7 @@
         contexts: {
           all: {},
           noFolder: {
-            folders: [1]
+            folder: 1
           },
           noTags: {
 

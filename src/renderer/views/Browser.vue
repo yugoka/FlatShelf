@@ -6,6 +6,9 @@
     @dragleave="fileDropSnackBar = false"
     @drop="onDrop"
   >
+    <!-- 上部のツールバー -->
+    <BrowserToolbar/>
+
     <!-- 検索画面本体 -->
     <SearchContents
       ref="contents"
@@ -30,13 +33,15 @@
 
 <script>
   import SearchContents from "../components/browser/Search"
+  import BrowserToolbar from "../components/browser/BrowserToolbar.vue"
 
   export default {
 
     name:"Browser",
 
     components: {
-      SearchContents
+    SearchContents,
+    BrowserToolbar,
     },
 
     data() {
