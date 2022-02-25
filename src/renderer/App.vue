@@ -48,9 +48,6 @@ export default {
   },
 
   mounted() {
-    setTimeout(() => {
-      this.$el.scrollTop = 1000
-    }, 3090)
   }
 
 }

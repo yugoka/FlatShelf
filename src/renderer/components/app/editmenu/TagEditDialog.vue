@@ -38,8 +38,7 @@
             v-for="tag in recentUsedTags"
             :key="tag.tagID"
             :tag="tag"
-            :showDeleteButton="false"
-            :highlightSelected="true"
+            :selectMode="true"
             :selectedTags="selectedTags"
             @click="toggleTag(tag)"
           />
@@ -67,8 +66,7 @@
             v-for="tag in tagSearchResult"
             :key="tag.tagID"
             :tag="tag"
-            :showDeleteButton="false"
-            :highlightSelected="true"
+            :selectMode="true"
             :selectedTags="selectedTags"
             @click="toggleTag(tag)"
           />
@@ -179,12 +177,8 @@ import TagCreateButton from "./TagCreateButton.vue"
           this.exactNameTag = null
         }
       },
-
-      onInput() {
-        this.searchTag()
-      },
  
-      searchTag: debounce(async function() {
+      onInput: debounce(async function() {
         await this.getTagsByWord()
       }, 100),
 

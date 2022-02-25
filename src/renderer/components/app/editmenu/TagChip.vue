@@ -2,8 +2,8 @@
   <v-chip 
     :class="{
       'tag-chip me-1 mt-1 ps-3': true,
-      'pe-1': showDeleteButton,
-      'pe-3': !showDeleteButton
+      'pe-1': !selectMode,
+      'pe-3': selectMode
     }"
     :small="size === 'small'"
     ripple
@@ -19,14 +19,13 @@
         mdi-check-circle
       </v-icon>
     </v-expand-x-transition>
-    <span v-if="!customText">
-      {{tag.name}}
+
+    <span>
+      {{customText ? customText : tag.name}}
     </span>
-    <span v-else>
-      {{customText}}
-    </span>
+
     <v-btn
-      v-if="showDeleteButton"
+      v-if="!selectMode"
       class="close-button"
       icon
       small
@@ -51,17 +50,13 @@ export default {
       type: String,
       default: "small"
     },
-    showDeleteButton: {
+    selectMode: {
       type: Boolean,
-      default: true
+      default: false
     },
     selectedTags: {
       type: Array,
       default: () => []
-    },
-    highlightSelected: {
-      type: Boolean,
-      default: false
     },
     customText: {
       type: String,
@@ -77,7 +72,7 @@ export default {
 
   computed: {
     highlighted() {
-      return (this.selected && this.highlightSelected)
+      return (this.selected && this.selectMode)
     }
   },
 
@@ -96,14 +91,14 @@ export default {
 
   watch: {
     selectedTags() {
-      if (this.highlightSelected) {
+      if (this.selectMode) {
         this.checkSelected()
       }
     }
   },
 
   created() {
-    if (this.highlightSelected) {
+    if (this.selectMode) {
       this.checkSelected()
     }
   }

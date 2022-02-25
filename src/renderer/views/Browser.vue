@@ -19,7 +19,7 @@
       timeout="-1"
       transition="slide-y-reverse-transition"
     >
-      <div class="file-drop-import-snackbar">
+      <div>
         <v-icon large>mdi-import</v-icon>
       </div>
       ファイルをドロップしてインポート

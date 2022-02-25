@@ -40,6 +40,34 @@ class ContentsManager {
     }
   }
 
+  //指定されたコンテンツ全てにおいて値が共通するようなcolumnsを抽出する
+  async checkCommonValues({ contentIDs, columns }) {
+    try {
+      const basisContent = await Content.findOne({
+        where: { contentID: contentIDs[0] },
+        attributes: columns,
+        raw: true,
+      })
+      const result = {}
+
+      for await (const column of columns) {
+        const commonCount = await Content.count({
+          where: {
+            contentID: contentIDs,
+            [column]: basisContent[column],
+          },
+        })
+
+        result[column] =
+          commonCount === contentIDs.length ? basisContent[column] : null
+      }
+
+      return result
+    } catch (err) {
+      log.error(`[checkContentCommonValues]Error: ${err}`)
+    }
+  }
+
   //コンテンツのメタデータを変更
   async update(data) {
     try {

@@ -97,6 +97,7 @@ class TagsManager {
         where: { contentID: contentIDs },
       })
       await tag.addContents(contents)
+      await this.setLastUsedTime(tag)
       return true
     } catch (err) {
       log.error(err)

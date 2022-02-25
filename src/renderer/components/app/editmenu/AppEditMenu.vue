@@ -175,16 +175,9 @@
 
     watch: {
       async contents() {
-        //それぞれの設定項目について選択数が1なら保存項目を読み込み、選択数が2以上なら空欄にする
-        for (const valueName of ["name", "description", "author"]) {
-          this[valueName] = (this.contents.length === 1) 
-            ? this.contents[0][valueName]
-            : null
+        if(this.contentIDs.length) {
+          await this.getCommonValues()
         }
-
-        this.folder = (this.contents.length === 1)
-          ? await this.$folders.getData(this.contents[0].folderID)
-          : null
       },
     },
 
@@ -209,6 +202,20 @@
 
       clickTagEditButton() {
         this.$refs.tagBox.clickCard()
+      },
+
+      //選択中のアイテム全てに共通する編集項目を抜き出して保存する
+      async getCommonValues() {
+        const commonValues = await this.$contents.checkCommonValues(this.contentIDs, ["description", "author", "folderID"])
+        if (!commonValues) return
+
+        for (const column of ["description", "author"]) {
+          this[column] = commonValues[column]
+        }
+
+        this.folder = (commonValues.folderID)
+          ? await this.$folders.getData(this.contents[0].folderID)
+          : null
       }
     },
 

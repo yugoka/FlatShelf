@@ -48,6 +48,14 @@ export const registerIpcHandlers = ({ mainWindow }) => {
     return contents.update(data)
   })
 
+  //コンテンツの重複値特定
+  ipcMain.handle(
+    "check-content-common-values",
+    (event, { contentIDs, columns }) => {
+      return contents.checkCommonValues(contentIDs, columns)
+    }
+  )
+
   //コンテンツ削除
   ipcMain.handle("delete-content", (event, { data }) => {
     return contents.delete(data)

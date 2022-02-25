@@ -70,6 +70,17 @@ class RendererContentsManager {
     return result
   }
 
+  //指定されたコンテンツで、columnsカラムの値が全て共通するかどうかを調べる。(共通する場合はその値、共通しない場合はnull)
+  //columns = ["name", "author"]の場合、{ name: null, author: '葛飾北斎' } みたいに帰ってくる
+  async checkCommonValues(contentIDs, columns) {
+    if (!contentIDs.length || !columns.length) return
+    const result = await window.ipc.checkContentCommonValues({
+      contentIDs,
+      columns,
+    })
+    return result
+  }
+
   async update(IDs, values) {
     if (!values || !IDs) return
     const result = await window.ipc.updateContent({

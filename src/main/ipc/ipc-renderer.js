@@ -38,6 +38,14 @@ contextBridge.exposeInMainWorld("ipc", {
     return await ipcRenderer.invoke("search-content", { query })
   },
 
+  //コンテンツの共通値を抽出
+  checkContentCommonValues: async (contentIDs, columns) => {
+    return await ipcRenderer.invoke("check-content-common-values", {
+      contentIDs,
+      columns,
+    })
+  },
+
   //コンテンツ更新
   updateContent: async (data) => {
     return await ipcRenderer.invoke("update-content", { data })
