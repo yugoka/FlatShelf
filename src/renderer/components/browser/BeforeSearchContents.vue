@@ -1,22 +1,29 @@
 <template> 
   <div ref="prepend" class="pa-1">
-    <BrowserFolders/>
+    <BrowserFolders
+      :width="width"
+    />
   </div>
 </template>
 
 <script>
-import throttle from "lodash.throttle"
+import debounce from "lodash.debounce"
 import BrowserFolders from "./BrowserFolders.vue"
 
 export default {
   components: { BrowserFolders },
   data() {
-    return {}
+    return {
+      width:0,
+      height: 0
+    }
   },
   methods: {
-    onResize: throttle(function () {
+    onResize: debounce(function () {
         if (!this.$refs.prepend) return 
-        this.$emit("resize", this.$refs.prepend.offsetHeight)
+        this.width = this.$refs.prepend.offsetWidth
+        this.height = this.$refs.prepend.offsetHeight
+        this.$emit("resize", this.height)
     }, 50)
   },
   mounted() {

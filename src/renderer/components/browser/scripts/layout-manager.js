@@ -3,17 +3,6 @@ import justifiedLayout from "justified-layout"
 
 class LayoutManager {
   getLayouts(data) {
-    const layouts = this.brickLayout(data)
-
-    for (let i = 0; i < layouts.boxes.length; i++) {
-      layouts.boxes[i].content = data.contents[i]
-      layouts.boxes[i].index = i
-    }
-
-    return layouts
-  }
-
-  brickLayout(data) {
     const settings = {
       containerWidth: data.scrollerWidth,
       boxSpacing: {
@@ -22,7 +11,7 @@ class LayoutManager {
       },
       targetRowHeight: data.itemSize,
       containerPadding: {
-        top: data.prependHeight,
+        top: 0,
         right: 12,
         left: 5,
         bottom: 0,
@@ -33,7 +22,33 @@ class LayoutManager {
       settings.boxSpacing.vertical = 30
     }
 
+    const layouts = this.switchLayouts(data, settings)
+
+    for (let i = 0; i < layouts.boxes.length; i++) {
+      layouts.boxes[i].content = data.contents[i]
+      layouts.boxes[i].index = i
+    }
+
+    return layouts
+  }
+
+  switchLayouts(data, settings) {
+    if (data.layoutName === "brick") {
+      return this.getBrickLayout(data, settings)
+    } else {
+      return this.getGridLayout(data, settings)
+    }
+  }
+
+  getBrickLayout(data, settings) {
     return justifiedLayout(this.getAspectRatios(data.contents), settings)
+  }
+
+  getGridLayout(data, settings) {
+    return justifiedLayout(this.getAspectRatios(data.contents), {
+      ...settings,
+      forceAspectRatio: 1,
+    })
   }
 
   getAspectRatios(contents) {

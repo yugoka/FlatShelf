@@ -38,6 +38,7 @@
 
 <script>
   import debounce from 'lodash.debounce'
+  import throttle from 'lodash.throttle'
   import ContentCard from './cards/ContentCard'
   import SearchContextMenu from './SearchContextMenu'
   import layoutManager from './scripts/layout-manager'
@@ -138,8 +139,7 @@
           layoutName: "brick", 
           contents: this.contents, 
           scrollerWidth: this.scrollerWidth,
-          itemSize: this.itemSize,
-          prependHeight: this.prependHeight
+          itemSize: this.itemSize
         })
 
         this.contentsHeight = this.layouts.containerHeight
@@ -173,11 +173,13 @@
 
       getVisibleCards() {
         if (!this.layouts) return
+        const minScrollTop = this.scrollTop - this.buffer - this.prependHeight
+        const maxScrollTop = this.scrollTop + this.scrollerHeight + this.buffer - this.prependHeight
 
         this.visibleCards = this.layouts.boxes.filter((box) => {
           return (
-            this.scrollTop - this.buffer < box.top &&
-            box.top < this.scrollTop + this.scrollerHeight + this.buffer
+            minScrollTop < box.top &&
+            box.top < maxScrollTop
           )
         })
       },
@@ -324,8 +326,12 @@
   width: 100%;
   height: 100%;
   overflow-y: scroll;
-  position: relative;
+  overflow-x: hidden;
   user-select: none;
+}
+
+.contents-wrapper {
+  position: relative;
 }
 
 .scroller::-webkit-scrollbar {
