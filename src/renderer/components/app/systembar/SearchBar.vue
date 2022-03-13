@@ -21,7 +21,7 @@
           > 
             <div class="search-chip-text-wrapper">
               <v-icon>mdi-magnify</v-icon>
-              検索
+              {{context.word ? context.word : "検索"}}
             </div>
           </v-chip>
         </template>
@@ -42,9 +42,9 @@
 
           prepend-inner-icon="mdi-magnify"
           placeholder="検索してみよう"
-          :persistent-placeholder="!searchWord.length"
+          :persistent-placeholder="!context.word.length"
 
-          v-model="searchWord"
+          v-model="context.word"
           @keydown.enter="executeSearch"
         />
       </div>
@@ -61,11 +61,29 @@
 import debounce from 'lodash.debounce'
 
 export default {
+
+  components: {  },
+
   data() {
     return {
       menu: false,
-      searchWord: "",
-      cardNudgeLeft: 0
+      cardNudgeLeft: 0,
+      context: {
+        word: ""
+      }
+    }
+  },
+
+  computed: {
+    //現在検索対象のフォルダ
+    searchFolder() {
+      return this.$store.state.viewContext.folder
+    }
+  },
+
+  watch: {
+    searchFolder() {
+      this.context = {word: ""}
     }
   },
 
@@ -76,9 +94,8 @@ export default {
 
     executeSearch() {
       if (this.menu) {
-        this.$search.mergeContext({word: this.searchWord})
+        this.$search.mergeContext(this.context)
         this.menu = false
-        this.searchWord = ""
       }
     },
 

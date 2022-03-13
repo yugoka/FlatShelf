@@ -1,6 +1,6 @@
 <template>
   <v-menu
-    content-class="menu"
+    :content-class="top ? 'top' : ''"
     v-model="menu"
     :close-on-content-click="false"
     nudge-left="80"
@@ -87,6 +87,12 @@
 
 <script>
 export default {
+  props: {
+    top: {
+      type: Boolean,
+      default: true
+    }
+  },
   data() {
     return {
       menu: false,
@@ -178,7 +184,7 @@ export default {
 </script>
 
 <style scoped>
-.menu {
+.top {
   top: 5px !important;
 }
 .button-icon {
