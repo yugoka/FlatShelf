@@ -7,6 +7,8 @@ import router from "../router"
 class RendererSearchManager {
   //検索の実行
   async execute(query) {
+    //
+    query.config = store.state.settings.renderer.search.query
     const result = await window.ipc.searchContent(query)
     return result
   }

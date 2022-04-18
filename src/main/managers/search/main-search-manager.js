@@ -2,6 +2,7 @@
 // 検索管理 for メインプロセス
 //------------------------------------
 const { Content } = require("../../db/models/content")
+const { folders } = require("../folders/main-folders-manager")
 const { Op } = require("sequelize")
 const log = require("electron-log")
 
@@ -33,7 +34,9 @@ class Search {
     //条件にショートカットでアクセスできるようにする
     this.queryRoot = this.queryObject.where[Op.or]
     this.queryAnd = this.queryObject.where[Op.or][0][Op.and]
+  }
 
+  async registerQuerys() {
     //各検索条件をクエリに登録する
     this.registerSearchIDs()
     this.registerSearchWords()
@@ -68,8 +71,13 @@ class Search {
   //フォルダ条件
   registerSearchFolders() {
     if (!this.query.folder) return
+    //子孫フォルダも検索対象の場合、子孫フォルダをIDリストに追加する
+    const folderIDs = this.query.config.includeDecendantFolders
+      ? folders.root.getChildById(this.query.folder).getAllAffiliatedID()
+      : this.query.folder
+    console.log(folderIDs)
     //クエリにフォルダ条件を追加する。複数のフォルダ条件がある場合or条件になる
-    this.queryAnd.push({ folderID: this.query.folder })
+    this.queryAnd.push({ folderID: folderIDs })
   }
 
   //順番条件。記載がない場合は作成日の降順になる
@@ -80,6 +88,7 @@ class Search {
   //検索を実行する
   async execute() {
     log.info(`[contentSearch] Start searching`)
+    await this.registerQuerys()
     const result = await Content.findAndCountAll(this.queryObject)
     log.info(`[contentSearch] Found ${result.count} items`)
 

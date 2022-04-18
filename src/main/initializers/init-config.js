@@ -22,6 +22,9 @@ const defaults = {
       search: {
         showItemName: false,
         itemSize: 150,
+        query: {
+          includeDecendantFolders: false
+        }
       },
     },
 

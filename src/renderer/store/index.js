@@ -15,6 +15,8 @@ const store = new Vuex.Store({
       folder: 1,
       word: null,
       order: [["createdAt", "ASC"]],
+      //settings.renderer.queryを常に監視＆反映する予定
+      config: {}
     },
     edit: {
       editMode: false,

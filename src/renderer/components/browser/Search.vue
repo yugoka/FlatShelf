@@ -128,7 +128,7 @@
     methods: {
       //storeに格納されたcontextに従ってコンテンツを読み込む。Browser上すべての検索はここで行われる
       async loadContents({ getLayouts = true } = {}) {
-        this.contents = await this.$contents.search(this.viewContext)
+        this.contents = await this.$search.execute(this.viewContext)
         this.selectStartIndex = null
         if (getLayouts) this.getLayouts()
       },

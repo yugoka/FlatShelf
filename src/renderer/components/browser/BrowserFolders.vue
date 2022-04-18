@@ -5,7 +5,7 @@
     class="folder-panel"
   >
     <v-expansion-panel>
-      <v-expansion-panel-header>子フォルダ</v-expansion-panel-header>
+      <v-expansion-panel-header>サブフォルダ</v-expansion-panel-header>
       <v-expansion-panel-content>
         <v-row 
           class="folders-wrapper"
@@ -26,6 +26,17 @@
             </span>
           </v-col>
         </v-row>
+        
+        <v-divider class="my-2"/>
+
+        <v-checkbox
+          dense
+          hide-details
+          v-model="includeDecendantFolders"
+          color="primary"
+          label="サブフォルダも含めて検索する"
+        />
+
       </v-expansion-panel-content>
     </v-expansion-panel>
 
@@ -40,13 +51,15 @@
     data() {
       return {
         childrenFolders: [],
-        panel: []
+        panel: [],
+        includeDecendantFolders: this.$config.renderer().search.query.includeDecendantFolders
       }
     },
     computed: {
       currentFolderID() {
         return this.$store.state.viewContext.folder
       },
+      //ブラウザの幅を基準にするためにcomputedで制御してるけど、CSSで実現する方法もありそう
       folderCols() {
         if (this.width < 300) {
           return 12
@@ -64,6 +77,9 @@
     watch: {
       async currentFolderID() {
         await this.getChildrenFolders()
+      },
+      includeDecendantFolders() {
+        this.$config.set("renderer.search.query.includeDecendantFolders", this.includeDecendantFolders)
       }
     },
     methods: {

@@ -124,7 +124,7 @@ class FoldersManager {
     return this.root
   }
 
-  async getDecendants(folderID, mode, includeMe) {
+  async getDecendants(folderID, mode="children", includeMe) {
     const targetFolder = this.root.getChildById(folderID)
     if (!targetFolder) return []
 

@@ -66,8 +66,8 @@
         const files = event.dataTransfer.files
         const context = this.$store.state.viewContext
         //コンテキストにフォルダが設定されていない場合未分類にインポートする
-        const folderID = context.folders
-          ? context.folders[0]
+        const folderID = context.folder
+          ? context.folder
           : 1
 
         await this.$contents.createMany({
