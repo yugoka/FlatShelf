@@ -19,12 +19,10 @@ class RendererSearchManager {
 
   setContext(context) {
     store.commit("setContext", context)
-    config.mirrorSearchConfigToContext()
   }
 
   reset() {
     store.commit("overwriteContext", { folder: 1 })
-    config.mirrorSearchConfigToContext()
   }
 
   //コンテキストを変更して検索ページへ飛ぶ

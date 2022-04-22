@@ -16,7 +16,7 @@ const store = new Vuex.Store({
       word: null,
       order: [["createdAt", "ASC"]],
       //settings.renderer.queryを常に監視＆反映する予定
-      config: {}
+      config: {},
     },
     edit: {
       editMode: false,
@@ -24,6 +24,18 @@ const store = new Vuex.Store({
       selectedContents: [],
     },
   },
+
+  //computed的なアレと認識してる
+  getters: {
+    //stateのviewContextにsettings.renderer.search.queryを加えたもの
+    viewContext(state) {
+      return {
+        ...state.viewContext,
+        config: state.settings.renderer.search.query,
+      }
+    },
+  },
+
   mutations: {
     //レンダラー設定をまとめて保存する
     setConfig(state, settings) {

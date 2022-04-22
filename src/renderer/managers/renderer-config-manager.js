@@ -19,24 +19,9 @@ class RendererConfigManager {
     if (result) {
       //resultで帰ってきたsettingsでstateを上書きする
       store.commit("setConfig", result)
-
-      //検索結果に関連する設定が変更された時、ViewContextにも同様の変更を反映する
-      if (key.slice(0, 21) === "renderer.search.query") {
-        this.mirrorSearchConfigToContext()
-      }
-
     } else {
       console.log(`設定の保存に失敗しました：${key}:${value}`)
     }
-  }
-
-  //config.renderer.search.queryの内容をviewContext.configに反映する
-  //要するに永続設定を検索クエリにミラーリングするよ
-  mirrorSearchConfigToContext() {
-    store.commit(
-      "mergeContext", 
-      { config: store.state.settings.renderer.search.query }
-    )
   }
 
   renderer() {

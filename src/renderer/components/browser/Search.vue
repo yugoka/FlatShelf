@@ -86,7 +86,7 @@
       },
 
       viewContext() {
-        return this.$store.state.viewContext
+        return this.$store.getters.viewContext
       },
 
       editMode() {
@@ -165,11 +165,11 @@
         this.scrollerHeight = scrollerRect.height
       },
 
-      onScroll: debounce(function() {
+      onScroll: throttle(function() {
         this.scrollTop = this.$refs.scroller.scrollTop
         this.getVisibleCards()
         this.hideContextMenu()
-      }, 30),
+      }, 300),
 
       getVisibleCards() {
         if (!this.layouts) return
