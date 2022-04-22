@@ -71,11 +71,12 @@ class Search {
   //フォルダ条件
   registerSearchFolders() {
     if (!this.query.folder) return
+
     //子孫フォルダも検索対象の場合、子孫フォルダをIDリストに追加する
     const folderIDs = this.query.config.includeDecendantFolders
       ? folders.root.getChildById(this.query.folder).getAllAffiliatedID()
       : this.query.folder
-    console.log(folderIDs)
+
     //クエリにフォルダ条件を追加する。複数のフォルダ条件がある場合or条件になる
     this.queryAnd.push({ folderID: folderIDs })
   }

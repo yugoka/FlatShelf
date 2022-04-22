@@ -3,12 +3,11 @@
 //------------------------------------
 import store from "../store"
 import router from "../router"
+import config from "./renderer-config-manager"
 
 class RendererSearchManager {
   //検索の実行
   async execute(query) {
-    //
-    query.config = store.state.settings.renderer.search.query
     const result = await window.ipc.searchContent(query)
     return result
   }
@@ -20,10 +19,12 @@ class RendererSearchManager {
 
   setContext(context) {
     store.commit("setContext", context)
+    config.mirrorSearchConfigToContext()
   }
 
   reset() {
     store.commit("overwriteContext", { folder: 1 })
+    config.mirrorSearchConfigToContext()
   }
 
   //コンテキストを変更して検索ページへ飛ぶ
