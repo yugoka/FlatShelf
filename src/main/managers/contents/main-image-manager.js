@@ -52,7 +52,7 @@ class ImageManager {
       thumbnailAspectRatio: thumbnail.aspectRatio,
       folderID: data.folderID,
     })
-    return newContent
+    return newContent.get({plain:true})
   }
 }
 

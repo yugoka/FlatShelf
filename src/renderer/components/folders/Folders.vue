@@ -218,7 +218,7 @@
       },
 
       async dropFiles(files, folder) {
-        await this.$contents.createMany({
+        await this.$contents.create({
           files,
           folderID: folder.id
         })

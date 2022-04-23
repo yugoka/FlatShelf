@@ -12,47 +12,24 @@ class RendererContentsManager {
   }
 
   async create(data) {
-    const file = data.file
-    //入力がそもそもファイル形式じゃないなら弾く
-    if (!(file instanceof File)) return false
-
-    //Node側だとFileオブジェクトが使えないらしいので必要なデータはここで展開する
-    const fileData = {
-      name: file.name,
-      type: file.type,
-      path: file.path,
-    }
-
-    const requestData = {
-      fileData,
-      folderID: data.folderID || 1,
-    }
-
-    const result = await window.ipc.createContent(requestData)
-    return result
-  }
-
-  async createMany(data) {
-    const files = data.files
-    const result = []
-
-    for await (const file of files) {
-      const response = await this.create({
-        file,
-        folderID: data.folderID || 1,
-      })
-      if (response) {
-        result.push(response.dataValues.contentID)
+    //1. FilesはmapできないのでArrayにする。
+    //2. Fileは各情報がprototypeにあるので改めてオブジェクトを作る
+    const files = Array.from(data.files).map(file => {
+      return {
+        name: file.name,
+        type: file.type,
+        path: file.path,
+        size: file.size
       }
+    })
+    const result = await window.ipc.createContents({
+      files,
+      folderID: data.folderID || 1
+    })
 
-      //保存枚数30枚ごとにBrowser画面を更新する
-      if (result.length % 30 === 0) {
-        window.dispatchEvent(this.events.reloadContents)
-      }
-    }
-
-    this.createdNotice(result.length, files.length)
+    //browserをリロードする
     window.dispatchEvent(this.events.reloadContents)
+
     //保存したコンテンツを編集する
     store.dispatch("setSelectedItems", result)
 

@@ -39,8 +39,8 @@ export const registerIpcHandlers = ({ mainWindow }) => {
   //------------------------------------
 
   //コンテンツ新規作成
-  ipcMain.handle("create-content", (event, { data }) => {
-    return contents.create(data)
+  ipcMain.handle("create-contents", (event, { data }) => {
+    return contents.createMany(data)
   })
 
   //コンテンツ更新

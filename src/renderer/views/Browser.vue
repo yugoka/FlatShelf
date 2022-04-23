@@ -70,7 +70,7 @@
           ? context.folder
           : 1
 
-        await this.$contents.createMany({
+        await this.$contents.create({
           files,
           folderID
         })
