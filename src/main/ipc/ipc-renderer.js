@@ -28,9 +28,9 @@ contextBridge.exposeInMainWorld("ipc", {
   //------------------------------------
 
   //コンテンツ作成
-  //dataは必ずfilePathをプロパティに持つ
-  createContent: async (data) => {
-    return await ipcRenderer.invoke("create-content", { data })
+  //作成したコンテンツのID一覧を返す
+  createContents: async (data) => {
+    return await ipcRenderer.invoke("create-contents", { data })
   },
 
   //コンテンツ検索

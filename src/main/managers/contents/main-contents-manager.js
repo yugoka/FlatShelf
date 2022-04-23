@@ -8,9 +8,22 @@ const fs = require("fs").promises
 const imageFileExts = ["png", "jpg", "jpeg", "webp", "gif", "bmp"]
 
 class ContentsManager {
+
+  async createMany(data) {
+    const promises = data.files.map(file => {
+      return this.create({
+        fileData: file,
+        folderID: data.folderID
+      })
+    })
+    const result = await Promise.all(promises)
+    return result.map(content => content.contentID)
+  }
+
   //コンテンツを登録する
   //やや長く読みづらいため分割の余地あり
   async create(data) {
+    console.log(data)
     try {
       const fileData = data.fileData
       //ファイルの種類を判定
@@ -19,15 +32,10 @@ class ContentsManager {
 
       //コンテンツの種類によって担当するマネージャーを変える
       //ここ分割予定
-      switch (type) {
-        //画像ファイルの場合
-        case "image":
-          if (ext.indexOf(imageFileExts)) {
-            return await imageManager.create(data)
-          }
-          break
-        case "aaa":
-          console.log(fileData)
+      if (type === "image" && ext.indexOf(imageFileExts)) {
+        return await imageManager.create(data)
+      } else if (type === "aaa") {
+        console.log("aaa")
       }
 
       //ファイルタイプがどれにも該当しない or サポートされていないファイルの場合
