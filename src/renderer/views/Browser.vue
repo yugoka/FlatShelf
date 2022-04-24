@@ -2,6 +2,7 @@
   <div
     class="main-browser-wrapper"
   >
+    <!-- 上部のツールバー -->
     <BrowserFilterMenu
       class="filtermenu"
     />
@@ -13,8 +14,6 @@
       @dragleave="fileDropSnackBar = false"
       @drop="onDrop"
     >
-      <!-- 上部のツールバー -->
-      <BrowserToolbar/>
 
       <!-- 検索画面本体 -->
       <SearchContents
@@ -41,7 +40,6 @@
 
 <script>
 import SearchContents from "../components/browser/Search"
-import BrowserToolbar from "../components/browser/BrowserToolbar.vue"
 import BrowserFilterMenu from "../components/browser/filtermenu/BrowserFilterMenu.vue"
 
 export default {
@@ -50,7 +48,6 @@ export default {
 
   components: {
     SearchContents,
-    BrowserToolbar,
     BrowserFilterMenu
   },
 
@@ -107,7 +104,7 @@ export default {
 .search-wrapper {
   position: relative;
   z-index: 1;
-  height: calc(100vh - 70px);
+  height: 100%;
 }
 
 </style>

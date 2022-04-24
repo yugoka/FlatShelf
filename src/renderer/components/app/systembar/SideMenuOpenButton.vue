@@ -13,12 +13,17 @@
           'me-1'
         ]"
         icon
-        x-small
+        small
         v-bind="attrs"
         v-on="on"
         @click="click"
       >
-        <v-icon class="button-icon">mdi-menu</v-icon>
+        <v-icon 
+          class="button-icon"
+          small
+        >
+          mdi-menu
+        </v-icon>
       </v-btn>
     </template>
     <span class="caption">
@@ -37,7 +42,7 @@ export default {
     return {
       showToolTip: false,
       shakeButton: false,
-      hintMessage: "メニューを開く",
+      hintMessage: "サイドメニューを開く",
       hint: true,
     }
   },

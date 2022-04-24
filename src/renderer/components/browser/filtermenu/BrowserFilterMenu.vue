@@ -1,11 +1,18 @@
 <template>
-  <v-system-bar
-    class="filtermenu elevation-3"
-    color="systemBar"
-    height="40"
+  <v-toolbar
+    class="filtermenu elevation-2"
+    height="30"
+    v-show="visible"
+    rounded
   >
-    aaa
-  </v-system-bar>
+    <v-btn
+      icon
+      x-small
+      @click="hide"
+    >
+      <v-icon>mdi-menu-up</v-icon>
+    </v-btn>
+  </v-toolbar>
 </template>
 
 <script>
@@ -15,13 +22,22 @@ export default {
     return {
       
     }
+  },
+
+  computed: {
+    visible() {
+      return this.$store.state.isFilterMenuShown
+    }
+  },
+
+  methods: {
+    hide() {
+      this.$store.commit("toggleFilterMenu", false)
+    }
   }
 }
 
 </script>
 
 <style scoped>
-.filtermenu {
-  position: relative;
-}
 </style>

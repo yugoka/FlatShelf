@@ -1,88 +1,94 @@
 <template>
-  <v-menu
-    :content-class="top ? 'top' : ''"
-    v-model="menu"
-    :close-on-content-click="false"
-    nudge-left="80"
-  >
-    <template v-slot:activator="{ on: menu, attrs }">
-      <v-tooltip
-        bottom
-        open-delay="300"
-      >
-        <template v-slot:activator="{ on: tooltip }">
-          <v-btn
-            class="mx-1"
-            icon
-            x-small
-            v-bind="{ attrs }"
-            v-on="{ ...tooltip, ...menu }"
-          >
-            <v-icon class="button-icon">mdi-sort</v-icon>
-          </v-btn>
-        </template>
-        <span class="caption">並び替え</span>
-      </v-tooltip>
-    </template>
-    <v-list
-      dense
-      width="180"
+  <div v-show="$route.name === 'Search'">
+    <v-menu
+      :content-class="top ? 'top' : ''"
+      v-model="menu"
+      :close-on-content-click="false"
+      nudge-left="80"
     >
-      <v-list-item>
-        <v-list-item-title>
-          並び替え方法を選択
-          <v-btn
-            class="mb-1 ml-1"
-            icon
-            x-small
-            @click="close"
+      <template v-slot:activator="{ on: menu, attrs }">
+        <v-tooltip
+          bottom
+          open-delay="300"
+        >
+          <template v-slot:activator="{ on: tooltip }">
+            <v-btn
+              icon
+              small
+              v-bind="{ attrs }"
+              v-on="{ ...tooltip, ...menu }"
+            >
+              <v-icon
+                small 
+                class="button-icon"
+              >
+                mdi-sort
+              </v-icon>
+            </v-btn>
+          </template>
+          <span class="caption">並び替え</span>
+        </v-tooltip>
+      </template>
+      <v-list
+        dense
+        width="180"
+      >
+        <v-list-item>
+          <v-list-item-title>
+            並び替え方法を選択
+            <v-btn
+              class="mb-1 ml-1"
+              icon
+              x-small
+              @click="close"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-list-item-title>
+        </v-list-item>
+
+        <v-divider/>
+
+        <v-list-item-group
+          color="primary"
+          mandatory
+          v-model="sortMethodSelect"
+          @change="onChange"
+        >
+          <v-list-item
+            v-for="sort in sortMethods"
+            :key="sort.id"
           >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-list-item-title>
-      </v-list-item>
+            <v-list-item-title>
+              <v-icon small class="me-1">{{sort.icon}}</v-icon>
+              {{sort.name}}
+            </v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
 
-      <v-divider/>
+        <v-divider
+          class="my-1"
+        />
 
-      <v-list-item-group
-        color="primary"
-        mandatory
-        v-model="sortMethodSelect"
-        @change="onChange"
-      >
-        <v-list-item
-          v-for="sort in sortMethods"
-          :key="sort.id"
+        <v-list-item-group
+          color="primary"
+          mandatory
+          v-model="sortDirectionSelect"
+          @change="onChange"
         >
-          <v-list-item-title>
-            <v-icon small class="me-1">{{sort.icon}}</v-icon>
-            {{sort.name}}
-          </v-list-item-title>
-        </v-list-item>
-      </v-list-item-group>
-
-      <v-divider
-        class="my-1"
-      />
-
-      <v-list-item-group
-        color="primary"
-        mandatory
-        v-model="sortDirectionSelect"
-        @change="onChange"
-      >
-        <v-list-item
-          v-for="direction in sortDirections"
-          :key="direction.id"
-        >
-          <v-list-item-title>
-            <v-icon small class="me-1">{{direction.icon}}</v-icon>
-            {{direction.name}}
-          </v-list-item-title>
-        </v-list-item>
-      </v-list-item-group>
-    </v-list>
-  </v-menu>
+          <v-list-item
+            v-for="direction in sortDirections"
+            :key="direction.id"
+          >
+            <v-list-item-title>
+              <v-icon small class="me-1">{{direction.icon}}</v-icon>
+              {{direction.name}}
+            </v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-menu>
+  </div>
 </template>
 
 <script>

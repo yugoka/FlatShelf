@@ -10,13 +10,12 @@ const store = new Vuex.Store({
     settings: {},
     folders: {},
     isSideMenuShown: true,
+    isFilterMenuShown: true,
     notice: {},
     viewContext: {
       folder: 1,
       word: null,
       order: [["createdAt", "ASC"]],
-      //settings.renderer.queryを常に監視＆反映する予定
-      config: {},
     },
     edit: {
       editMode: false,
@@ -46,6 +45,13 @@ const store = new Vuex.Store({
     },
     toggleSideMenu(state, sideBarStatus) {
       state.isSideMenuShown = sideBarStatus
+    },
+    toggleFilterMenu(state, menuStatus) {
+      if (menuStatus === undefined) {
+        state.isFilterMenuShown = !state.isFilterMenuShown
+      } else {
+        state.isFilterMenuShown = menuStatus
+      }
     },
     //通知を追加する
     setNotice(state, notice) {

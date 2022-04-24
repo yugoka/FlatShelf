@@ -1,5 +1,8 @@
 <template>
-  <div class="slider-wrapper">
+  <div 
+    v-show="$route.name === 'Search'"
+    class="slider-wrapper"
+  >
     <v-slider
       dense
       height="30"
@@ -24,6 +27,7 @@ export default {
   },
 
   methods: {
+    //大きさを更新するたびに検索処理が走ってる疑惑ある
     onSlide: debounce(function() {
       this.$config.set("renderer.search.itemSize", this.value)
     }, 200)

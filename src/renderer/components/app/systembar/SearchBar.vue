@@ -12,6 +12,7 @@
       >
         <template v-slot:activator="{ on: tooltip }">
           <v-chip
+            class="mx-1"
             small
             label
             outlined

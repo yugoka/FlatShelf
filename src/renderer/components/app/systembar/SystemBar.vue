@@ -16,17 +16,14 @@
     </div>
     
     <div class="group-wrapper clickable">
-      <SortMenu
-        v-if="$route.name === 'Search'"
-      />
+      <SortMenu/>
 
-      <SearchBar
-        class="clickable"
-      />
+      <SearchBar/>
 
-      <Slider
-        class="clickable"
-      />
+      <Slider/>
+
+      <FilterMenuButton/>
+
     </div>
 
     <div>
@@ -56,6 +53,7 @@ import SearchBar from "./SearchBar.vue"
 import Slider from "./Slider.vue"
 import SideMenuOpenButton from "./SideMenuOpenButton.vue"
 import SortMenu from "./SortMenu.vue"
+import FilterMenuButton from './FilterMenuButton.vue'
 
 export default {
   name: 'SystemBar',
@@ -65,8 +63,9 @@ export default {
     SearchBar,
     Slider,
     SideMenuOpenButton,
-    SortMenu
-},
+    SortMenu,
+    FilterMenuButton
+  },
 
   data() {
     return {
