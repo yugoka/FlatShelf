@@ -13,7 +13,7 @@ const store = new Vuex.Store({
     isFilterMenuShown: true,
     notice: {},
     viewContext: {
-      folder: 1,
+      folder: null,
       word: null,
       order: [["createdAt", "ASC"]],
     },
@@ -27,7 +27,10 @@ const store = new Vuex.Store({
   //computed的なアレと認識してる
   getters: {
     //stateのviewContextにsettings.renderer.search.queryを加えたもの
+    //これstate.settingsが変わるたびに呼び出されてしまってるぽおい！
+    //→config全部上書きしてるせいだわ
     viewContext(state) {
+      console.log(state.viewContext)
       return {
         ...state.viewContext,
         config: state.settings.renderer.search.query,
