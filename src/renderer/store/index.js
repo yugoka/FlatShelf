@@ -16,6 +16,7 @@ const store = new Vuex.Store({
       folder: null,
       word: null,
       order: [["createdAt", "ASC"]],
+      tags: []
     },
     edit: {
       editMode: false,

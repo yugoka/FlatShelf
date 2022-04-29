@@ -2,6 +2,7 @@
 // 検索管理 for メインプロセス
 //------------------------------------
 const { Content } = require("../../db/models/content")
+const { Tag } = require("../../db/models/tag")
 const { folders } = require("../folders/main-folders-manager")
 const { Op } = require("sequelize")
 const log = require("electron-log")
@@ -29,6 +30,20 @@ class Search {
           },
         ],
       },
+      include: [
+        {
+          model: Tag,
+          attributes: [],
+          through: { attributes: [] },
+          where: {
+            [Op.and]: [
+              {tagID: 1},
+              {tagID: 2},
+            ]
+          }
+        }
+      ],
+      group: ["contentID"]
     }
 
     //条件にショートカットでアクセスできるようにする
@@ -91,6 +106,7 @@ class Search {
     log.info(`[contentSearch] Start searching`)
     await this.registerQuerys()
     const result = await Content.findAndCountAll(this.queryObject)
+    console.log(result.rows)
     log.info(`[contentSearch] Found ${result.count} items`)
 
     return result.rows
