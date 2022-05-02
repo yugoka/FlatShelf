@@ -205,11 +205,12 @@
       },
 
       //選択中のアイテム全てに共通する編集項目を抜き出して保存する
+      //nameまでもを適用する必要はないかも？
       async getCommonValues() {
-        const commonValues = await this.$contents.checkCommonValues(this.contentIDs, ["description", "author", "folderID"])
+        const commonValues = await this.$contents.checkCommonValues(this.contentIDs, ["name", "description", "author", "folderID"])
         if (!commonValues) return
 
-        for (const column of ["description", "author"]) {
+        for (const column of ["name", "description", "author"]) {
           this[column] = commonValues[column]
         }
 

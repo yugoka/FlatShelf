@@ -62,21 +62,53 @@ class TagsManager {
   }
 
   //与えられたnamesと同じ名前を持つタグを配列で返す
-  async getTagsByNames(names, idMode=true) {
+  //オプション：
+  //idMode: タグ情報ではなくてID一覧を返す
+  //checkExsist：与えられたnamesの中に存在しないタグ名が含まれる場合falseを返す
+  async getTagsByNames(names, { idMode=false, checkExistence=false }={}) {
     if (!Array.isArray(names)) return []
     const result = await Tag.findAll({
       where: {
-        name: {
-          [Op.in]: names
-        }
+        name: names
       },
       raw: true
     })
     
+    //与えられたnamesの中に存在しないタグ名が含まれる場合falseを返す
+    if (checkExistence) {
+      const areAllNameExist = await this.checkNameExistence(names)
+      if (!areAllNameExist) {
+        console.log("False")
+        return false
+      }
+    }
+
     if (!idMode) {
       return result
     } else {
       return result.map(tag => tag.tagID)
+    }
+  }
+
+  //namesのタグがすべて存在するかどうかを確認する。タグの数だけSQLを叩くのであんまりいい実装じゃないかも
+  async checkNameExistence(names) {
+    if (!Array.isArray(names)) return null
+
+    const tagFinders = names.map(name => {
+      return Tag.findOne({
+          where: { name },
+          raw: true,
+          attributes: ["name"]
+      })
+    })
+
+    const results = await Promise.all(tagFinders)
+
+    //見つからなかったタグ名があるかどうか判定
+    if (results.includes(null)) {
+      return false
+    } else { 
+      return true
     }
   }
 

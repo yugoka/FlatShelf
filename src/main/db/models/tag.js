@@ -11,6 +11,7 @@ export const Tag = sequelize.define("Tag", {
     autoIncrement: true,
     primaryKey: true,
   },
+  //nameがuniqueでない時様々なバグが発生する危険があるので注意
   name: {
     type: DataTypes.STRING,
     allowNull: false,

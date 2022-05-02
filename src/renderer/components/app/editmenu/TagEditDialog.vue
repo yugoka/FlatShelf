@@ -22,7 +22,7 @@
         :persistent-placeholder="!input.length"
 
         v-model="input"
-        @keydown.enter="setTagByInput"
+        @keypress.enter="setTagByInput"
         @input="onInput"
       />
 
@@ -80,7 +80,7 @@
 <script>
   import debounce from "lodash.debounce"
   import TagChip from "./TagChip.vue"
-import TagCreateButton from "./TagCreateButton.vue"
+  import TagCreateButton from "./TagCreateButton.vue"
   export default {
 
     components: { TagChip, TagCreateButton },
@@ -180,7 +180,7 @@ import TagCreateButton from "./TagCreateButton.vue"
  
       onInput: debounce(async function() {
         await this.getTagsByWord()
-      }, 100),
+      }, 200),
 
 
     },

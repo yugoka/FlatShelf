@@ -46,7 +46,7 @@
           :persistent-placeholder="!context.word.length"
 
           v-model="context.word"
-          @keydown.enter="executeSearch"
+          @keypress.enter="executeSearch"
         />
       </div>
       <v-divider class="mb-3"/>
@@ -95,7 +95,17 @@ export default {
 
     executeSearch() {
       if (this.menu) {
-        this.$search.mergeContext(this.context)
+
+        //検索画面に居るならシンプルに検索
+        if (this.$route.name === "Search") {
+          this.$search.mergeContext(this.context)
+
+        //検索画面でないなら検索画面に飛ぶ
+        } else {
+          this.$search.setContext(this.context)
+          this.$router.push({ name: "Search"})
+        }
+
         this.menu = false
       }
     },

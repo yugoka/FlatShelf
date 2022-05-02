@@ -10,6 +10,7 @@ const log = require("electron-log")
 
 //Searchインスタンスを生成して検索を実行する。
 export const executeSearch = (query) => {
+  console.log(query)
   const search = new Search(query)
   return search.execute()
 }
@@ -20,6 +21,10 @@ class Search {
     log.info(`[contentSearch] Creating search instance`)
 
     this.query = query
+
+    //このフラグがtrueなら検索過程を飛ばして空の配列を返す
+    this.notFound = false
+
     //tagsが未定義なら空の配列にする
     if (!Array.isArray(this.query.tags)) {
       this.query.tags = []
@@ -102,9 +107,20 @@ class Search {
     
     //ワード検索にタグ指定がある場合、タグ名称からIDを取得してタグ条件に追加
     if (tagNames.length) {
-      const tagIDs = await tags.getTagsByNames(tagNames)
-      this.query.tags = [...this.query.tags, ...tagIDs]
-      console.log(this.query)
+
+      //存在しないタグ名が1つでも含まれている場合falseが帰ってくる
+      const tagIDs = await tags.getTagsByNames(
+        tagNames, 
+        { idMode: true, checkExistence: true }
+      )
+
+      if (tagIDs) {
+        this.query.tags = [...this.query.tags, ...tagIDs]
+      
+      //存在しないタグ名で検索した場合表示数が0件になるようにする
+      } else {
+        this.notFound = true
+      }
     }
   }
 
@@ -113,7 +129,6 @@ class Search {
   //------------------------------------
   registerSearchTags() {
     if (!Array.isArray(this.query.tags) || !this.query.tags.length) return
-    console.log(this.query.tags)
 
     //タグ検索条件の基本オブジェクト
     const tagInclude = {
@@ -162,7 +177,12 @@ class Search {
   async execute() {
     log.info(`[contentSearch] Start searching`)
     await this.registerQuerys()
-    const result = await Content.findAll(this.queryObject)
+    
+    //notFoundフラグが立っている場合(タグ検索ワードを見つけられなかった場合など)は空の配列を結果として返す
+    const result = this.notFound
+      ? []
+      : await Content.findAll(this.queryObject)
+
     log.info(`[contentSearch] Found ${result.length} items`)
 
     return result

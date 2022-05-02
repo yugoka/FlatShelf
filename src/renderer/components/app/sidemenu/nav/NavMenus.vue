@@ -64,7 +64,9 @@
 
         //各ボタンに対応する検索コンテキスト
         contexts: {
-          all: {},
+          all: {
+            word: ""
+          },
           noFolder: {
             folder: 1
           },
@@ -84,9 +86,6 @@
         this.isMandatoryEnabled = false
         this.selectedItem = null
       },
-      redirect(path) {
-        this.$router.push(path)
-      }
     },
 
     watch: {
