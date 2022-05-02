@@ -36,6 +36,7 @@ class TagsManager {
     }
   }
 
+  //タグを検索する
   async get(data) {
     try {
       const query = {
@@ -57,6 +58,25 @@ class TagsManager {
     } catch (err) {
       log.error(err)
       return false
+    }
+  }
+
+  //与えられたnamesと同じ名前を持つタグを配列で返す
+  async getTagsByNames(names, idMode=true) {
+    if (!Array.isArray(names)) return []
+    const result = await Tag.findAll({
+      where: {
+        name: {
+          [Op.in]: names
+        }
+      },
+      raw: true
+    })
+    
+    if (!idMode) {
+      return result
+    } else {
+      return result.map(tag => tag.tagID)
     }
   }
 

@@ -4,6 +4,7 @@
 const { Content } = require("../../db/models/content")
 const { Tag } = require("../../db/models/tag")
 const { folders } = require("../folders/main-folders-manager")
+const { tags } = require("../tags/main-tags-manager")
 const { Op, fn, col, where } = require("sequelize")
 const log = require("electron-log")
 
@@ -16,10 +17,13 @@ export const executeSearch = (query) => {
 class Search {
   constructor(query, raw = true) {
 
-    query.tags = []
-
     log.info(`[contentSearch] Creating search instance`)
+
     this.query = query
+    //tagsが未定義なら空の配列にする
+    if (!Array.isArray(this.query.tags)) {
+      this.query.tags = []
+    }
 
     //------------------------------------
     // 検索クエリのオブジェクト
@@ -51,7 +55,9 @@ class Search {
   async registerQuerys() {
     //各検索条件をクエリに登録する
     this.registerSearchIDs()
-    this.registerSearchWords()
+    //↓ここでquery.tagsに条件追加されるので前後関係に注意
+    //あんまりいい実装じゃないかも
+    await this.registerSearchWords()
     this.registerSearchTags()
     this.registerSearchFolders()
     this.registerOrders()
@@ -73,15 +79,32 @@ class Search {
   //------------------------------------
   // 検索ワード条件
   //------------------------------------
-  registerSearchWords() {
-    if (!this.query.word) return
+  async registerSearchWords() {
+    if (!this.query.word || typeof this.query.word != "string") return
 
     //各種スペースかコンマで区切る
     const splitter = /[\s|　,]/
     const words = this.query.word.split(splitter)
+    //ワード条件から抽出されたタグ
+    const tagNames = []
 
     for (const word of words) {
-      this.queryAnd.push({ name: { [Op.like]: `%${word}%` } })
+      //#で始まるタグ指定の場合
+      if (word[0] === "#" || word[0] === "＃") {
+        //#を除いたタグ名を追加
+        tagNames.push(word.slice(1))
+      
+      //通常の検索ワードの場合
+      } else {
+        this.queryAnd.push({ name: { [Op.like]: `%${word}%` } })
+      }
+    }
+    
+    //ワード検索にタグ指定がある場合、タグ名称からIDを取得してタグ条件に追加
+    if (tagNames.length) {
+      const tagIDs = await tags.getTagsByNames(tagNames)
+      this.query.tags = [...this.query.tags, ...tagIDs]
+      console.log(this.query)
     }
   }
 
@@ -89,7 +112,8 @@ class Search {
   // タグ条件
   //------------------------------------
   registerSearchTags() {
-    if (!this.query.tags || !this.query.tags.length) return
+    if (!Array.isArray(this.query.tags) || !this.query.tags.length) return
+    console.log(this.query.tags)
 
     //タグ検索条件の基本オブジェクト
     const tagInclude = {
@@ -100,7 +124,9 @@ class Search {
     }
 
     tagInclude.where[Op.or] = this.query.tags.map((tag) => {
-      return { tagID: tag }
+      if (typeof tag === "number") {
+        return { tagID: tag }
+      }
     })
 
     this.queryObject.include.push(tagInclude)
