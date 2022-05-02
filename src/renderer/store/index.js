@@ -15,8 +15,8 @@ const store = new Vuex.Store({
     viewContext: {
       folder: null,
       word: null,
+      tags: null,
       order: [["createdAt", "ASC"]],
-      tags: []
     },
     edit: {
       editMode: false,
@@ -31,7 +31,6 @@ const store = new Vuex.Store({
     //これstate.settingsが変わるたびに呼び出されてしまってるぽおい！
     //→config全部上書きしてるせいだわ
     viewContext(state) {
-      console.log(state.viewContext)
       return {
         ...state.viewContext,
         config: state.settings.renderer.search.query,
