@@ -1,16 +1,6 @@
 <template>
-  <v-card
-    class="card"
-    outlined
-    ripple
-    @click="clickCard"
-  >
-
-    <TagEditDialog
-      ref="dialog"
-      @update="onUpdate"
-      :selectedTags="tags"
-    />
+  <v-card class="card" outlined ripple @click="clickCard">
+    <TagEditDialog ref="dialog" @update="onUpdate" :selectedTags="tags" />
 
     <TagChip
       v-for="tag in tags"
@@ -18,64 +8,61 @@
       :tag="tag"
       @delete="removeTag(tag.tagID)"
     />
-
   </v-card>
 </template>
 
 <script>
-  import TagEditDialog from "./TagEditDialog.vue"
-  import TagChip from "./TagChip.vue"
+import TagEditDialog from "./TagEditDialog.vue"
+import TagChip from "../../tags/TagChip.vue"
 
-  export default {
+export default {
+  name: "EditMenuTagBox",
 
-    name: "EditMenuTagBox",
+  props: {
+    contentIDs: Array,
+  },
 
-    props: {
-      contentIDs: Array
-    },
+  components: {
+    TagEditDialog,
+    TagChip,
+  },
 
-    components: {
-      TagEditDialog,
-      TagChip
-    },
+  data() {
+    return {
+      tags: [],
+    }
+  },
 
-    data() {
-      return {
-        tags: []
-      }
-    },
-
-    watch: {
-      async contentIDs() {
-        await this.getCommonTags()
-      }
-    },
-
-    methods: {
-      clickCard() {
-        this.$refs.dialog.show(this.contentIDs)
-      },
-
-      async onUpdate() {
-        await this.getCommonTags()
-      },
-
-      //メインプロセスに問い合わせて選択されたコンテンツ全てに共通するタグを抽出する
-      async getCommonTags() {
-        this.tags = await this.$tags.getCommonTags(this.contentIDs)
-      },
-
-      async removeTag(tagID) {
-        await this.$tags.removeByID(this.contentIDs, tagID)
-        await this.getCommonTags()
-      }
-    },
-
-    async created() {
+  watch: {
+    async contentIDs() {
       await this.getCommonTags()
     },
-    
-  }
+  },
+
+  methods: {
+    clickCard() {
+      this.$refs.dialog.show(this.contentIDs)
+    },
+
+    async onUpdate() {
+      await this.getCommonTags()
+    },
+
+    //メインプロセスに問い合わせて選択されたコンテンツ全てに共通するタグを抽出する
+    async getCommonTags() {
+      this.tags = await this.$tags.getCommonTags(this.contentIDs)
+    },
+
+    async removeTag(tagID) {
+      await this.$tags.removeByID(this.contentIDs, tagID)
+      await this.getCommonTags()
+    },
+  },
+
+  async created() {
+    await this.getCommonTags()
+  },
+}
 </script>
 
 <style scoped>

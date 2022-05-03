@@ -6,44 +6,35 @@
     height="30"
     color="systemBar"
   >
-    <div
-      class="group-wrapper"
-    >
+    <div class="group-wrapper">
       <span>FlatShelf</span>
-      <SideMenuOpenButton
-        class="clickable"
-      />
+      <SideMenuOpenButton class="clickable" />
     </div>
-    
+
     <div class="group-wrapper clickable">
-      <SortMenu/>
+      <SortMenu />
 
-      <SearchBar/>
+      <SearchBar />
 
-      <Slider/>
+      <Slider />
 
-      <FilterMenuButton/>
-
+      <FilterMenuButton />
     </div>
 
     <div>
-      <SystemButton
-        icon="mdi-minus"
-        @click.native="minimizeWindow"
-      />
+      <SystemButton icon="mdi-minus" @click.native="minimizeWindow" />
 
       <SystemButton
-        :icon="maximized ? 'mdi-checkbox-multiple-blank-outline' : 'mdi-checkbox-blank-outline'"
+        :icon="
+          maximized
+            ? 'mdi-checkbox-multiple-blank-outline'
+            : 'mdi-checkbox-blank-outline'
+        "
         @click.native="toggleMaximized"
       />
 
-      <SystemButton
-        color="red"
-        icon="mdi-close"
-        @click.native="quitApp"
-      />
+      <SystemButton color="red" icon="mdi-close" @click.native="quitApp" />
     </div>
-
   </v-system-bar>
 </template>
 
@@ -53,10 +44,10 @@ import SearchBar from "./SearchBar.vue"
 import Slider from "./Slider.vue"
 import SideMenuOpenButton from "./SideMenuOpenButton.vue"
 import SortMenu from "./SortMenu.vue"
-import FilterMenuButton from './FilterMenuButton.vue'
+import FilterMenuButton from "./FilterMenuButton.vue"
 
 export default {
-  name: 'SystemBar',
+  name: "SystemBar",
 
   components: {
     SystemButton,
@@ -64,20 +55,19 @@ export default {
     Slider,
     SideMenuOpenButton,
     SortMenu,
-    FilterMenuButton
+    FilterMenuButton,
   },
 
   data() {
     return {
       maximized: false,
-
     }
   },
 
   computed: {
     sideMenuWidth() {
       return this.$config.renderer().app.sideMenuWidth
-    }
+    },
   },
 
   methods: {
@@ -92,12 +82,12 @@ export default {
     },
     onToggleMaximized(isMaximized) {
       this.maximized = isMaximized
-    }
+    },
   },
 
   created() {
     window.ipc.onToggleMaximized(this.onToggleMaximized)
-  }
+  },
 }
 </script>
 
