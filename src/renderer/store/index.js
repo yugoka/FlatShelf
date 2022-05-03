@@ -65,9 +65,9 @@ const store = new Vuex.Store({
     },
     //コンテキストを直接指定する。ただし並び替えだけは保持
     setContext(state, context) {
-      state.viewContext = { 
+      state.viewContext = {
         ...context,
-        order: state.viewContext.order
+        order: state.viewContext.order,
       }
     },
     setSelectedItems(state, contents) {

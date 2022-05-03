@@ -65,20 +65,19 @@ class TagsManager {
   //オプション：
   //idMode: タグ情報ではなくてID一覧を返す
   //checkExsist：与えられたnamesの中に存在しないタグ名が含まれる場合falseを返す
-  async getTagsByNames(names, { idMode=false, checkExistence=false }={}) {
+  async getTagsByNames(names, { idMode = false, checkExistence = false } = {}) {
     if (!Array.isArray(names)) return []
     const result = await Tag.findAll({
       where: {
-        name: names
+        name: names,
       },
-      raw: true
+      raw: true,
     })
-    
+
     //与えられたnamesの中に存在しないタグ名が含まれる場合falseを返す
     if (checkExistence) {
       const areAllNameExist = await this.checkNameExistence(names)
       if (!areAllNameExist) {
-        console.log("False")
         return false
       }
     }
@@ -86,7 +85,7 @@ class TagsManager {
     if (!idMode) {
       return result
     } else {
-      return result.map(tag => tag.tagID)
+      return result.map((tag) => tag.tagID)
     }
   }
 
@@ -94,11 +93,11 @@ class TagsManager {
   async checkNameExistence(names) {
     if (!Array.isArray(names)) return null
 
-    const tagFinders = names.map(name => {
+    const tagFinders = names.map((name) => {
       return Tag.findOne({
-          where: { name },
-          raw: true,
-          attributes: ["name"]
+        where: { name },
+        raw: true,
+        attributes: ["name"],
       })
     })
 
@@ -107,7 +106,7 @@ class TagsManager {
     //見つからなかったタグ名があるかどうか判定
     if (results.includes(null)) {
       return false
-    } else { 
+    } else {
       return true
     }
   }
