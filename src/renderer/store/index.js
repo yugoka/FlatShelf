@@ -40,6 +40,7 @@ const store = new Vuex.Store({
 
   mutations: {
     //レンダラー設定をまとめて保存する
+    //設定を保存するたびに全ての設定項目が再読み込みされる問題。
     setConfig(state, settings) {
       state.settings = settings
     },

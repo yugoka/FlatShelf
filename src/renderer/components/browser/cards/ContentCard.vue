@@ -2,7 +2,7 @@
   <div
     :class="{
       'content-card': true,
-      'rounded': true,
+      rounded: true,
       'text-center': true,
       'elevation-2': true,
       'content-card--highlighted': selected || highlighted,
@@ -11,24 +11,22 @@
       width: card.width + 'px',
       height: cardHeight + 'px',
       top: card.top + 'px',
-      left: card.left + 'px'
+      left: card.left + 'px',
     }"
-
     v-ripple
     draggable
     @mouseenter="onHover"
-    @mouseleave="hover=false"
+    @mouseleave="hover = false"
     @click="clickCard"
     @click.middle="middleClickCard($event)"
     @contextmenu="showContextMenu"
     @dragstart="onDragStart"
     @dragend="onDragEnd"
   >
-
-    <div 
+    <div
       :class="{
         'top-gradient': true,
-        'top-gradient--show': showSelectButton
+        'top-gradient--show': showSelectButton,
       }"
     />
 
@@ -43,15 +41,12 @@
       v-show="showImg"
       class="content-card-img rounded"
       :src="imgSrc"
-      @load="showImg=true"
+      @load="showImg = true"
       :width="card.width"
       :height="card.height"
     />
-    <span 
-      :class="(card.height < 300) ? 'caption' : 'body--2'"
-      v-if="showItemName"
-    >
-      {{card.content.name}}
+    <span class="caption" v-if="showItemName">
+      {{ card.content.name }}
     </span>
   </div>
 </template>
@@ -59,138 +54,132 @@
 <script>
 import SelectButton from "./SelectButton"
 
-  export default {
+export default {
+  name: "ContentsCard",
 
-    name:"ContentsCard",
+  props: {
+    card: Object,
+  },
 
-    props: {
-      card: Object
+  components: {
+    SelectButton,
+  },
+
+  data() {
+    return {
+      width: "",
+      flexGrow: 0,
+      showImg: false,
+      hover: false,
+      selected: false,
+      highlighted: false,
+      sources: {
+        small: this.$contents.getThumbnail(this.card.content, "small"),
+        medium: this.$contents.getThumbnail(this.card.content, "medium"),
+      },
+    }
+  },
+
+  computed: {
+    showSelectButton() {
+      return this.showImg && (this.hover || this.selected)
     },
-
-    components: {
-      SelectButton
+    editMode() {
+      return this.$store.state.edit.editMode
     },
-
-    data() {
-      return {
-        width: "",
-        flexGrow: 0,
-        showImg: false,
-        hover: false,
-        selected: false,
-        highlighted: false,
-        sources: {
-          small: this.$contents.getThumbnail(this.card.content, "small"),
-          medium: this.$contents.getThumbnail(this.card.content, "medium"),
-        },
+    showItemName() {
+      return this.$store.state.settings.renderer.search.showItemName
+    },
+    cardHeight() {
+      if (this.showItemName) {
+        return this.card.height + 26
+      } else {
+        return this.card.height
       }
     },
-
-    computed: {
-      showSelectButton() {
-        return this.showImg && (this.hover || this.selected)
-      },
-      editMode() {
-        return this.$store.state.edit.editMode
-      },
-      showItemName() {
-        return this.$store.state.settings.renderer.search.showItemName
-      },
-      cardHeight() {
-        if (this.showItemName) {
-          return this.card.height + 26
-        } else {
-          return this.card.height
-        }
-      },
-      imgSrc() {
-        return (this.card.height <= 200)
-          ? this.sources.small
-          : this.sources.medium
-      },
-      selectedIDs() {
-        return this.$store.state.edit.selectedIDs
-      },
+    imgSrc() {
+      return this.card.height <= 200 ? this.sources.small : this.sources.medium
     },
+    selectedIDs() {
+      return this.$store.state.edit.selectedIDs
+    },
+  },
 
-    watch: {
-      editMode() {
-        if (this.editMode) {
-          this.checkSelected()
-        } else {
-          //他の要因で選択モードがオフになった時自身の選択を解除する
-          this.selected = false
-          this.highlighted = false
-        }
-      },
-
-      selectedIDs() {
+  watch: {
+    editMode() {
+      if (this.editMode) {
         this.checkSelected()
+      } else {
+        //他の要因で選択モードがオフになった時自身の選択を解除する
+        this.selected = false
+        this.highlighted = false
       }
     },
 
-    methods: {
-      onHover() {
-        this.hover = true
-        this.$emit("hover")
-      },
-
-      onClickSelectButton() {
-        this.selected = !this.selected
-        this.$emit(
-          "setContentSelect",
-          {
-            contentID: this.card.content.contentID, 
-            isSelected: this.selected,
-            cardIndex: this.card.index
-          }
-        )
-      },
-
-      clickCard() {
-        //選択モードなら画像クリックで選択追加
-        if (this.editMode) {
-          this.onClickSelectButton()
-        }
-      },
-
-      //ミドルクリックをした場合単体選択する
-      middleClickCard() {
-        this.$store.dispatch("setSelectedItems", this.card.content.contentID)
-      },
-
-      checkSelected() {
-        this.selected = this.selectedIDs.includes(this.card.content.contentID)
-      },
-
-      showContextMenu() {
-        this.$emit("contextMenu", this.card.content.contentID)
-      },
-
-      onDragStart(e) {
-        //ドラッグ操作の対象
-        const targets = this.selected
-          ? this.selectedIDs
-          : [this.card.content.contentID]
-        
-        e.dataTransfer.effectAllowed = 'move'
-        e.dataTransfer.dropEffect = 'move'
-        e.dataTransfer.setDragImage(new Image(), 0, 0)
-        e.dataTransfer.setData('type', 'content')
-        e.dataTransfer.setData('targetContents', JSON.stringify(targets))
-        this.$emit('dragstart', this.card.content)
-      },
-
-      onDragEnd() {
-        this.$emit('dragend')
-      }
-    },
-
-    created() {
-      //選択されたコンテンツにこれが含まれるなら表示時に選択
+    selectedIDs() {
       this.checkSelected()
     },
-  }
+  },
+
+  methods: {
+    onHover() {
+      this.hover = true
+      this.$emit("hover")
+    },
+
+    onClickSelectButton() {
+      this.selected = !this.selected
+      this.$emit("setContentSelect", {
+        contentID: this.card.content.contentID,
+        isSelected: this.selected,
+        cardIndex: this.card.index,
+      })
+    },
+
+    clickCard() {
+      //選択モードなら画像クリックで選択追加
+      if (this.editMode) {
+        this.onClickSelectButton()
+      }
+    },
+
+    //ミドルクリックをした場合単体選択する
+    middleClickCard() {
+      this.$store.dispatch("setSelectedItems", this.card.content.contentID)
+    },
+
+    checkSelected() {
+      this.selected = this.selectedIDs.includes(this.card.content.contentID)
+    },
+
+    showContextMenu() {
+      this.$emit("contextMenu", this.card.content.contentID)
+    },
+
+    onDragStart(e) {
+      //ドラッグ操作の対象
+      const targets = this.selected
+        ? this.selectedIDs
+        : [this.card.content.contentID]
+
+      e.dataTransfer.effectAllowed = "move"
+      e.dataTransfer.dropEffect = "move"
+      e.dataTransfer.setDragImage(new Image(), 0, 0)
+      e.dataTransfer.setData("type", "content")
+      e.dataTransfer.setData("targetContents", JSON.stringify(targets))
+      this.$emit("dragstart", this.card.content)
+    },
+
+    onDragEnd() {
+      this.$emit("dragend")
+    },
+  },
+
+  created() {
+    //選択されたコンテンツにこれが含まれるなら表示時に選択
+    this.checkSelected()
+  },
+}
 </script>
 
 <style scoped>
@@ -254,7 +243,11 @@ import SelectButton from "./SelectButton"
   border-radius: 4px;
   opacity: 0;
   transition: 0.1s;
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, transparent 20%);
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.4) 0%,
+    transparent 20%
+  );
 }
 .top-gradient--show {
   opacity: 1;

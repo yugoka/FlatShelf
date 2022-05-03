@@ -91,7 +91,8 @@ export default {
     containerHeight() {
       if (!this.layouts) return 0
       const containerHeight = this.layouts.containerHeight - this.prependHeight
-      console.log(this.layouts)
+
+      //最小値を0としてコンテナの高さを設定
       if (containerHeight >= 0) {
         return containerHeight
       } else {
