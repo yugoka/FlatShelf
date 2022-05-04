@@ -40,7 +40,7 @@
 
 <script>
 import SystemButton from "./SystemButton.vue"
-import SearchBar from "./SearchBar.vue"
+import SearchBar from "./search/SearchBar.vue"
 import Slider from "./Slider.vue"
 import SideMenuOpenButton from "./SideMenuOpenButton.vue"
 import SortMenu from "./SortMenu.vue"

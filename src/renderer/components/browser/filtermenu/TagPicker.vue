@@ -6,7 +6,11 @@
       nudge-bottom="25"
     >
       <template v-slot:activator="{ on: menu, attrs }">
-        <v-tooltip bottom open-delay="300" :disabled="isMenuOpen">
+        <v-tooltip
+          bottom
+          open-delay="300"
+          :disabled="isMenuOpen || disableToolTip"
+        >
           <template v-slot:activator="{ on: tooltip }">
             <v-chip
               class="picker mx-2 px-1"
@@ -18,20 +22,32 @@
               ripple
               @click="show"
             >
-              <v-icon small color="secondary" class="mx-1"
+              <v-icon small color="secondary" class="mx-1 picker-icon"
                 >mdi-tag-outline</v-icon
               >
 
-              <v-chip
-                x-small
-                class="mx-1 px-1"
-                v-for="tag in selectedTags"
-                :key="tag.tagID"
-              >
-                {{ tag.name }}
-              </v-chip>
+              <div class="picker-tagchips-group">
+                <v-chip
+                  v-for="tag in selectedTags"
+                  :key="tag.tagID"
+                  x-small
+                  class="picker-tagchips mx-1 px-1"
+                >
+                  {{ tag.name }}
+                </v-chip>
+              </div>
 
-              <span v-if="!selectedTags.length" class="caption mx-1">
+              <v-btn
+                v-if="selectedTags.length"
+                class="picker-icon"
+                icon
+                x-small
+                @click.stop="unselect"
+              >
+                <v-icon small color="secondary">mdi-close</v-icon>
+              </v-btn>
+
+              <span v-show="!selectedTags.length" class="caption mx-1">
                 タグを選択
               </span>
             </v-chip>
@@ -40,7 +56,6 @@
         </v-tooltip>
       </template>
       <TagPickerWindow
-        :viewContext="viewContext"
         :visible="isMenuOpen"
         :selectedTags="selectedTags"
         @close="hide"
@@ -51,7 +66,7 @@
 </template>
 
 <script>
-import TagPickerWindow from "./TagPickerWindow.vue"
+import TagPickerWindow from "../../tags/TagPickerWindow.vue"
 
 export default {
   components: { TagPickerWindow },
@@ -64,16 +79,11 @@ export default {
     return {
       isMenuOpen: false,
       selectedTags: [],
+      disableToolTip: false,
     }
   },
   watch: {
     async viewContext() {
-      if (
-        !Array.isArray(this.viewContext.tags) ||
-        !this.viewContext.tags.length
-      )
-        return
-
       await this.getSelectedTags()
     },
   },
@@ -84,29 +94,40 @@ export default {
     hide() {
       this.isMenuOpen = false
     },
-    async getSelectedTags() {
-      this.selectedTags = await this.$tags.get({
-        ids: this.viewContext.tags,
-        idMode: true,
+    async unselect() {
+      this.$store.commit("mergeContext", {
+        tags: [],
       })
+      this.selectedTags = []
+      this.disableToolTip = true
+    },
+    async getSelectedTags() {
+      if (Array.isArray(this.viewContext.tags)) {
+        this.selectedTags = await this.$tags.get({
+          ids: this.viewContext.tags,
+          idMode: true,
+        })
+      } else {
+        this.selectedTags = []
+      }
     },
     async toggleTag(tag) {
-      const selectedTags = this.selectedTags
+      this.selectedTags
 
       //選択中のタグに含まれるかどうかの判定
-      const tagIndex = selectedTags.findIndex(
+      const tagIndex = this.selectedTags.findIndex(
         (selectedTag) => selectedTag.tagID === tag.tagID
       )
 
       if (tagIndex > -1) {
-        selectedTags.splice(tagIndex, 1)
+        this.selectedTags.splice(tagIndex, 1)
       } else {
         await this.$tags.setTimeStamp(tag.tagID)
-        selectedTags.push(tag)
+        this.selectedTags.push(tag)
       }
 
       this.$store.commit("mergeContext", {
-        tags: selectedTags.map((tag) => tag.tagID),
+        tags: this.selectedTags.map((tag) => tag.tagID),
       })
     },
   },
@@ -119,7 +140,20 @@ export default {
 
 <style scoped>
 .picker {
+  display: flex;
   max-width: 250px;
-  overflow: scroll;
+}
+.picker-icon {
+  flex-shrink: 0;
+}
+.picker-tagchips {
+  pointer-events: none;
+}
+.picker-tagchips-group {
+  flex-shrink: 1;
+  overflow-x: scroll;
+}
+.picker-tagchips-group::-webkit-scrollbar {
+  display: none;
 }
 </style>

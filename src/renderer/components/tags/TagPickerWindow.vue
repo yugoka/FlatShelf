@@ -10,7 +10,7 @@
       placeholder="タグ名を入力"
       :persistent-placeholder="!word.length"
       v-model="word"
-      @keypress.enter="onInput"
+      @keypress.enter="onEnter"
       @input="onInput"
     >
       <template v-slot:append>
@@ -45,14 +45,13 @@
 </template>
 
 <script>
-import TagChip from "../../tags/TagChip.vue"
+import TagChip from "./TagChip.vue"
 import debounce from "lodash.debounce"
 
 export default {
   components: { TagChip },
 
   props: {
-    viewContext: Object,
     selectedTags: Array,
     visible: Boolean,
   },
@@ -62,6 +61,7 @@ export default {
       word: "",
       recentUsedTags: [],
       tagSearchResult: [],
+      exactNameTag: null,
       //検索が終わった後trueになり、ウィンドウを閉じるかword.length===0になるとfalseになる
       searchReady: false,
     }
@@ -102,6 +102,22 @@ export default {
         this.getExactNameTag()
       }
     }, 200),
+
+    //検索窓に対してエンターキーが押された時、
+    //1. 検索結果が　1件だけの場合
+    //2. 検索ワードと完全に一致するタグ名がある場合
+    //以上の場合で対象のタグを自動追加する
+    async onEnter() {
+      if (
+        this.searchReady &&
+        (this.exactNameTag || this.tagSearchResult.length === 1)
+      ) {
+        await this.toggleTag(this.tagSearchResult[0])
+        this.word = ""
+        this.searchReady = false
+      }
+    },
+
     close() {
       if (this.word.length) {
         this.word = ""
@@ -128,12 +144,11 @@ export default {
         (tag) => tag.name === this.word
       )
       if (exactNameTagIndex != -1) {
-        const exactNameTag = this.tagSearchResult.splice(
-          exactNameTagIndex,
-          1
-        )[0]
+        this.exactNameTag = this.tagSearchResult.splice(exactNameTagIndex, 1)[0]
 
-        this.tagSearchResult.unshift(exactNameTag)
+        this.tagSearchResult.unshift(this.exactNameTag)
+      } else {
+        this.exactNameTag = null
       }
     },
   },
@@ -147,6 +162,10 @@ export default {
 <style scoped>
 .card {
   width: 250px;
+}
+
+.card:hover {
+  opacity: 1;
 }
 
 .scroll-content {

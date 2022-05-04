@@ -1,9 +1,9 @@
 <template>
-  <v-chip 
+  <v-chip
     :class="{
       'tag-chip me-1 mt-1 ps-3': true,
       'pe-1': !selectMode,
-      'pe-3': selectMode
+      'pe-3': selectMode,
     }"
     :small="size === 'small'"
     ripple
@@ -11,17 +11,11 @@
     :color="highlighted ? 'primary' : null"
   >
     <v-expand-x-transition>
-      <v-icon
-        v-if="highlighted"
-        class="me-1"
-        small
-      >
-        mdi-check-circle
-      </v-icon>
+      <v-icon v-if="highlighted" class="me-1" small> mdi-check-circle </v-icon>
     </v-expand-x-transition>
 
     <span>
-      {{customText ? customText : tag.name}}
+      {{ customText ? customText : tag.name }}
     </span>
 
     <v-btn
@@ -31,11 +25,7 @@
       small
       @click.stop="clickDeleteButton"
     >
-      <v-icon
-        x-small
-      >
-        mdi-close
-      </v-icon>
+      <v-icon x-small> mdi-close </v-icon>
     </v-btn>
   </v-chip>
 </template>
@@ -48,32 +38,32 @@ export default {
     tag: Object,
     size: {
       type: String,
-      default: "small"
+      default: "small",
     },
     selectMode: {
       type: Boolean,
-      default: false
+      default: false,
     },
     selectedTags: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     customText: {
       type: String,
-      default: ""
-    }
+      default: "",
+    },
   },
 
   data() {
     return {
-      selected: false
+      selected: false,
     }
   },
 
   computed: {
     highlighted() {
-      return (this.selected && this.selectMode)
-    }
+      return this.selected && this.selectMode
+    },
   },
 
   methods: {
@@ -85,8 +75,10 @@ export default {
     },
     //タグが選択されているかどうかを確認する
     checkSelected() {
-      this.selected = !!this.selectedTags.find(tag => tag.tagID === this.tag.tagID)
-    }
+      this.selected = !!this.selectedTags.find(
+        (tag) => tag.tagID === this.tag.tagID
+      )
+    },
   },
 
   watch: {
@@ -94,14 +86,14 @@ export default {
       if (this.selectMode) {
         this.checkSelected()
       }
-    }
+    },
   },
 
   created() {
     if (this.selectMode) {
       this.checkSelected()
     }
-  }
+  },
 }
 </script>
 

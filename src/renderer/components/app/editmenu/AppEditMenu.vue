@@ -136,6 +136,9 @@ export default {
     selectedMany() {
       return this.contentIDs.length >= 2
     },
+    viewContext() {
+      return this.$store.state.viewContext
+    },
   },
 
   watch: {
@@ -143,6 +146,9 @@ export default {
       if (this.contentIDs.length) {
         await this.getCommonValues()
       }
+    },
+    viewContext() {
+      this.show = false
     },
   },
 
