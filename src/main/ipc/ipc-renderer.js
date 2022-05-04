@@ -114,6 +114,9 @@ contextBridge.exposeInMainWorld("ipc", {
   setTagByID: async (contentIDs, tagID) => {
     return await ipcRenderer.invoke("set-tag-by-id", { contentIDs, tagID })
   },
+  setTagTimestamp: async (tagIDs) => {
+    return await ipcRenderer.send("set-tag-timestamp", { tagIDs })
+  },
   removeTagByID: async (contentIDs, tagID) => {
     return await ipcRenderer.invoke("remove-tag-by-id", { contentIDs, tagID })
   },

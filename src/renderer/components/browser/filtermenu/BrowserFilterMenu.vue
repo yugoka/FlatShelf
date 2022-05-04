@@ -9,7 +9,7 @@
       <v-icon>mdi-menu-up</v-icon>
     </v-btn>
 
-    <TagPicker />
+    <TagPicker :viewContext="viewContext" />
   </v-toolbar>
 </template>
 
@@ -28,6 +28,9 @@ export default {
   computed: {
     visible() {
       return this.$store.state.isFilterMenuShown
+    },
+    viewContext() {
+      return this.$store.state.viewContext
     },
   },
 

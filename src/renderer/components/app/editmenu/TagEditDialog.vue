@@ -50,7 +50,7 @@
             v-for="tag in tagSearchResult"
             :key="tag.tagID"
             :tag="tag"
-            :selectMode="true"
+            selectMode
             :selectedTags="selectedTags"
             @click="toggleTag(tag)"
           />
@@ -134,7 +134,7 @@ export default {
     async getRecentUsedTags() {
       this.recentUsedTags = await this.$tags.get({
         order: [["lastUsed", "DESC"]],
-        limit: 15,
+        limit: 20,
       })
     },
 

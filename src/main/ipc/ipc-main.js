@@ -124,6 +124,10 @@ export const registerIpcHandlers = ({ mainWindow }) => {
     return tags.setByID(contentIDs, tagID)
   })
 
+  ipcMain.on("set-tag-timestamp", (event, { tagIDs }) => {
+    tags.setTimestamp(tagIDs)
+  })
+
   ipcMain.handle("remove-tag-by-id", (event, { contentIDs, tagID }) => {
     return tags.removeByID(contentIDs, tagID)
   })

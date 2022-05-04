@@ -8,7 +8,10 @@ const log = require("electron-log")
 const { Op } = require("sequelize")
 
 class TagsManager {
-  //対象のコンテンツ全てが共通して持つタグを抽出する
+  //------------------------------------
+  // 共通抽出
+  // 対象のコンテンツ全てが共通して持つタグを抽出する
+  //------------------------------------
   async getCommonTags(contentIDs) {
     try {
       const result = []
@@ -36,7 +39,9 @@ class TagsManager {
     }
   }
 
-  //タグを検索する
+  //------------------------------------
+  // タグ検索
+  //------------------------------------
   async get(data) {
     try {
       const query = {
@@ -45,6 +50,15 @@ class TagsManager {
         raw: true,
       }
 
+      //IDModeの場合はids=nullの時空配列を結果として返す。
+      //そうでない場合、ids=nullは条件無しとして扱われる。
+      if (data.idMode && !data.ids) {
+        return []
+      }
+
+      if (data.ids) {
+        query.where.tagID = data.ids
+      }
       //ワード条件が入力されているなら条件を追加
       if (data.word) {
         query.where.name = { [Op.like]: `%${data.word}%` }
@@ -123,7 +137,7 @@ class TagsManager {
       })
 
       await tag[0].addContents(contents)
-      await this.setLastUsedTime(tag[0])
+      await this.setTimeStamp(tag[0])
 
       return {
         tag: tag[0].dataValues,
@@ -135,12 +149,6 @@ class TagsManager {
     }
   }
 
-  async setLastUsedTime(tag) {
-    tag.update({
-      lastUsed: new Date(),
-    })
-  }
-
   async setByID(contentIDs, tagID) {
     try {
       const tag = await Tag.findOne({ where: { tagID: tagID } })
@@ -148,11 +156,32 @@ class TagsManager {
         where: { contentID: contentIDs },
       })
       await tag.addContents(contents)
-      await this.setLastUsedTime(tag)
+      await this.setTimestamp(tagID)
       return true
     } catch (err) {
       log.error(err)
       return false
+    }
+  }
+
+  //------------------------------------
+  // 指定されたタグの最終使用を現時刻にする
+  //------------------------------------
+
+  async setTimestamp(tagIDs) {
+    try {
+      await Tag.update(
+        {
+          lastUsed: new Date(),
+        },
+        {
+          where: {
+            tagID: tagIDs,
+          },
+        }
+      )
+    } catch (err) {
+      log.error(err)
     }
   }
 

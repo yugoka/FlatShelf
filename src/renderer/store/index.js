@@ -63,6 +63,11 @@ const store = new Vuex.Store({
     },
     mergeContext(state, context) {
       state.viewContext = cloneDeep(merge(state.viewContext, context))
+
+      //mergeで配列が統合されてしまうので上書きする。あまり良い実装ではない
+      if (Array.isArray(context.tags)) {
+        state.viewContext.tags = context.tags
+      }
     },
     //コンテキストを直接指定する。ただし並び替えだけは保持
     setContext(state, context) {

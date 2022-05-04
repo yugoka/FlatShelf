@@ -25,6 +25,11 @@ class RendererTagsManager {
     return result
   }
 
+  //指定したタグの最後に使用した日時を現在時刻に設定する
+  async setTimeStamp(tagIDs) {
+    await window.ipc.setTagTimestamp(tagIDs)
+  }
+
   async removeByID(contentIDs, tagID) {
     const result = await window.ipc.removeTagByID(contentIDs, tagID)
     return result
