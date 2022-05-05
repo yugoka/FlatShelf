@@ -67,7 +67,14 @@ export default {
       prependHeight: 0,
       keys: {
         Shift: false,
-        Ctrl: false,
+        Meta: false,
+      },
+      keyDownBinds: {
+        Shift: [this.highlightCards],
+        a: [this.selectAll],
+      },
+      keyUpBinds: {
+        Shift: [this.endHighlight],
       },
       tips: {
         selectMany: true,
@@ -130,6 +137,7 @@ export default {
     //storeに格納されたcontextに従ってコンテンツを読み込む。Browser上すべての検索はここで行われる
     async loadContents({ getLayouts = true } = {}) {
       this.contents = await this.$search.execute(this.viewContext)
+      //毎回リロード問題のせいで選択開始位置がリセットされてしまう。。。
       this.selectStartIndex = null
       if (getLayouts) this.getLayouts()
     },
@@ -149,28 +157,11 @@ export default {
       })
     },
 
-    onResizePrependElements(height) {
-      this.prependHeight = height
-      this.getLayouts()
-    },
-
-    onResize: debounce(function () {
-      if (!this.$refs.scroller) return
-      this.getScrollerSize()
-      this.getLayouts()
-    }, 50),
-
     getScrollerSize() {
       const scrollerRect = this.$refs.scroller.getBoundingClientRect()
       this.scrollerWidth = scrollerRect.width
       this.scrollerHeight = scrollerRect.height
     },
-
-    onScroll: throttle(function () {
-      this.scrollTop = this.$refs.scroller.scrollTop
-      this.getVisibleCards()
-      this.hideContextMenu()
-    }, 300),
 
     getVisibleCards() {
       if (!this.layouts) return
@@ -183,6 +174,9 @@ export default {
       })
     },
 
+    //------------------------------------
+    // スクロール/検索要素制御
+    //------------------------------------
     setScrollTop(scrollTop) {
       this.scrollTop = scrollTop
       this.$nextTick(() => {
@@ -198,6 +192,7 @@ export default {
       this.$refs.contextMenu.hide()
     },
 
+    //アイテムを選択した時
     setContentSelect({ contentID, cardIndex, isSelected }) {
       if (this.tips.selectMany) {
         this.$store.commit("setNotice", {
@@ -226,27 +221,6 @@ export default {
         this.$store.dispatch("addSelectedItems", newSelectItem)
       }
       this.selectStartIndex = cardIndex
-    },
-
-    onKeyUp(e) {
-      for (const keyName in this.keys) {
-        if (e.key === keyName) this.keys[keyName] = false
-      }
-      if (e.key === "Shift") this.endHighlight()
-    },
-
-    onKeyDown(e) {
-      for (const keyName in this.keys) {
-        if (e.key === keyName) {
-          this.keys[keyName] = true
-        }
-      }
-      this.highlightCards()
-    },
-
-    onHoverCard(index) {
-      this.hoverCardIndex = index
-      if (this.keys.Shift) this.highlightCards()
     },
 
     //Shiftを押している場合に複数選択対象のカードをハイライトする
@@ -278,12 +252,78 @@ export default {
       }
     },
 
+    selectAll() {
+      if (!this.keys.Meta) return
+      this.$store.dispatch("setSelectedItems", this.contentIDs)
+      this.$nextTick(() => {
+        window.getSelection().removeAllRanges()
+      })
+    },
+
+    //------------------------------------
+    // イベント制御
+    //------------------------------------
     onCardDragStart(content) {
       this.$refs.dragGhost.show(content)
     },
 
     onCardDragEnd() {
       this.$refs.dragGhost.hide()
+    },
+
+    onResizePrependElements(height) {
+      this.prependHeight = height
+      this.getLayouts()
+    },
+
+    onResize: debounce(function () {
+      if (!this.$refs.scroller) return
+      this.getScrollerSize()
+      this.getLayouts()
+    }, 50),
+
+    onHoverCard(index) {
+      this.hoverCardIndex = index
+      if (this.keys.Shift) this.highlightCards()
+    },
+
+    onScroll: throttle(function () {
+      this.scrollTop = this.$refs.scroller.scrollTop
+      this.getVisibleCards()
+      this.hideContextMenu()
+    }, 300),
+
+    onKeyUp(e) {
+      for (const keyName in this.keys) {
+        if (e.key === keyName) this.keys[keyName] = false
+      }
+      this.executeShortCuts(e.key, this.keyUpBinds)
+    },
+
+    onKeyDown(e) {
+      for (const keyName in this.keys) {
+        if (e.key === keyName) {
+          this.keys[keyName] = true
+        }
+      }
+
+      //各ショートカットを実行する
+      this.executeShortCuts(e.key, this.keyDownBinds)
+
+      //Ctrl+Aで全画面選択をしないようにする
+      if (this.keys.Meta && e.key === "a") {
+        e.preventDefault()
+      }
+    },
+
+    //特定のキーに指定されているメソッドを全て実行
+    executeShortCuts(keyName, binds) {
+      if (!binds[keyName]) return
+
+      for (const func of binds[keyName]) {
+        func.bind(this)
+        func()
+      }
     },
   },
 
