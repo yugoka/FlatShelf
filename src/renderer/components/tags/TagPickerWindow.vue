@@ -33,7 +33,7 @@
           :tag="tag"
           selectMode
           :selectedTags="selectedTags"
-          @click="toggleTag(tag)"
+          @click="toggleTag"
         />
       </div>
 
@@ -131,8 +131,8 @@ export default {
         limit: 20,
       })
     },
-    async toggleTag(tag) {
-      this.$emit("toggleTag", tag)
+    async toggleTag(data) {
+      this.$emit("toggle-tag", data)
       if (this.word.length) {
         await this.getRecentUsedTags()
       }

@@ -9,16 +9,16 @@
       <v-icon>mdi-menu-up</v-icon>
     </v-btn>
 
-    <TagPicker :viewContext="viewContext" />
+    <FilterMenuTagPicker :viewContext="viewContext" />
   </v-toolbar>
 </template>
 
 <script>
-import TagPicker from "./TagPicker.vue"
+import FilterMenuTagPicker from "./FilterMenuTagPicker.vue"
 
 export default {
   components: {
-    TagPicker,
+    FilterMenuTagPicker,
   },
 
   data() {

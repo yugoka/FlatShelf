@@ -68,7 +68,7 @@ export default {
 
   methods: {
     click() {
-      this.$emit("click")
+      this.$emit("click", this.tag)
     },
     clickDeleteButton() {
       this.$emit("delete")

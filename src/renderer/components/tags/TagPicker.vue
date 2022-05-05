@@ -59,33 +59,24 @@
         :visible="isMenuOpen"
         :selectedTags="selectedTags"
         @close="hide"
-        @toggleTag="toggleTag"
+        @toggle-tag="toggleTag"
       />
     </v-menu>
   </div>
 </template>
 
 <script>
-import TagPickerWindow from "../../tags/TagPickerWindow.vue"
+import TagPickerWindow from "./TagPickerWindow.vue"
 
 export default {
   components: { TagPickerWindow },
 
-  props: {
-    viewContext: Object,
-  },
-
   data() {
     return {
       isMenuOpen: false,
-      selectedTags: [],
       disableToolTip: false,
+      selectedTags: [],
     }
-  },
-  watch: {
-    async viewContext() {
-      await this.getSelectedTags()
-    },
   },
   methods: {
     show() {
@@ -94,6 +85,11 @@ export default {
     hide() {
       this.isMenuOpen = false
     },
+    //親コンポーネントから呼び出し。
+    //選択中のタグ一覧を上書きする
+    setSelectedTags(tags) {
+      this.selectedTags = tags
+    },
     async unselect() {
       this.$store.commit("mergeContext", {
         tags: [],
@@ -101,19 +97,7 @@ export default {
       this.selectedTags = []
       this.disableToolTip = true
     },
-    async getSelectedTags() {
-      if (Array.isArray(this.viewContext.tags)) {
-        this.selectedTags = await this.$tags.get({
-          ids: this.viewContext.tags,
-          idMode: true,
-        })
-      } else {
-        this.selectedTags = []
-      }
-    },
     async toggleTag(tag) {
-      this.selectedTags
-
       //選択中のタグに含まれるかどうかの判定
       const tagIndex = this.selectedTags.findIndex(
         (selectedTag) => selectedTag.tagID === tag.tagID
@@ -126,14 +110,9 @@ export default {
         this.selectedTags.push(tag)
       }
 
-      this.$store.commit("mergeContext", {
-        tags: this.selectedTags.map((tag) => tag.tagID),
-      })
+      //親コンポーネントに選択の更新があったことを通知する
+      this.$emit("update", this.selectedTags)
     },
-  },
-
-  async mounted() {
-    await this.getSelectedTags()
   },
 }
 </script>

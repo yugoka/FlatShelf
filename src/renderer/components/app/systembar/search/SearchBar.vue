@@ -26,7 +26,7 @@
         <span class="caption">アイテムを検索</span>
       </v-tooltip>
     </template>
-    <v-card ref="card" class="menu-card px-1 pb-3 text-center">
+    <v-card ref="card" class="menu-card px-1 pb-3">
       <div ref="input">
         <v-text-field
           autofocus
@@ -43,7 +43,7 @@
       </div>
       <v-divider class="mb-3" />
       <div>
-        <span class="caption">ここに検索設定やタグ設定を入れる</span>
+        <TagPicker @update="onTagsUpdate" />
       </div>
     </v-card>
   </v-menu>
@@ -51,9 +51,10 @@
 
 <script>
 import debounce from "lodash.debounce"
+import TagPicker from "../../../tags/TagPicker.vue"
 
 export default {
-  components: {},
+  components: { TagPicker },
 
   data() {
     return {
@@ -102,6 +103,11 @@ export default {
       if (cardWidth > 600) cardWidth = 600
       this.cardNudgeLeft = cardWidth / 2 - 86.5
     }, 500),
+
+    onTagsUpdate(tags) {
+      this.context.tags = tags.map((tag) => tag.tagID)
+      console.log(this.context)
+    },
   },
 
   mounted() {
