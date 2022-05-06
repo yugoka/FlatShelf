@@ -1,9 +1,9 @@
 <template>
-  <div v-if="$store.state.isFilterMenuShown">
+  <div>
     <v-menu
       v-model="isMenuOpen"
       :close-on-content-click="false"
-      nudge-bottom="25"
+      :nudge-bottom="large ? 33 : 25"
     >
       <template v-slot:activator="{ on: menu, attrs }">
         <v-tooltip
@@ -13,8 +13,8 @@
         >
           <template v-slot:activator="{ on: tooltip }">
             <v-chip
-              class="picker mx-2 px-1"
-              small
+              class="picker px-1"
+              :small="!large"
               v-bind="{ attrs }"
               v-on="{ ...tooltip, ...menu }"
               label
@@ -22,7 +22,7 @@
               ripple
               @click="show"
             >
-              <v-icon small color="secondary" class="mx-1 picker-icon"
+              <v-icon :small="!large" color="secondary" class="mx-1 picker-icon"
                 >mdi-tag-outline</v-icon
               >
 
@@ -30,8 +30,14 @@
                 <v-chip
                   v-for="tag in selectedTags"
                   :key="tag.tagID"
-                  x-small
-                  class="picker-tagchips mx-1 px-1"
+                  :x-small="!large"
+                  :small="large"
+                  :class="{
+                    'picker-tagchips': true,
+                    'mx-1': true,
+                    'px-1': !large,
+                    'px-2': large,
+                  }"
                 >
                   {{ tag.name }}
                 </v-chip>
@@ -41,13 +47,17 @@
                 v-if="selectedTags.length"
                 class="picker-icon"
                 icon
-                x-small
+                :x-small="!large"
+                :small="large"
                 @click.stop="unselect"
               >
                 <v-icon small color="secondary">mdi-close</v-icon>
               </v-btn>
 
-              <span v-show="!selectedTags.length" class="caption mx-1">
+              <span
+                v-show="!selectedTags.length"
+                :class="{ 'mx-1': true, capiton: !large, 'body-2': large }"
+              >
                 タグを選択
               </span>
             </v-chip>
@@ -71,6 +81,13 @@ import TagPickerWindow from "./TagPickerWindow.vue"
 export default {
   components: { TagPickerWindow },
 
+  props: {
+    large: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
   data() {
     return {
       isMenuOpen: false,
@@ -91,11 +108,9 @@ export default {
       this.selectedTags = tags
     },
     async unselect() {
-      this.$store.commit("mergeContext", {
-        tags: [],
-      })
       this.selectedTags = []
       this.disableToolTip = true
+      this.$emit("update", this.selectedTags)
     },
     async toggleTag(tag) {
       //選択中のタグに含まれるかどうかの判定
@@ -109,7 +124,6 @@ export default {
         await this.$tags.setTimeStamp(tag.tagID)
         this.selectedTags.push(tag)
       }
-
       //親コンポーネントに選択の更新があったことを通知する
       this.$emit("update", this.selectedTags)
     },

@@ -8,17 +8,27 @@
     <v-btn icon x-small @click="hide">
       <v-icon>mdi-menu-up</v-icon>
     </v-btn>
-
-    <FilterMenuTagPicker :viewContext="viewContext" />
+    <FilterMenuFolderSelector
+      class="mx-2"
+      :folderID="viewContext.folder"
+      v-if="visible"
+    />
+    <FilterMenuTagPicker
+      class="mx-2"
+      :viewContext="viewContext"
+      v-if="visible"
+    />
   </v-toolbar>
 </template>
 
 <script>
+import FilterMenuFolderSelector from "./FilterMenuFolderSelector.vue"
 import FilterMenuTagPicker from "./FilterMenuTagPicker.vue"
 
 export default {
   components: {
     FilterMenuTagPicker,
+    FilterMenuFolderSelector,
   },
 
   data() {

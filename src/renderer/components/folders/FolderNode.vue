@@ -1,9 +1,10 @@
 <template>
   <div class="folder-node">
-    <div 
+    {{ folder.name }}
+    <div
       :class="{
         'folder-node-click-observer': true,
-        highlighted: highlighted
+        highlighted: highlighted,
       }"
       @click.stop="click"
       @contextmenu.stop="rightClick"
@@ -11,57 +12,60 @@
       @dragover="onDragOver"
       @dragleave="onDragLeave"
     />
-      {{folder.name}}
   </div>
 </template>
 
 <script>
-  import debounce from 'lodash.debounce'
+import debounce from "lodash.debounce"
 
-  export default {
-    props: {
-      folder: Object
-    },
+export default {
+  props: {
+    folder: Object,
+  },
 
-    data() {
-      return {
-        highlighted: false
-      }
-    },
-
-    methods: {
-      click() {
-        this.$emit("click", this.folder)
-      },
-
-      rightClick() {
-        this.$emit("contextmenu", this.folder)
-      },
-
-      onDrop(event) {
-        this.$emit("drop", { event, dropFolder: this.folder })
-      },
-
-      onDragOver() {
-        this.unHighlight()
-        this.highlighted = true
-      },
-
-      onDragLeave() {
-        this.highlighted = false
-      },
-
-      unHighlight: debounce(function() {
-        this.highlighted = false
-      }, 100)
+  data() {
+    return {
+      highlighted: false,
     }
-  }
+  },
+
+  methods: {
+    click() {
+      this.$emit("click", this.folder)
+    },
+
+    rightClick() {
+      this.$emit("contextmenu", this.folder)
+    },
+
+    onDrop(event) {
+      this.$emit("drop", { event, dropFolder: this.folder })
+    },
+
+    onDragOver() {
+      this.unHighlight()
+      this.highlighted = true
+    },
+
+    onDragLeave() {
+      this.highlighted = false
+    },
+
+    unHighlight: debounce(function () {
+      this.highlighted = false
+    }, 100),
+  },
+}
 </script>
 
 <style scoped>
 .folder-node {
   position: static;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
+
 .folder-node-click-observer {
   position: absolute;
   top: 0px;
@@ -72,6 +76,6 @@
 }
 
 .folder-node-click-observer.highlighted {
-  background-color: rgba(33, 150, 243, .1)
+  background-color: rgba(33, 150, 243, 0.1);
 }
 </style>

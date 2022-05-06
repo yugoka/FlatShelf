@@ -1,10 +1,12 @@
 <template>
-  <TagPicker
-    ref="picker"
-    :viewContext="viewContext"
-    :selectedTags="selectedTags"
-    @update="onUpdate"
-  />
+  <div>
+    <TagPicker
+      ref="picker"
+      :viewContext="viewContext"
+      :selectedTags="selectedTags"
+      @update="onUpdate"
+    />
+  </div>
 </template>
 
 <script>
