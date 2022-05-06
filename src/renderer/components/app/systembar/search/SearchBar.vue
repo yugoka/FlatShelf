@@ -51,31 +51,38 @@
           </template>
         </v-text-field>
       </div>
-      <v-divider class="mb-2" />
-      <v-row class="mx-2">
-        <v-col col-6>
-          <div class="mb-1 subtitle-2">タグ</div>
-          <TagPicker
-            ref="tagPicker"
-            class="tag-picker"
-            @update="onTagsUpdate"
-          />
-        </v-col>
-        <v-col col-6>
-          <div class="mb-1 subtitle-2">フォルダ</div>
-          <FolderSelector
-            :folderID="context.folder"
-            @select="onFolderSelect"
-            @unselect="onFolderUnselect"
-          />
-        </v-col>
-      </v-row>
+      <v-divider />
+
+      <v-tabs v-model="tab" height="30">
+        <v-tab class="body-2">検索対象</v-tab>
+        <v-tab class="body-2">絞り込み</v-tab>
+      </v-tabs>
+      <v-tabs-items v-model="tab">
+        <v-tab-item> 検索対象条件 </v-tab-item>
+        <v-tab-item eager>
+          <v-row no-gutters class="mt-1">
+            <v-col cols="7" class="px-1">
+              <div class="ms-2 mb-1 subtitle-2">タグ</div>
+              <TagPicker ref="tagPicker" @update="onTagsUpdate" mode="card" />
+            </v-col>
+            <v-col cols="5" class="px-1">
+              <div class="mb-1 subtitle-2">フォルダ</div>
+              <FolderSelector
+                class="folder-selector"
+                :folderID="context.folder"
+                @select="onFolderSelect"
+                @unselect="onFolderUnselect"
+              />
+            </v-col>
+          </v-row>
+        </v-tab-item>
+      </v-tabs-items>
     </v-card>
   </v-menu>
 </template>
 
 <script>
-import TagPicker from "../../../tags/TagPicker.vue"
+import TagPicker from "../../../tags/tagpicker/TagPicker.vue"
 import FolderSelector from "../../../folders/FolderSelector.vue"
 import { cloneDeep } from "lodash"
 
@@ -85,6 +92,7 @@ export default {
   data() {
     return {
       menu: false,
+      tab: null,
       cardNudgeLeft: 113.5,
       context: {
         word: "",
@@ -127,6 +135,7 @@ export default {
         ids: this.context.tags,
         idMode: true,
       })
+
       this.$refs.tagPicker.setSelectedTags(selectedTags)
     },
 
@@ -174,8 +183,8 @@ export default {
 .search-chip-text-wrapper {
   margin-inline-end: 100px;
 }
-
-.tag-picker {
+.folder-selector {
   display: inline-block;
+  max-width: 100%;
 }
 </style>

@@ -8,52 +8,22 @@
       <template v-slot:activator="{ on: menu, attrs }">
         <v-tooltip
           bottom
-          open-delay="300"
+          open-delay="700"
           :disabled="isMenuOpen || disableToolTip"
         >
           <template v-slot:activator="{ on: tooltip }">
-            <v-chip
-              class="picker px-1"
-              small
-              v-bind="{ attrs }"
-              v-on="{ ...tooltip, ...menu }"
-              label
-              outlined
-              ripple
-              @click="show"
-            >
-              <v-icon
-                small
-                :color="isTagSelected ? 'primary' : null"
-                class="mx-1 picker-icon"
-                >mdi-tag{{ isTagSelected ? "" : "-outline" }}</v-icon
-              >
-
-              <div class="picker-tagchips-group">
-                <v-chip
-                  v-for="tag in selectedTags"
-                  :key="tag.tagID"
-                  x-small
-                  class="picker-tagchips mx-1 px-2"
-                >
-                  {{ tag.name }}
-                </v-chip>
-              </div>
-
-              <v-btn
-                v-if="isTagSelected"
-                class="picker-icon"
-                icon
-                x-small
-                @click.stop="unselect"
-              >
-                <v-icon small color="secondary">mdi-close</v-icon>
-              </v-btn>
-
-              <span v-show="!selectedTags.length" class="mx-1 caption">
-                タグを選択
-              </span>
-            </v-chip>
+            <div v-bind="{ attrs }" v-on="{ ...tooltip, ...menu }">
+              <ActivatorChip
+                v-if="mode === 'chip'"
+                :selectedTags="selectedTags"
+                @unselect="unselect"
+              />
+              <ActivatorCard
+                v-else
+                :selectedTags="selectedTags"
+                @unselect="unselect"
+              />
+            </div>
           </template>
           <span class="caption">タグで絞り込み</span>
         </v-tooltip>
@@ -69,12 +39,20 @@
 </template>
 
 <script>
-import TagPickerWindow from "./TagPickerWindow.vue"
+import TagPickerWindow from "../TagPickerWindow.vue"
+import ActivatorCard from "./ActivatorCard.vue"
+import ActivatorChip from "./ActivatorChip.vue"
 
 export default {
-  components: { TagPickerWindow },
+  components: { TagPickerWindow, ActivatorChip, ActivatorCard },
 
-  props: {},
+  props: {
+    //mode="chip"ならアクティベーターが小さなチップに、mode="box"ならアクティベーターがカードになる
+    mode: {
+      type: String,
+      default: "chip",
+    },
+  },
 
   data() {
     return {
@@ -84,16 +62,7 @@ export default {
     }
   },
 
-  computed: {
-    isTagSelected() {
-      return !!this.selectedTags.length
-    },
-  },
-
   methods: {
-    show() {
-      this.isMenuOpen = true
-    },
     hide() {
       this.isMenuOpen = false
     },

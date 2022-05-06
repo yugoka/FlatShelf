@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import TagPicker from "../../tags/TagPicker.vue"
+import TagPicker from "../../tags/tagpicker/TagPicker.vue"
 export default {
   props: {
     viewContext: Object,

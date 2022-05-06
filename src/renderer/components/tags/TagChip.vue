@@ -2,13 +2,14 @@
   <v-chip
     :class="{
       'tag-chip me-1 mt-1 ps-3': true,
-      'pe-1': !selectMode,
-      'pe-3': selectMode,
+      'pe-1': !selectMode && !noCloseButton,
+      'pe-3': selectMode || noCloseButton,
     }"
     :small="size === 'small'"
+    :x-small="size === 'x-small'"
     ripple
     @click.stop="click"
-    :color="highlighted ? 'primary' : null"
+    :color="chipColor"
   >
     <v-expand-x-transition>
       <v-icon v-if="highlighted" class="me-1" small> mdi-check-circle </v-icon>
@@ -19,7 +20,7 @@
     </span>
 
     <v-btn
-      v-if="!selectMode"
+      v-if="!selectMode && !noCloseButton"
       class="close-button"
       icon
       small
@@ -44,11 +45,19 @@ export default {
       type: Boolean,
       default: false,
     },
+    noCloseButton: {
+      type: Boolean,
+      default: false,
+    },
     selectedTags: {
       type: Array,
       default: () => [],
     },
     customText: {
+      type: String,
+      default: "",
+    },
+    color: {
       type: String,
       default: "",
     },
@@ -63,6 +72,15 @@ export default {
   computed: {
     highlighted() {
       return this.selected && this.selectMode
+    },
+    chipColor() {
+      if (this.highlighted) {
+        return "primary"
+      } else if (typeof this.color === "String") {
+        return this.color
+      } else {
+        return null
+      }
     },
   },
 

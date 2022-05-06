@@ -1,68 +1,70 @@
 <template>
-  <v-menu
-    v-model="isMenuOpen"
-    :close-on-content-click="false"
-    nudge-bottom="25"
-  >
-    <template v-slot:activator="{ on: menu, attrs }">
-      <v-tooltip
-        bottom
-        open-delay="300"
-        :disabled="isMenuOpen || disableToolTip"
-      >
-        <template v-slot:activator="{ on: tooltip }">
-          <v-chip
-            class="selector px-1"
-            small
-            v-bind="{ attrs }"
-            v-on="{ ...tooltip, ...menu }"
-            label
-            outlined
-            ripple
-            @click="show"
-          >
-            <v-icon small class="selector-icon ms-1 me-2"
-              >mdi-folder-outline</v-icon
+  <div>
+    <v-menu
+      v-model="isMenuOpen"
+      :close-on-content-click="false"
+      nudge-bottom="25"
+    >
+      <template v-slot:activator="{ on: menu, attrs }">
+        <v-tooltip
+          bottom
+          open-delay="300"
+          :disabled="isMenuOpen || disableToolTip"
+        >
+          <template v-slot:activator="{ on: tooltip }">
+            <v-chip
+              class="selector px-1"
+              small
+              v-bind="{ attrs }"
+              v-on="{ ...tooltip, ...menu }"
+              label
+              outlined
+              ripple
+              @click="show"
             >
+              <v-icon small class="selector-icon ms-1 me-1"
+                >mdi-folder-outline</v-icon
+              >
 
-            <div class="selector-text">
-              {{ isFolderSelected ? folder.name : "フォルダを選択" }}
-            </div>
+              <div class="selector-text me-1">
+                {{ isFolderSelected ? folder.name : "フォルダを選択" }}
+              </div>
 
-            <v-btn
-              v-if="isFolderSelected"
-              icon
-              x-small
-              class="selector-icon ms-1"
-              @click.stop="unselect"
-            >
+              <v-btn
+                v-if="isFolderSelected"
+                icon
+                x-small
+                class="selector-icon ms-1"
+                @click.stop="unselect"
+              >
+                <v-icon small> mdi-close </v-icon>
+              </v-btn>
+            </v-chip>
+          </template>
+          <span class="caption">フォルダで絞り込み</span>
+        </v-tooltip>
+      </template>
+      <v-card class="card">
+        <div class="pt-2">
+          <div class="menu-header mx-4 mb-1 body-2">
+            <span class="mt-1 ms-3">フォルダを選択</span>
+            <v-btn icon small @click="isMenuOpen = false">
               <v-icon small> mdi-close </v-icon>
             </v-btn>
-          </v-chip>
-        </template>
-        <span class="caption">フォルダで絞り込み</span>
-      </v-tooltip>
-    </template>
-    <v-card class="card">
-      <div class="pt-2">
-        <div class="menu-header mx-4 mb-1 body-2">
-          <span class="mt-1 ms-3">フォルダを選択</span>
-          <v-btn icon small @click="isMenuOpen = false">
-            <v-icon small> mdi-close </v-icon>
-          </v-btn>
+          </div>
+          <div class="scroll-content py-2 my-1">
+            <Folders
+              syncWithViewContext
+              ref="folderList"
+              no-header
+              @select="onSelect"
+              :min-height="null"
+            />
+          </div>
         </div>
-        <div class="scroll-content py-2 my-1">
-          <Folders
-            syncWithViewContext
-            ref="folderList"
-            no-header
-            @select="onSelect"
-            :min-height="null"
-          />
-        </div>
-      </div>
-    </v-card>
-  </v-menu>
+      </v-card>
+    </v-menu>
+  </div>
 </template>
 
 <script>
@@ -119,7 +121,7 @@ export default {
 <style scoped>
 .selector {
   display: flex;
-  max-width: 150px;
+  max-width: 200px;
 }
 
 .selector-text {
