@@ -1,65 +1,47 @@
 <template>
   <ContextMenu ref="contextMenu">
-
-    <MenuButton
-      v-if="showOpenButton"
-      @click.native="openFolder"
-    >
+    <MenuButton v-if="showOpenButton" @click.native="openFolder">
       開く
     </MenuButton>
 
-    <v-divider 
-      class="my-1"
-      v-if="showOpenButton"
-    />
+    <v-divider class="my-1" v-if="showOpenButton" />
 
-    <MenuButton 
-      @click.native="createFolder"
-    >
-      新規フォルダ
-    </MenuButton>
+    <MenuButton @click.native="createFolder"> 新規フォルダ </MenuButton>
 
-    <MenuButton
-      @click.native="renameFolder"
-      v-if="folderID != 1"
-    >
+    <MenuButton @click.native="renameFolder" v-if="folderID != 1">
       名前の変更
     </MenuButton>
 
-    <MenuButton
-      @click.native="deleteFolder"
-      v-if="folderID != 1"
-    >
+    <MenuButton @click.native="deleteFolder" v-if="folderID != 1">
       削除
     </MenuButton>
-
   </ContextMenu>
 </template>
 
 <script>
-import ContextMenu from '../app/contextmenu/ContextMenu.vue'
-import MenuButton from '../app/contextmenu/ContextMenuButton.vue'
+import ContextMenu from "../app/contextmenu/ContextMenu.vue"
+import MenuButton from "../app/contextmenu/ContextMenuButton.vue"
 
 export default {
   props: {
-    mode: String
+    mode: String,
   },
 
   components: {
     ContextMenu,
-    MenuButton
+    MenuButton,
   },
 
   data() {
     return {
-      folderID: null
+      folderID: null,
     }
   },
 
   computed: {
     showOpenButton() {
-      return this.mode === 'SideMenu' && this.folderID != 1
-    }
+      return this.mode === "SideMenu" && this.folderID != 1
+    },
   },
 
   methods: {
@@ -69,7 +51,7 @@ export default {
     },
 
     openFolder() {
-      this.$emit("open-folder", this.folderID)
+      this.$emit("open-folder", { id: this.folderID })
     },
 
     createFolder() {
@@ -82,7 +64,7 @@ export default {
 
     deleteFolder() {
       this.$folders.delete(this.folderID)
-    }
-  }
+    },
+  },
 }
 </script>

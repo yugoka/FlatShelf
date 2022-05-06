@@ -8,14 +8,15 @@
     <v-btn icon x-small @click="hide">
       <v-icon>mdi-menu-up</v-icon>
     </v-btn>
-    <FilterMenuFolderSelector
-      class="mx-2"
-      :folderID="viewContext.folder"
-      v-if="visible"
-    />
+
     <FilterMenuTagPicker
       class="mx-2"
       :viewContext="viewContext"
+      v-if="visible"
+    />
+    <FilterMenuFolderSelector
+      class="mx-2"
+      :folderID="viewContext.folder"
       v-if="visible"
     />
   </v-toolbar>

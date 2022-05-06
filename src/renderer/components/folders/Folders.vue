@@ -13,7 +13,7 @@
       ref="folderContextMenu"
       @rename="startRenaming"
       @create-folder="createNewFolder"
-      @open-folder="activatedFolder = [$event]"
+      @open-folder="onClickFolder"
       :mode="mode"
     />
 
@@ -44,7 +44,7 @@
           <FolderNode
             v-if="renamingFolderID != item.id"
             :folder="item"
-            @click="clickFolder"
+            @click="onClickFolder"
             @contextmenu="rightClickFolder"
             @drop="onDrop"
           />
@@ -98,6 +98,10 @@ export default {
       type: Number,
       default: 300,
     },
+    syncWithViewContext: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   components: {
@@ -127,6 +131,29 @@ export default {
     folders() {
       return this.$store.state.folders.children
     },
+    viewContextFolder() {
+      return this.$store.state.viewContext.folder
+    },
+  },
+
+  watch: {
+    folders() {
+      //フォルダが読み込まれた時一度だけ初期オープンフォルダを読み込む
+      if (!this.hasInitiallyOpenFolderLoaded) {
+        this.openedFolders = this.$config.renderer().folders.initiallyOpened
+        this.hasInitiallyOpenFolderLoaded = true
+      }
+    },
+
+    //this.syncWithViewContext = trueなら、ハイライトされたフォルダとviewContextを同期する
+    viewContextFolder() {
+      if (!this.syncWithViewContext) return
+      if (this.viewContextFolder) {
+        this.highlightFolder(this.viewContextFolder)
+      } else {
+        this.unselect()
+      }
+    },
   },
 
   methods: {
@@ -136,12 +163,16 @@ export default {
       this.activatedFolder = []
     },
 
-    clickFolder(folder) {
-      this.isSelectingNavFolder = true
-      this.activatedFolder = [folder.id]
-
+    onClickFolder(folder) {
+      this.highlightFolder(folder.id)
       //このイベントが親コンポーネントとやりとりする
       this.$emit("select", folder)
+    },
+
+    //クリック時の処理はしないけどハイライトはするやつ
+    highlightFolder(folderID) {
+      this.isSelectingNavFolder = true
+      this.activatedFolder = [folderID]
     },
 
     rightClickFolder(folder) {
@@ -224,16 +255,6 @@ export default {
         files,
         folderID: folder.id,
       })
-    },
-  },
-
-  watch: {
-    folders() {
-      //フォルダが読み込まれた時一度だけ初期オープンフォルダを読み込む
-      if (!this.hasInitiallyOpenFolderLoaded) {
-        this.openedFolders = this.$config.renderer().folders.initiallyOpened
-        this.hasInitiallyOpenFolderLoaded = true
-      }
     },
   },
 

@@ -10,7 +10,12 @@
 
     <v-divider class="mx-2" />
 
-    <Folders ref="folders" @select="selectFolder($event)" mode="SideMenu" />
+    <Folders
+      syncWithViewContext
+      ref="folders"
+      @select="selectFolder($event)"
+      mode="SideMenu"
+    />
   </v-navigation-drawer>
 </template>
 

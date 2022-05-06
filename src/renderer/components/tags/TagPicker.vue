@@ -3,7 +3,7 @@
     <v-menu
       v-model="isMenuOpen"
       :close-on-content-click="false"
-      :nudge-bottom="large ? 33 : 25"
+      nudge-bottom="25"
     >
       <template v-slot:activator="{ on: menu, attrs }">
         <v-tooltip
@@ -14,7 +14,7 @@
           <template v-slot:activator="{ on: tooltip }">
             <v-chip
               class="picker px-1"
-              :small="!large"
+              small
               v-bind="{ attrs }"
               v-on="{ ...tooltip, ...menu }"
               label
@@ -22,42 +22,35 @@
               ripple
               @click="show"
             >
-              <v-icon :small="!large" color="secondary" class="mx-1 picker-icon"
-                >mdi-tag-outline</v-icon
+              <v-icon
+                small
+                :color="isTagSelected ? 'primary' : null"
+                class="mx-1 picker-icon"
+                >mdi-tag{{ isTagSelected ? "" : "-outline" }}</v-icon
               >
 
               <div class="picker-tagchips-group">
                 <v-chip
                   v-for="tag in selectedTags"
                   :key="tag.tagID"
-                  :x-small="!large"
-                  :small="large"
-                  :class="{
-                    'picker-tagchips': true,
-                    'mx-1': true,
-                    'px-1': !large,
-                    'px-2': large,
-                  }"
+                  x-small
+                  class="picker-tagchips mx-1 px-2"
                 >
                   {{ tag.name }}
                 </v-chip>
               </div>
 
               <v-btn
-                v-if="selectedTags.length"
+                v-if="isTagSelected"
                 class="picker-icon"
                 icon
-                :x-small="!large"
-                :small="large"
+                x-small
                 @click.stop="unselect"
               >
                 <v-icon small color="secondary">mdi-close</v-icon>
               </v-btn>
 
-              <span
-                v-show="!selectedTags.length"
-                :class="{ 'mx-1': true, capiton: !large, 'body-2': large }"
-              >
+              <span v-show="!selectedTags.length" class="mx-1 caption">
                 タグを選択
               </span>
             </v-chip>
@@ -81,12 +74,7 @@ import TagPickerWindow from "./TagPickerWindow.vue"
 export default {
   components: { TagPickerWindow },
 
-  props: {
-    large: {
-      type: Boolean,
-      default: false,
-    },
-  },
+  props: {},
 
   data() {
     return {
@@ -95,6 +83,13 @@ export default {
       selectedTags: [],
     }
   },
+
+  computed: {
+    isTagSelected() {
+      return !!this.selectedTags.length
+    },
+  },
+
   methods: {
     show() {
       this.isMenuOpen = true

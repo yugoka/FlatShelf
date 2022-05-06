@@ -2,7 +2,7 @@
   <v-menu
     v-model="isMenuOpen"
     :close-on-content-click="false"
-    :nudge-bottom="25"
+    nudge-bottom="25"
   >
     <template v-slot:activator="{ on: menu, attrs }">
       <v-tooltip
@@ -13,7 +13,7 @@
         <template v-slot:activator="{ on: tooltip }">
           <v-chip
             class="selector px-1"
-            :small="!large"
+            small
             v-bind="{ attrs }"
             v-on="{ ...tooltip, ...menu }"
             label
@@ -21,19 +21,16 @@
             ripple
             @click="show"
           >
-            <v-icon
-              :small="!large"
-              color="secondary"
-              class="selector-icon ms-1 me-2"
+            <v-icon small class="selector-icon ms-1 me-2"
               >mdi-folder-outline</v-icon
             >
 
             <div class="selector-text">
-              {{ folder.name ? folder.name : "フォルダを選択" }}
+              {{ isFolderSelected ? folder.name : "フォルダを選択" }}
             </div>
 
             <v-btn
-              v-if="folder.name"
+              v-if="isFolderSelected"
               icon
               x-small
               class="selector-icon ms-1"
@@ -56,6 +53,7 @@
         </div>
         <div class="scroll-content py-2 my-1">
           <Folders
+            syncWithViewContext
             ref="folderList"
             no-header
             @select="onSelect"
@@ -73,10 +71,6 @@ export default {
   components: { Folders },
   props: {
     folderID: Number,
-    large: {
-      type: Boolean,
-      default: false,
-    },
   },
 
   data() {
@@ -87,12 +81,15 @@ export default {
     }
   },
 
+  computed: {
+    isFolderSelected() {
+      return !!this.folder.folderID
+    },
+  },
+
   watch: {
     async folderID() {
       await this.getFolderData()
-      if (!this.folderID) {
-        this.$refs.folderList.unselect()
-      }
     },
   },
 
