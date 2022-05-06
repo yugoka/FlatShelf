@@ -53,20 +53,32 @@
       </div>
       <v-divider />
 
-      <v-tabs v-model="tab" height="30">
-        <v-tab class="body-2">検索対象</v-tab>
-        <v-tab class="body-2">絞り込み</v-tab>
+      <v-tabs v-model="tab" grow height="30">
+        <v-tab class="body-2">
+          <v-icon class="me-1" small>mdi-layers-search-outline</v-icon>
+          検索対象
+        </v-tab>
+        <v-tab class="body-2">
+          <v-icon class="me-1" small>mdi-filter-variant</v-icon>
+          フィルター
+        </v-tab>
+        <v-tab class="body-2">
+          <v-icon class="me-1" small>mdi-cog</v-icon>
+          設定
+        </v-tab>
       </v-tabs>
       <v-tabs-items v-model="tab">
         <v-tab-item> 検索対象条件 </v-tab-item>
         <v-tab-item eager>
-          <v-row no-gutters class="mt-1">
-            <v-col cols="7" class="px-1">
-              <div class="ms-2 mb-1 subtitle-2">タグ</div>
+          <v-row no-gutters class="mt-2 mx-1 pb-1">
+            <v-col cols="7" class="tagpicker-area px-1">
+              <div class="ms-2 mb-2 subtitle-2">タグ</div>
+
               <TagPicker ref="tagPicker" @update="onTagsUpdate" mode="card" />
             </v-col>
+
             <v-col cols="5" class="px-1">
-              <div class="mb-1 subtitle-2">フォルダ</div>
+              <div class="mb-2 subtitle-2">フォルダ</div>
               <FolderSelector
                 class="folder-selector"
                 :folderID="context.folder"
@@ -154,6 +166,11 @@ export default {
         this.menu = false
       }
     },
+
+    openTagPicker() {
+      this.$refs.tagPicker.show()
+    },
+
     onTagsUpdate(tags) {
       this.context.tags = tags.map((tag) => tag.tagID)
     },

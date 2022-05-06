@@ -3,13 +3,13 @@
     <v-menu
       v-model="isMenuOpen"
       :close-on-content-click="false"
-      nudge-bottom="25"
+      :nudge-bottom="nudgeBottom"
     >
       <template v-slot:activator="{ on: menu, attrs }">
         <v-tooltip
           bottom
           open-delay="700"
-          :disabled="isMenuOpen || disableToolTip"
+          :disabled="isMenuOpen || disableToolTip || mode === 'card'"
         >
           <template v-slot:activator="{ on: tooltip }">
             <div v-bind="{ attrs }" v-on="{ ...tooltip, ...menu }">
@@ -21,7 +21,7 @@
               <ActivatorCard
                 v-else
                 :selectedTags="selectedTags"
-                @unselect="unselect"
+                @toggleTag="toggleTag"
               />
             </div>
           </template>
@@ -62,7 +62,20 @@ export default {
     }
   },
 
+  computed: {
+    nudgeBottom() {
+      if (this.mode === "card") {
+        return 100
+      } else {
+        return 25
+      }
+    },
+  },
+
   methods: {
+    show() {
+      this.isMenuOpen = true
+    },
     hide() {
       this.isMenuOpen = false
     },
@@ -95,22 +108,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.picker {
-  display: flex;
-  max-width: 250px;
-}
-.picker-icon {
-  flex-shrink: 0;
-}
-.picker-tagchips {
-  pointer-events: none;
-}
-.picker-tagchips-group {
-  flex-shrink: 1;
-  overflow-x: scroll;
-}
-.picker-tagchips-group::-webkit-scrollbar {
-  display: none;
-}
-</style>
+<style scoped></style>

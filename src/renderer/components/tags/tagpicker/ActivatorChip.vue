@@ -49,3 +49,23 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.picker {
+  display: flex;
+  max-width: 250px;
+}
+.picker-icon {
+  flex-shrink: 0;
+}
+.picker-tagchips {
+  pointer-events: none;
+}
+.picker-tagchips-group {
+  flex-shrink: 1;
+  overflow-x: scroll;
+}
+.picker-tagchips-group::-webkit-scrollbar {
+  display: none;
+}
+</style>

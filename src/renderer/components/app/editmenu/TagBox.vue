@@ -1,14 +1,22 @@
 <template>
-  <v-card class="card" outlined ripple @click="clickCard">
+  <div>
     <TagEditDialog ref="dialog" @update="onUpdate" :selectedTags="tags" />
+    <v-card class="card" outlined ripple @click="clickCard">
+      <TagChip
+        v-for="tag in tags"
+        :key="tag.tagID"
+        :tag="tag"
+        @delete="removeTag(tag.tagID)"
+      />
 
-    <TagChip
-      v-for="tag in tags"
-      :key="tag.tagID"
-      :tag="tag"
-      @delete="removeTag(tag.tagID)"
-    />
-  </v-card>
+      <div v-if="!tags.length" class="body-2 no-tag-message">
+        <div>
+          <v-icon small>mdi-cursor-default-click-outline</v-icon>
+          タグを追加
+        </div>
+      </div>
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -72,5 +80,12 @@ export default {
   padding: 5px;
   overflow-y: scroll;
   overflow-x: hidden;
+}
+.no-tag-message {
+  padding-top: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
 }
 </style>
