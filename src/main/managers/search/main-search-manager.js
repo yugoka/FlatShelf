@@ -17,7 +17,6 @@ export const executeSearch = (query) => {
 
 class Search {
   constructor(query, raw = true) {
-
     log.info(`[contentSearch] Creating search instance`)
 
     this.query = query
@@ -46,7 +45,7 @@ class Search {
       },
       having: [],
       include: [],
-      group: ["contentID"]
+      group: ["contentID"],
     }
 
     //条件にショートカットでアクセスできるようにする
@@ -87,6 +86,13 @@ class Search {
   async registerSearchWords() {
     if (!this.query.word || typeof this.query.word != "string") return
 
+    //検索対象のカラムを列挙した配列。
+    //searchColumnsが定義されていない場合はすべてのカラムを対象にする。
+    const searchColumns =
+      Array.isArray(this.query.searchColumns) && this.query.searchColumns.length
+        ? this.query.searchColumns
+        : ["name", "description", "author"]
+
     //各種スペースかコンマで区切る
     const splitter = /[\s|　,]/
     const words = this.query.word.split(splitter)
@@ -98,26 +104,32 @@ class Search {
       if (word[0] === "#" || word[0] === "＃") {
         //#を除いたタグ名を追加
         tagNames.push(word.slice(1))
-      
-      //通常の検索ワードの場合
+
+        //通常の検索ワードの場合
       } else {
-        this.queryAnd.push({ name: { [Op.like]: `%${word}%` } })
+        const conditions = {
+          [Op.or]: searchColumns.map((column) => {
+            return {
+              [column]: { [Op.like]: `%${word}%` },
+            }
+          }),
+        }
+        this.queryAnd.push(conditions)
       }
     }
-    
+
     //ワード検索にタグ指定がある場合、タグ名称からIDを取得してタグ条件に追加
     if (tagNames.length) {
-
       //存在しないタグ名が1つでも含まれている場合falseが帰ってくる
-      const tagIDs = await tags.getTagsByNames(
-        tagNames, 
-        { idMode: true, checkExistence: true }
-      )
+      const tagIDs = await tags.getTagsByNames(tagNames, {
+        idMode: true,
+        checkExistence: true,
+      })
 
       if (tagIDs) {
         this.query.tags = [...this.query.tags, ...tagIDs]
-      
-      //存在しないタグ名で検索した場合表示数が0件になるようにする
+
+        //存在しないタグ名で検索した場合表示数が0件になるようにする
       } else {
         this.notFound = true
       }
@@ -135,7 +147,7 @@ class Search {
       model: Tag,
       attributes: [],
       through: { attributes: [] },
-      where: {}
+      where: {},
     }
 
     tagInclude.where[Op.or] = this.query.tags.map((tag) => {
@@ -146,7 +158,9 @@ class Search {
 
     this.queryObject.include.push(tagInclude)
 
-    this.queryObject.having.push(where(fn('COUNT', col("Content.contentID")), this.query.tags.length))
+    this.queryObject.having.push(
+      where(fn("COUNT", col("Content.contentID")), this.query.tags.length)
+    )
   }
 
   //------------------------------------
@@ -177,11 +191,9 @@ class Search {
   async execute() {
     log.info(`[contentSearch] Start searching`)
     await this.registerQuerys()
-    
+
     //notFoundフラグが立っている場合(タグ検索ワードを見つけられなかった場合など)は空の配列を結果として返す
-    const result = this.notFound
-      ? []
-      : await Content.findAll(this.queryObject)
+    const result = this.notFound ? [] : await Content.findAll(this.queryObject)
 
     log.info(`[contentSearch] Found ${result.length} items`)
 

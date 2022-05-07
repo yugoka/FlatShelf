@@ -25,7 +25,7 @@
         <span class="caption">アイテムを検索</span>
       </v-tooltip>
     </template>
-    <v-card ref="card" class="menu-card px-1 pb-3">
+    <v-card ref="card" class="menu-card px-1">
       <div ref="input">
         <v-text-field
           class="text-field"
@@ -68,9 +68,12 @@
         </v-tab>
       </v-tabs>
       <v-tabs-items v-model="tab">
-        <v-tab-item> 検索対象条件 </v-tab-item>
+        <v-tab-item>
+          <ColumnSelector @select="onSearchColumnUpdate" />
+        </v-tab-item>
+
         <v-tab-item eager>
-          <v-row no-gutters class="mt-2 mx-1 pb-1">
+          <v-row no-gutters class="mt-2 mx-1 pb-4">
             <v-col cols="7" class="tagpicker-area px-1">
               <div class="ms-2 mb-2 subtitle-2">タグ</div>
 
@@ -88,6 +91,8 @@
             </v-col>
           </v-row>
         </v-tab-item>
+
+        <v-tab-item> 設定画面</v-tab-item>
       </v-tabs-items>
     </v-card>
   </v-menu>
@@ -97,14 +102,15 @@
 import TagPicker from "../../../tags/tagpicker/TagPicker.vue"
 import FolderSelector from "../../../folders/FolderSelector.vue"
 import { cloneDeep } from "lodash"
+import ColumnSelector from "./ColumnSelector.vue"
 
 export default {
-  components: { TagPicker, FolderSelector },
+  components: { TagPicker, FolderSelector, ColumnSelector },
 
   data() {
     return {
       menu: false,
-      tab: null,
+      tab: 0,
       cardNudgeLeft: 113.5,
       context: {
         word: "",
@@ -181,6 +187,11 @@ export default {
 
     onFolderUnselect() {
       this.context.folder = null
+    },
+
+    //現状SearchColumnのコンポーネント内部値をcontextと同期する仕様はないので注意
+    onSearchColumnUpdate(columns) {
+      this.context.searchColumns = columns.map((column) => column.column)
     },
   },
 }

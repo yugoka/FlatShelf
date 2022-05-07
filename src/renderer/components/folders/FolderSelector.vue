@@ -26,7 +26,7 @@
                 >mdi-folder-outline</v-icon
               >
 
-              <div class="selector-text me-1">
+              <div class="selector-text">
                 {{ isFolderSelected ? folder.name : "フォルダを選択" }}
               </div>
 

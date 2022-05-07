@@ -68,6 +68,9 @@ const store = new Vuex.Store({
       if (Array.isArray(context.tags)) {
         state.viewContext.tags = context.tags
       }
+      if (Array.isArray(context.searchColumn)) {
+        state.viewContext.searchColumn = context.searchColumn
+      }
     },
     //コンテキストを直接指定する。ただし並び替えだけは保持
     setContext(state, context) {
