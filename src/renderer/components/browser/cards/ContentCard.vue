@@ -140,6 +140,8 @@ export default {
       //選択モードなら画像クリックで選択追加
       if (this.editMode) {
         this.onClickSelectButton()
+      } else {
+        this.$contents.view(this.card.content.contentID)
       }
     },
 

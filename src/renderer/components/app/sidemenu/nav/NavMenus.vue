@@ -5,25 +5,17 @@
       color="primary"
       :mandatory="isMandatoryEnabled"
     >
-      <NavItem title="ホーム" icon="mdi-home" to="Home" />
+      <NavItem title="すべて" icon="mdi-home" :context="contexts.all" />
 
       <v-divider class="my-1" />
 
       <NavItem
-        title="すべて"
-        icon="mdi-archive-outline"
-        to="Search"
-        :context="contexts.all"
-      />
-
-      <NavItem
         title="未分類"
-        icon="mdi-archive-outline"
-        to="Search"
+        icon="mdi-folder-question-outline"
         :context="contexts.noFolder"
       />
 
-      <NavItem title="タグなし" icon="mdi-archive-outline" />
+      <NavItem title="タグなし" icon="mdi-tag-off-outline" />
 
       <NavItem title="最近追加" icon="mdi-archive-outline" />
     </v-list-item-group>

@@ -3,6 +3,7 @@
 //------------------------------------
 import store from "../store"
 import searchManager from "./renderer-search-manager"
+import router from "../router"
 
 class RendererContentsManager {
   constructor() {
@@ -14,17 +15,17 @@ class RendererContentsManager {
   async create(data) {
     //1. FilesはmapできないのでArrayにする。
     //2. Fileは各情報がprototypeにあるので改めてオブジェクトを作る
-    const files = Array.from(data.files).map(file => {
+    const files = Array.from(data.files).map((file) => {
       return {
         name: file.name,
         type: file.type,
         path: file.path,
-        size: file.size
+        size: file.size,
       }
     })
     const result = await window.ipc.createContents({
       files,
-      folderID: data.folderID || 1
+      folderID: data.folderID || 1,
     })
 
     //browserをリロードする
@@ -104,6 +105,10 @@ class RendererContentsManager {
       message: noticeMessage,
       icon: successCount ? "mdi-check" : "mdi-alert-circle-outline",
     })
+  }
+
+  view(contentID) {
+    router.push({ name: "View", params: { contentID } })
   }
 }
 

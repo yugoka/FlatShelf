@@ -9,7 +9,7 @@
       <v-tooltip bottom open-delay="300">
         <template v-slot:activator="{ on: tooltip }">
           <v-chip
-            class="mx-1"
+            class="mx-1 ps-3 pe-2"
             small
             label
             outlined
@@ -20,6 +20,9 @@
               <v-icon>mdi-magnify</v-icon>
               {{ context.word ? context.word : "検索" }}
             </div>
+            <v-btn icon x-small @click.stop="resetSearch">
+              <v-icon small class="mx-0"> mdi-close </v-icon>
+            </v-btn>
           </v-chip>
         </template>
         <span class="caption">アイテムを検索</span>
@@ -51,64 +54,20 @@
           </template>
         </v-text-field>
       </div>
+
       <v-divider />
 
-      <v-tabs v-model="tab" grow height="30">
-        <v-tab class="body-2">
-          <v-icon class="me-1" small>mdi-layers-search-outline</v-icon>
-          検索対象
-        </v-tab>
-        <v-tab class="body-2">
-          <v-icon class="me-1" small>mdi-filter-variant</v-icon>
-          フィルター
-        </v-tab>
-        <v-tab class="body-2">
-          <v-icon class="me-1" small>mdi-cog</v-icon>
-          設定
-        </v-tab>
-      </v-tabs>
-      <v-tabs-items v-model="tab">
-        <v-tab-item>
-          <ColumnSelector @select="onSearchColumnUpdate" />
-        </v-tab-item>
-
-        <v-tab-item eager>
-          <v-row no-gutters class="mt-2 mx-1 pb-4">
-            <v-col cols="7" class="tagpicker-area px-1">
-              <div class="ms-2 mb-2 subtitle-2">タグ</div>
-
-              <TagPicker ref="tagPicker" @update="onTagsUpdate" mode="card" />
-            </v-col>
-
-            <v-col cols="5" class="px-1">
-              <div class="mb-2 subtitle-2">フォルダ</div>
-              <FolderSelector
-                class="folder-selector"
-                :folderID="context.folder"
-                @select="onFolderSelect"
-                @unselect="onFolderUnselect"
-              />
-            </v-col>
-          </v-row>
-        </v-tab-item>
-
-        <v-tab-item>
-          <SettingsTab />
-        </v-tab-item>
-      </v-tabs-items>
+      <ColumnSelector />
     </v-card>
   </v-menu>
 </template>
 
 <script>
 import { cloneDeep } from "lodash"
-import TagPicker from "../../../tags/tagpicker/TagPicker.vue"
-import FolderSelector from "../../../folders/FolderSelector.vue"
 import ColumnSelector from "./ColumnSelector.vue"
-import SettingsTab from "./SettingsTab.vue"
 
 export default {
-  components: { TagPicker, FolderSelector, ColumnSelector, SettingsTab },
+  components: { ColumnSelector },
 
   data() {
     return {
@@ -144,6 +103,7 @@ export default {
 
   methods: {
     close() {
+      this.resetSearch()
       this.menu = false
     },
 
@@ -152,12 +112,6 @@ export default {
     //これを実現するためにlodash.cloneDeepを使っている
     async syncContext() {
       this.context = cloneDeep(this.viewContext)
-      const selectedTags = await this.$tags.get({
-        ids: this.context.tags,
-        idMode: true,
-      })
-
-      this.$refs.tagPicker.setSelectedTags(selectedTags)
     },
 
     executeSearch() {
@@ -169,32 +123,21 @@ export default {
           //検索画面でないなら検索画面に飛ぶ
         } else {
           this.$search.setContext(this.context)
-          this.$router.push({ name: "Search" })
+          this.$search.redirect()
         }
 
         this.menu = false
       }
     },
 
-    openTagPicker() {
-      this.$refs.tagPicker.show()
-    },
-
-    onTagsUpdate(tags) {
-      this.context.tags = tags.map((tag) => tag.tagID)
-    },
-
-    onFolderSelect(folder) {
-      this.context.folder = folder.id
-    },
-
-    onFolderUnselect() {
-      this.context.folder = null
-    },
-
     //現状SearchColumnのコンポーネント内部値をcontextと同期する仕様はないので注意
     onSearchColumnUpdate(columns) {
       this.context.searchColumns = columns.map((column) => column.column)
+    },
+
+    resetSearch() {
+      this.context.word = ""
+      this.executeSearch()
     },
   },
 }
@@ -212,7 +155,7 @@ export default {
   border: none !important;
 }
 .search-chip-text-wrapper {
-  margin-inline-end: 100px;
+  min-width: 150px;
 }
 .folder-selector {
   display: inline-block;
