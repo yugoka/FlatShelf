@@ -92,20 +92,23 @@
           </v-row>
         </v-tab-item>
 
-        <v-tab-item> 設定画面</v-tab-item>
+        <v-tab-item>
+          <SettingsTab />
+        </v-tab-item>
       </v-tabs-items>
     </v-card>
   </v-menu>
 </template>
 
 <script>
+import { cloneDeep } from "lodash"
 import TagPicker from "../../../tags/tagpicker/TagPicker.vue"
 import FolderSelector from "../../../folders/FolderSelector.vue"
-import { cloneDeep } from "lodash"
 import ColumnSelector from "./ColumnSelector.vue"
+import SettingsTab from "./SettingsTab.vue"
 
 export default {
-  components: { TagPicker, FolderSelector, ColumnSelector },
+  components: { TagPicker, FolderSelector, ColumnSelector, SettingsTab },
 
   data() {
     return {

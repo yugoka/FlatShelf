@@ -121,7 +121,7 @@ export default {
       }
     },
     selectedColumnsData() {
-      const selectedColumns = this.columnSelect.length
+      const selectedColumns = this.selectedColumnsData.length
         ? this.selectedColumnsData
         : this.columns
 
