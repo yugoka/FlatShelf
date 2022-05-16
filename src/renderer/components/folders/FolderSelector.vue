@@ -115,6 +115,10 @@ export default {
       this.$emit("unselect")
     },
   },
+
+  async mounted() {
+    await this.getFolderData()
+  },
 }
 </script>
 

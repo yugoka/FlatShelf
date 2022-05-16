@@ -8,22 +8,20 @@ const fs = require("fs").promises
 const imageFileExts = ["png", "jpg", "jpeg", "webp", "gif", "bmp"]
 
 class ContentsManager {
-
   async createMany(data) {
-    const promises = data.files.map(file => {
+    const promises = data.files.map((file) => {
       return this.create({
         fileData: file,
-        folderID: data.folderID
+        folderID: data.folderID,
       })
     })
     const result = await Promise.all(promises)
-    return result.map(content => content.contentID)
+    return result.map((content) => content.contentID)
   }
 
   //コンテンツを登録する
   //やや長く読みづらいため分割の余地あり
   async create(data) {
-    console.log(data)
     try {
       const fileData = data.fileData
       //ファイルの種類を判定

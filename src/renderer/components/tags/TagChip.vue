@@ -76,7 +76,7 @@ export default {
     chipColor() {
       if (this.highlighted) {
         return "primary"
-      } else if (typeof this.color === "String") {
+      } else if (typeof this.color === "string") {
         return this.color
       } else {
         return null

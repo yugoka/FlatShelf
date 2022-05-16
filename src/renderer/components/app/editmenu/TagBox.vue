@@ -58,7 +58,7 @@ export default {
 
     //メインプロセスに問い合わせて選択されたコンテンツ全てに共通するタグを抽出する
     async getCommonTags() {
-      this.tags = await this.$tags.getCommonTags(this.contentIDs)
+      this.tags = await this.$tags.getTagsByContentIDs(this.contentIDs)
     },
 
     async removeTag(tagID) {

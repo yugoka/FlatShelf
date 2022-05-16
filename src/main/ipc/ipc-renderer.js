@@ -105,8 +105,8 @@ contextBridge.exposeInMainWorld("ipc", {
   setTag: async (contentIDs, tagName) => {
     return await ipcRenderer.invoke("set-tag", { contentIDs, tagName })
   },
-  getCommonTags: async (contentIDs) => {
-    return await ipcRenderer.invoke("get-common-tags", { contentIDs })
+  getTagsByContentIDs: async (contentIDs) => {
+    return await ipcRenderer.invoke("get-tags-by-content-ids", { contentIDs })
   },
   getTags: async (data) => {
     return await ipcRenderer.invoke("get-tags", { data })

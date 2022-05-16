@@ -10,7 +10,6 @@ const log = require("electron-log")
 
 //Searchインスタンスを生成して検索を実行する。
 export const executeSearch = (query) => {
-  console.log(query)
   const search = new Search(query)
   return search.execute()
 }

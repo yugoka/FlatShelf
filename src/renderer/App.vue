@@ -1,55 +1,48 @@
 <template>
   <v-app>
-    <SystemBar/>
+    <SystemBar />
 
-    <SideMenu/>
+    <SideMenu />
 
-    <ContentsEditMenu/>
+    <ContentsEditMenu />
 
-    <NoticeChip/>
+    <NoticeChip />
 
     <div id="main-content">
       <v-main id="main">
-        <router-view/>
+        <transition name="slide">
+          <router-view class="test" />
+        </transition>
       </v-main>
     </div>
   </v-app>
 </template>
 
 <script>
-
 import SystemBar from "./components/app/systembar/SystemBar"
 import SideMenu from "./components/app/sidemenu/SideMenu"
 import ContentsEditMenu from "./components/app/editmenu/AppEditMenu"
 import NoticeChip from "./components/app/NoticeChip"
 
 export default {
-  name: 'App',
+  name: "App",
 
   components: {
     SystemBar,
     SideMenu,
     ContentsEditMenu,
-    NoticeChip
+    NoticeChip,
   },
 
   data() {
-    return {
-
-    }
+    return {}
   },
 
-  computed: {
+  computed: {},
 
-  },
+  methods: {},
 
-  methods: {
-
-  },
-
-  mounted() {
-  }
-
+  mounted() {},
 }
 </script>
 
@@ -70,11 +63,36 @@ html {
   margin-top: 30px;
   width: 100vw;
   height: calc(100vh - 30px);
-  flex-direction: column;
   overflow-y: scroll;
 }
 
 #main-content::-webkit-scrollbar {
   display: none;
+}
+
+#main .slide-enter-active,
+#main .slide-leave-active {
+  max-width: 100%;
+  transition: all 0.3s ease-out;
+}
+
+#main .slide-enter-to {
+  position: absolute;
+  right: 0;
+}
+
+#main .slide-enter {
+  position: absolute;
+  right: -100%;
+}
+
+#main .slide-leave-to {
+  position: absolute;
+  left: -100%;
+}
+
+#main .slide-leave {
+  position: absolute;
+  left: 0;
 }
 </style>

@@ -5,11 +5,13 @@ import store from "../store"
 
 class RendererTagsManager {
   //対象のコンテンツ全てに共通するタグを抽出する
-  async getCommonTags(contentIDs) {
-    const result = await window.ipc.getCommonTags(contentIDs)
+  async getTagsByContentIDs(contentIDs) {
+    const result = await window.ipc.getTagsByContentIDs(contentIDs)
     return result
   }
 
+  //data = { ids, name, limit, idMode }
+  //IDModeの場合はids=nullの時空配列を結果として返す。
   async get(data) {
     const result = await window.ipc.getTags(data)
     return result

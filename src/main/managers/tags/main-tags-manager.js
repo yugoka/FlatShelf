@@ -9,18 +9,61 @@ const { Op } = require("sequelize")
 
 class TagsManager {
   //------------------------------------
+  // contentIDからタグを取得
+  // 複数の場合すべてのcontentが共通して持つタグを返す
+  //------------------------------------
+  async getTagsByContentIDs(contentIDs) {
+    if (!Array.isArray(contentIDs) && typeof contentIDs != "number") return []
+    console.log(contentIDs)
+
+    if (typeof contentIDs === "number") {
+      const result = await this.getContentTags({
+        contentID: contentIDs,
+        raw: true,
+      })
+      return result
+    } else if (contentIDs.length === 1) {
+      const result = await this.getContentTags({
+        contentID: contentIDs[0],
+        raw: true,
+      })
+      return result
+    } else {
+      const result = await this.getCommonTags(contentIDs)
+      return result
+    }
+  }
+
+  async getContentTags({ contentID, raw = false } = {}) {
+    try {
+      if (typeof contentID != "number") {
+        throw new Error("contentID must be number")
+      }
+
+      const content = await Content.findOne({
+        where: { contentID },
+      })
+
+      const tags = await content.getTags({ raw: raw })
+      return tags
+    } catch (err) {
+      log.error(err)
+    }
+  }
+
+  //------------------------------------
   // 共通抽出
   // 対象のコンテンツ全てが共通して持つタグを抽出する
   //------------------------------------
   async getCommonTags(contentIDs) {
     try {
-      const result = []
-      //タグの取得先をとりあえず最後に選択したコンテンツにしてるけど非効率的
-      const lastContent = await Content.findOne({
-        where: { contentID: contentIDs[contentIDs.length - 1] },
-      })
+      if (!Array.isArray(contentIDs))
+        throw new Error("contentIDs must be Array")
 
-      const tags = await lastContent.getTags()
+      const result = []
+      const tags = await this.getContentTags({
+        contentID: contentIDs[contentIDs.length - 1],
+      })
 
       for await (const tag of tags) {
         //与えられたcontentIDを持つコンテンツの内、そのタグを持つものを抜き出す

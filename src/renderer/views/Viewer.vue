@@ -1,7 +1,13 @@
 <template>
-  <div>
-    <ImageViewer v-if="contentType === 'image'" :content="content" />
-  </div>
+  <v-container class="viewer">
+    <v-btn fixed icon large @click="back" class="back-button">
+      <v-icon>mdi-close</v-icon>
+    </v-btn>
+
+    <div class="viewport-wrapper">
+      <ImageViewer v-if="contentType === 'image'" :content="content" />
+    </div>
+  </v-container>
 </template>
 
 <script>
@@ -38,6 +44,10 @@ export default {
   },
 
   methods: {
+    back() {
+      this.$search.redirect()
+    },
+
     async getContentData() {
       const result = await this.$contents.getData(this.contentID)
       this.content = result[0]
@@ -49,3 +59,17 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.viewer {
+  height: calc(100vh - 30px);
+}
+.viewport-wrapper {
+  z-index: 1;
+  height: 100%;
+}
+
+.back-button {
+  z-index: 2;
+}
+</style>

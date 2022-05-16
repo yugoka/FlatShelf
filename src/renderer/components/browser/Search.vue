@@ -180,7 +180,9 @@ export default {
     setScrollTop(scrollTop) {
       this.scrollTop = scrollTop
       this.$nextTick(() => {
-        this.$refs.scroller.scrollTop = this.scrollTop
+        if (this.$refs.scroller) {
+          this.$refs.scroller.scrollTop = this.scrollTop
+        }
       })
     },
 

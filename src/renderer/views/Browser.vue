@@ -14,18 +14,7 @@
       <SearchContents ref="contents" />
 
       <!-- ファイルドロップ用スナックバー -->
-      <v-snackbar
-        v-model="fileDropSnackBar"
-        color="primary"
-        content-class="text-center"
-        timeout="-1"
-        transition="slide-y-reverse-transition"
-      >
-        <div>
-          <v-icon large>mdi-import</v-icon>
-        </div>
-        ファイルをドロップしてインポート
-      </v-snackbar>
+      <FileDropSnackBar :show="fileDropSnackBar" />
     </div>
   </div>
 </template>
@@ -33,6 +22,7 @@
 <script>
 import SearchContents from "../components/browser/Search"
 import BrowserFilterMenu from "../components/browser/filtermenu/BrowserFilterMenu.vue"
+import FileDropSnackBar from "../components/browser/FileDropSnackBar.vue"
 
 export default {
   name: "Browser",
@@ -40,6 +30,7 @@ export default {
   components: {
     SearchContents,
     BrowserFilterMenu,
+    FileDropSnackBar,
   },
 
   data() {
@@ -78,10 +69,11 @@ export default {
 <style scoped>
 /* システムメニューとフィルターメニューに対しハードコーディング */
 .main-browser-wrapper {
+  width: 100%;
+  position: relative;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  position: relative;
   height: calc(100vh - 30px);
 }
 
