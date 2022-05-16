@@ -1,5 +1,5 @@
 <template>
-  <div class="viewer-wrapper mt-3" ref="viewerWrapper">
+  <div class="viewer-wrapper mt-3" ref="viewer">
     <v-row justify="center" class="image-row" no-gutters>
       <v-col cols="10" class="image-col">
         <div class="image-wrapper">
@@ -18,17 +18,29 @@
 
     <div class="content-data">
       <v-expand-transition>
-        <div v-show="expandContentData">
-          <v-divider class="mb-3" />
-          <ContentData :content="content" class="mx-3" />
-          <v-btn @click="showContentData = false">aaa</v-btn>
+        <div v-show="showContentData">
+          <v-divider />
+          <div class="text-center" :class="{ 'mb-3': alwaysShowContentData }">
+            <v-btn
+              v-show="!alwaysShowContentData"
+              icon
+              small
+              @click="toggleExpandData"
+            >
+              <v-icon>mdi-chevron-down</v-icon>
+            </v-btn>
+          </div>
+          <ContentData :content="content" class="mx-3 mb-5" />
         </div>
       </v-expand-transition>
 
       <v-expand-transition>
-        <div v-show="!expandContentData" class="my-5 text-center">
-          <v-btn icon x-large>
-            <v-icon x-large>mdi-chevron-down</v-icon>
+        <div v-show="!showContentData" class="data-expand-button text-center">
+          <div class="data-expand-button-info text-caption secondary--text">
+            スクロールで展開
+          </div>
+          <v-btn icon large @click="toggleExpandData">
+            <v-icon>mdi-chevron-down</v-icon>
           </v-btn>
         </div>
       </v-expand-transition>
@@ -38,6 +50,8 @@
 
 <script>
 import ContentData from "../ContentData.vue"
+import throttle from "lodash.throttle"
+
 export default {
   components: { ContentData },
   name: "image-viewer",
@@ -48,22 +62,42 @@ export default {
 
   data() {
     return {
-      showContentData: true,
+      expandContentData: false,
     }
   },
 
   computed: {
-    expandContentData() {
-      return this.showContentData
+    alwaysShowContentData() {
+      return false
+    },
+
+    showContentData() {
+      return this.alwaysShowContentData || this.expandContentData
     },
     imageMaxHeight() {
       return null
     },
   },
 
-  methods: {},
+  methods: {
+    onWheel: throttle(function (e) {
+      if (this.alwaysShowContentData) return
 
-  mounted() {},
+      if (e.deltaY > 0) {
+        this.expandContentData = true
+      } else {
+        this.expandContentData = false
+      }
+    }, 10),
+
+    toggleExpandData() {
+      this.expandContentData = !this.showContentData
+    },
+  },
+
+  mounted() {
+    this.$refs.viewer.onmousewheel = this.onWheel
+  },
 }
 </script>
 
@@ -82,6 +116,7 @@ export default {
 .content-data {
   flex-shrink: 0;
   flex-grow: 0;
+  transition: 1s;
 }
 
 .image-col {
@@ -102,5 +137,16 @@ export default {
   height: auto;
   max-width: 100%;
   max-height: calc(100% - 50px);
+}
+
+.data-expand-button-info {
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.data-expand-button:hover .data-expand-button-info {
+  opacity: 1;
+  transition-delay: 0.5s;
+  pointer-events: none;
 }
 </style>
