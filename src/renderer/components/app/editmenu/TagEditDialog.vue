@@ -98,6 +98,13 @@ export default {
     },
   },
 
+  watch: {
+    visible() {
+      this.searchReady = false
+      this.input = ""
+    },
+  },
+
   methods: {
     async show(contentIDs) {
       this.input = ""
