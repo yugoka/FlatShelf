@@ -10,7 +10,7 @@
   >
     <FolderMoveDialog ref="folderMoveDialog" />
     <div>
-      <v-btn icon x-small class="mt-1 ms-1" @click="close">
+      <v-btn icon small class="mt-1 ms-1" @click="close">
         <v-icon>mdi-close</v-icon>
       </v-btn>
     </div>

@@ -6,9 +6,21 @@ const { imageManager } = require("./main-image-manager")
 const log = require("electron-log")
 const fs = require("fs").promises
 const imageFileExts = ["png", "jpg", "jpeg", "webp", "gif", "bmp"]
+const { performance } = require("perf_hooks")
 
 class ContentsManager {
   async createMany(data) {
+    const start = performance.now()
+    /*
+    const result = []
+    for await (const file of data.files) {
+      const r = await this.create({
+        fileData: file,
+        folderID: data.folderID,
+      })
+      result.push(r)
+    }    
+    */
     const promises = data.files.map((file) => {
       return this.create({
         fileData: file,
@@ -16,6 +28,10 @@ class ContentsManager {
       })
     })
     const result = await Promise.all(promises)
+    const end = performance.now()
+    console.log("==========")
+    console.log(end - start)
+    console.log("==========")
     return result.map((content) => content.contentID)
   }
 
