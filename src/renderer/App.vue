@@ -10,7 +10,7 @@
 
     <div id="main-content">
       <v-main id="main">
-        <transition name="slide">
+        <transition name="fade">
           <router-view class="test" />
         </transition>
       </v-main>
@@ -63,7 +63,6 @@ html {
   margin-top: 30px;
   width: 100vw;
   height: calc(100vh - 30px);
-  overflow-y: scroll;
 }
 
 #main-content::-webkit-scrollbar {
@@ -95,4 +94,5 @@ html {
   position: absolute;
   left: 0;
 }
+
 </style>

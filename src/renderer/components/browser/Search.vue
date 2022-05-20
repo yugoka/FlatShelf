@@ -68,6 +68,7 @@ export default {
       keys: {
         Shift: false,
         Meta: false,
+        Control: false,
       },
       keyDownBinds: {
         Shift: [this.highlightCards],
@@ -255,7 +256,7 @@ export default {
     },
 
     selectAll() {
-      if (!this.keys.Meta) return
+      if (!this.keys.Control && !this.keys.Meta) return
       this.$store.dispatch("setSelectedItems", this.contentIDs)
       this.$nextTick(() => {
         window.getSelection().removeAllRanges()
@@ -313,7 +314,7 @@ export default {
       this.executeShortCuts(e.key, this.keyDownBinds)
 
       //Ctrl+Aで全画面選択をしないようにする
-      if (this.keys.Meta && e.key === "a") {
+      if ((this.keys.Meta || this.keys.Control) && e.key === "a") {
         e.preventDefault()
       }
     },

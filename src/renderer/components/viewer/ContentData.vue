@@ -84,6 +84,7 @@ export default {
   async mounted() {
     this.getTags()
     this.getFolder()
+    console.log(this.content)
   },
 }
 </script>

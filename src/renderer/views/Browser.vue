@@ -87,6 +87,6 @@ export default {
   position: relative;
   z-index: 1;
   flex-grow: 1;
-  overflow: scroll;
+  overflow: hidden;
 }
 </style>
