@@ -22,7 +22,7 @@ class RendererSearchManager {
   }
 
   reset() {
-    store.commit("overwriteContext", { folder: 1 })
+    store.commit("overwriteContext", {})
   }
 
   //コンテキストを変更して検索ページへ飛ぶ

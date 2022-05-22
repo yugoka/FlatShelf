@@ -1,25 +1,26 @@
 <template>
   <div class="viewer-wrapper mt-3" ref="viewer">
-    <v-row justify="center" class="image-row" no-gutters>
-      <v-col cols="10" class="image-col">
-        <div class="image-buttons">
-          <v-btn icon block>
-            <v-icon>mdi-magnify-plus</v-icon>
+
+    <v-row justify="center" class="image-overview" no-gutters>
+      <v-col :cols="magnify ? 12 : 10" class="image-col">
+        <div v-show="!magnify" class="image-buttons">
+          <v-btn icon block :color="magnify ? 'info' : null" @click="toggleMagnify">
+            <v-icon>{{magnify ? "mdi-magnify-minus" : "mdi-magnify-plus"}}</v-icon>
           </v-btn>
-          <v-btn icon block @click="edit">
+          <v-btn icon block :color="$store.state.edit.editMode ? 'info' : null" @click="toggleEditMode">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
-          <v-btn icon block>
-            <v-icon>mdi-cog</v-icon>
+          <v-btn icon block :color="expandContentData ? 'info' : null" v-if="!alwaysShowContentData" @click="toggleExpandData">
+            <v-icon>mdi-information</v-icon>
           </v-btn>
         </div>
 
-        <div class="image-wrapper" ref="imageWrapper">
+        <div class="image-wrapper" :class="{'magnify': magnify}" ref="imageWrapper">
           <v-img
             contain
             :src="`file://${content.mainFilePath}`"
             class="image"
-            :max-height="imageMaxHeight"
+            @click="toggleMagnify"
           />
 
           <div class="text-body-2 text-center my-1">
@@ -53,7 +54,7 @@
             クリックまたは下にスクロールで展開
           </div>
           <v-btn icon large @click="toggleExpandData">
-            <v-icon>mdi-chevron-down</v-icon>
+            <v-icon>mdi-chevron-up</v-icon>
           </v-btn>
         </div>
       </v-expand-transition>
@@ -80,6 +81,7 @@ export default {
       viewerWidth: 0,
       imageResizeObserver: null,
       alwaysShowContentData: false,
+      magnify: false
     }
   },
 
@@ -87,17 +89,14 @@ export default {
     showContentData() {
       return this.alwaysShowContentData || this.expandContentData
     },
-    imageMaxHeight() {
-      return null
-    },
     editMode() {
-      return this.$store.state.editMode
+      return this.$store.state.edit.editMode
     },
   },
 
   methods: {
     onWheel: throttle(function (e) {
-      if (this.alwaysShowContentData) return
+      if (this.alwaysShowContentData || this.magnify) return
 
       if (e.deltaY > 0) {
         this.expandContentData = true
@@ -107,6 +106,8 @@ export default {
     }, 10),
 
     onResizeImage: throttle(function (entry) {
+      if (this.magnify) return
+
       const imageHeight = entry[0].contentRect.height
 
       if (!imageHeight || !this.$refs.imageWrapper) return
@@ -129,14 +130,22 @@ export default {
       this.expandContentData = !this.showContentData
     },
 
-    edit() {
+    toggleEditMode() {
       if (this.editMode) {
-        this.$store.dispatch("endSelectMode")
+        this.$store.dispatch("endEditMode")
       } else {
         this.$store.dispatch("setSelectedItems", this.content.contentID)
         this.$store.commit("setEditMode", true)
       }
     },
+
+    toggleMagnify() {
+      this.magnify = !this.magnify
+      this.$emit("toggle-magnify-mode", this.magnify)
+      if (this.magnify) {
+        this.alwaysShowContentData = true
+      }
+    }
   },
 
   mounted() {
@@ -156,7 +165,7 @@ export default {
   height: 100%;
 }
 
-.image-row {
+.image-overview {
   flex-shrink: 1;
   flex-grow: 1;
 }
@@ -180,11 +189,21 @@ export default {
   height: 100%;
 }
 
+.image-wrapper.magnify {
+  position: static;
+  height: unset;
+}
+
 .image {
   width: auto;
   height: auto;
   max-width: 100%;
   max-height: calc(100% - 50px);
+  cursor: zoom-in;
+}
+
+.magnify .image {
+  cursor: zoom-out;
 }
 
 .image-buttons {

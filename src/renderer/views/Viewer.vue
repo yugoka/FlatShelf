@@ -1,11 +1,11 @@
 <template>
-  <v-container class="viewer">
-    <v-btn fixed icon large @click="back" class="back-button">
+  <v-container class="viewer" :fluid="magnifyMode">
+    <v-btn v-if="!magnifyMode" fixed icon large @click="back" class="back-button">
       <v-icon>mdi-close</v-icon>
     </v-btn>
 
     <div class="viewport-wrapper">
-      <ImageViewer v-if="contentType === 'image'" :content="content" />
+      <ImageViewer v-if="contentType === 'image'" :content="content" @toggle-magnify-mode="toggleMagnifyMode" />
     </div>
   </v-container>
 </template>
@@ -21,6 +21,7 @@ export default {
   data() {
     return {
       content: null,
+      magnifyMode: false
     }
   },
 
@@ -52,6 +53,10 @@ export default {
       const result = await this.$contents.getData(this.contentID)
       this.content = result[0]
     },
+
+    toggleMagnifyMode(bool) {
+      this.magnifyMode = bool
+    }
   },
 
   async mounted() {

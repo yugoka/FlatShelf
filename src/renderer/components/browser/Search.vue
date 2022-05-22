@@ -39,6 +39,7 @@ import layoutManager from "./scripts/layout-manager"
 import CardDragGhost from "./cards/CardDragGhost.vue"
 import BeforeSearchContents from "./BeforeSearchContents.vue"
 import ItemNotFound from "./ItemNotFound.vue"
+import { throws } from "assert"
 
 export default {
   name: "SearchContents",
@@ -140,11 +141,17 @@ export default {
       this.contents = await this.$search.execute(this.viewContext)
       //毎回リロード問題のせいで選択開始位置がリセットされてしまう。。。
       this.selectStartIndex = null
-      if (getLayouts) this.getLayouts()
+      if (getLayouts) {
+        this.$nextTick(() => {
+          this.getLayouts()
+        })
+      }
     },
 
     //レイアウトを更新する
     getLayouts() {
+      if (!Array.isArray(this.contents)) return
+
       this.layouts = layoutManager.getLayouts({
         layoutName: "brick",
         contents: this.contents,
@@ -165,7 +172,10 @@ export default {
     },
 
     getVisibleCards() {
-      if (!this.layouts) return
+      if (!this.layouts) {
+        this.visibleCards = []
+        return
+      }
       const minScrollTop = this.scrollTop - this.buffer - this.prependHeight
       const maxScrollTop =
         this.scrollTop + this.scrollerHeight + this.buffer - this.prependHeight
@@ -274,10 +284,10 @@ export default {
       this.$refs.dragGhost.hide()
     },
 
-    onResizePrependElements(height) {
+    onResizePrependElements: debounce(function(height) {
       this.prependHeight = height
       this.getLayouts()
-    },
+    }, 100),
 
     onResize: debounce(function () {
       if (!this.$refs.scroller) return

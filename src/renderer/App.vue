@@ -63,6 +63,7 @@ html {
   margin-top: 30px;
   width: 100vw;
   height: calc(100vh - 30px);
+  overflow-y: scroll;
 }
 
 #main-content::-webkit-scrollbar {
