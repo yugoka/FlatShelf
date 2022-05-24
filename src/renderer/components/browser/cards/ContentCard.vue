@@ -141,7 +141,7 @@ export default {
       if (this.editMode) {
         this.onClickSelectButton()
       } else {
-        this.$contents.view(this.card.content.contentID)
+        this.$contents.view(this.card.content.contentID, this.card.index)
       }
     },
 

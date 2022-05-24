@@ -4,6 +4,12 @@
 import store from "../store"
 
 class RendererTagsManager {
+  constructor() {
+    this.events = {
+      onTagUpdate: new CustomEvent("onTagUpdate"),
+    }
+  }
+
   //対象のコンテンツ全てに共通するタグを抽出する
   async getTagsByContentIDs(contentIDs) {
     const result = await window.ipc.getTagsByContentIDs(contentIDs)
@@ -19,11 +25,15 @@ class RendererTagsManager {
 
   async set(contentIDs, tagName) {
     const result = await window.ipc.setTag(contentIDs, tagName)
+    //タグ変更をビューワーに検知させる
+    window.dispatchEvent(this.events.onTagUpdate)
     return result
   }
 
   async setByID(contentIDs, tagID) {
     const result = await window.ipc.setTagByID(contentIDs, tagID)
+    //タグ変更をビューワーに検知させる
+    window.dispatchEvent(this.events.onTagUpdate)
     return result
   }
 
@@ -34,6 +44,8 @@ class RendererTagsManager {
 
   async removeByID(contentIDs, tagID) {
     const result = await window.ipc.removeTagByID(contentIDs, tagID)
+    //タグ変更をビューワーに検知させる
+    window.dispatchEvent(this.events.onTagUpdate)
     return result
   }
 }

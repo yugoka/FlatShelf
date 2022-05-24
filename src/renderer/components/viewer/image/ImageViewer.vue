@@ -1,21 +1,42 @@
 <template>
   <div class="viewer-wrapper mt-3" ref="viewer">
-
     <v-row justify="center" class="image-overview" no-gutters>
       <v-col :cols="magnify ? 12 : 10" class="image-col">
         <div v-show="!magnify" class="image-buttons">
-          <v-btn icon block :color="magnify ? 'info' : null" @click="toggleMagnify">
-            <v-icon>{{magnify ? "mdi-magnify-minus" : "mdi-magnify-plus"}}</v-icon>
+          <v-btn
+            icon
+            block
+            :color="magnify ? 'info' : null"
+            @click="toggleMagnify"
+          >
+            <v-icon>{{
+              magnify ? "mdi-magnify-minus" : "mdi-magnify-plus"
+            }}</v-icon>
           </v-btn>
-          <v-btn icon block :color="$store.state.edit.editMode ? 'info' : null" @click="toggleEditMode">
+          <v-btn
+            icon
+            block
+            :color="$store.state.edit.editMode ? 'info' : null"
+            @click="toggleEditMode"
+          >
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
-          <v-btn icon block :color="expandContentData ? 'info' : null" v-if="!alwaysShowContentData" @click="toggleExpandData">
+          <v-btn
+            icon
+            block
+            :color="expandContentData ? 'info' : null"
+            v-if="!alwaysShowContentData"
+            @click="toggleExpandData"
+          >
             <v-icon>mdi-information</v-icon>
           </v-btn>
         </div>
 
-        <div class="image-wrapper" :class="{'magnify': magnify}" ref="imageWrapper">
+        <div
+          class="image-wrapper"
+          :class="{ magnify: magnify }"
+          ref="imageWrapper"
+        >
           <v-img
             contain
             :src="`file://${content.mainFilePath}`"
@@ -25,6 +46,19 @@
 
           <div class="text-body-2 text-center my-1">
             {{ content.name }}
+          </div>
+        </div>
+
+        <div v-show="!magnify">
+          <div class="page-button button-next" v-if="isItemExsists.next">
+            <v-btn icon x-large @click="changeItem(1)">
+              <v-icon large>mdi-chevron-right</v-icon>
+            </v-btn>
+          </div>
+          <div class="page-button button-prev" v-if="isItemExsists.prev">
+            <v-btn icon x-large @click="changeItem(-1)">
+              <v-icon large>mdi-chevron-left</v-icon>
+            </v-btn>
           </div>
         </div>
       </v-col>
@@ -73,6 +107,7 @@ export default {
 
   props: {
     content: Object,
+    isItemExsists: Object,
   },
 
   data() {
@@ -81,7 +116,7 @@ export default {
       viewerWidth: 0,
       imageResizeObserver: null,
       alwaysShowContentData: false,
-      magnify: false
+      magnify: false,
     }
   },
 
@@ -145,7 +180,11 @@ export default {
       if (this.magnify) {
         this.alwaysShowContentData = true
       }
-    }
+    },
+
+    changeItem(relativeIndex) {
+      this.$emit("change-item", relativeIndex)
+    },
   },
 
   mounted() {
@@ -211,6 +250,19 @@ export default {
   right: -40px;
   transition: 0.3s;
   opacity: 0;
+}
+
+.page-button {
+  display: flex;
+  position: absolute;
+  top: 30vh;
+}
+
+.button-next {
+  right: -60px;
+}
+.button-prev {
+  left: -60px;
 }
 
 .image-col:hover .image-buttons {

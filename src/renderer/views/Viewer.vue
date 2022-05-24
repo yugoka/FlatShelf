@@ -1,11 +1,24 @@
 <template>
   <v-container class="viewer" :fluid="magnifyMode">
-    <v-btn v-if="!magnifyMode" fixed icon large @click="back" class="back-button">
+    <v-btn
+      v-if="!magnifyMode"
+      fixed
+      icon
+      large
+      @click="back"
+      class="back-button"
+    >
       <v-icon>mdi-close</v-icon>
     </v-btn>
 
     <div class="viewport-wrapper">
-      <ImageViewer v-if="contentType === 'image'" :content="content" @toggle-magnify-mode="toggleMagnifyMode" />
+      <ImageViewer
+        v-if="contentType === 'image'"
+        :content="content"
+        :isItemExsists="isItemExsists"
+        @toggle-magnify-mode="toggleMagnifyMode"
+        @change-item="changeItem"
+      />
     </div>
   </v-container>
 </template>
@@ -21,7 +34,7 @@ export default {
   data() {
     return {
       content: null,
-      magnifyMode: false
+      magnifyMode: false,
     }
   },
 
@@ -34,6 +47,14 @@ export default {
         return this.content.type.split("/")[0]
       } else {
         return null
+      }
+    },
+    isItemExsists() {
+      return {
+        next:
+          this.$route.params.index !=
+          this.$store.state.searchResultIDs.length - 1,
+        prev: this.$route.params.index != 0,
       }
     },
   },
@@ -49,6 +70,14 @@ export default {
       this.$search.redirect()
     },
 
+    changeItem(relativeIndex) {
+      console.log(relativeIndex)
+      const newItemIndex = this.$route.params.index + relativeIndex
+      const newItemID = this.$store.state.searchResultIDs[newItemIndex]
+
+      this.$contents.view(newItemID, newItemIndex)
+    },
+
     async getContentData() {
       const result = await this.$contents.getData(this.contentID)
       this.content = result[0]
@@ -56,11 +85,19 @@ export default {
 
     toggleMagnifyMode(bool) {
       this.magnifyMode = bool
-    }
+    },
+  },
+
+  created() {
+    window.addEventListener("reloadContents", this.getContentData)
   },
 
   async mounted() {
     await this.getContentData()
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("reloadContents", this.getContentData, false)
   },
 }
 </script>

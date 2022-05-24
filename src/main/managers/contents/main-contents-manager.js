@@ -10,7 +10,6 @@ const { performance } = require("perf_hooks")
 
 class ContentsManager {
   async createMany(data) {
-    const start = performance.now()
     /*
     const result = []
     for await (const file of data.files) {
@@ -28,10 +27,6 @@ class ContentsManager {
       })
     })
     const result = await Promise.all(promises)
-    const end = performance.now()
-    console.log("==========")
-    console.log(end - start)
-    console.log("==========")
     return result.map((content) => content.contentID)
   }
 

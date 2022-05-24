@@ -165,7 +165,7 @@ export default {
     save: debounce(async function () {
       await this.$contents.update(this.contentIDs, this.changes)
       this.changes = {}
-    }, 500),
+    }, 200),
 
     moveFolder() {
       this.$refs.folderMoveDialog.show(this.contentIDs)

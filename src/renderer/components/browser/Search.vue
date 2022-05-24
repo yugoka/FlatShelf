@@ -133,6 +133,10 @@ export default {
       if (before <= 0) return
       this.setScrollTop((this.scrollTop * after) / before)
     },
+
+    contentIDs() {
+      this.$store.commit("setSearchResult", this.contentIDs)
+    },
   },
 
   methods: {
@@ -284,7 +288,7 @@ export default {
       this.$refs.dragGhost.hide()
     },
 
-    onResizePrependElements: debounce(function(height) {
+    onResizePrependElements: debounce(function (height) {
       this.prependHeight = height
       this.getLayouts()
     }, 100),

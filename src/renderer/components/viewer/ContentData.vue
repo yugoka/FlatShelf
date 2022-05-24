@@ -56,12 +56,15 @@ export default {
 
   watch: {
     async content() {
-      await this.getTags()
-      await this.getFolder()
+      await this.getContentData()
     },
   },
 
   methods: {
+    async getContentData() {
+      this.getTags()
+      this.getFolder()
+    },
     async getTags() {
       this.tags = await this.$tags.getTagsByContentIDs(this.content.contentID)
     },
@@ -81,9 +84,13 @@ export default {
     },
   },
 
-  async mounted() {
-    this.getTags()
-    this.getFolder()
+  async created() {
+    window.addEventListener("onTagUpdate", this.getTags)
+    await this.getContentData()
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("onTagUpdate", this.getTags, false)
   },
 }
 </script>

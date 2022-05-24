@@ -107,8 +107,13 @@ class RendererContentsManager {
     })
   }
 
-  view(contentID) {
-    router.push({ name: "View", params: { contentID } })
+  view(contentID, contentIndex = null) {
+    const index =
+      contentIndex === null
+        ? store.state.searchResultIDs.findIndex((id) => id === contentID)
+        : contentIndex
+
+    router.push({ name: "View", params: { contentID, index } })
   }
 }
 

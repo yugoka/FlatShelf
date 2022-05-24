@@ -18,6 +18,12 @@ const store = new Vuex.Store({
       tags: null,
       order: [["createdAt", "ASC"]],
     },
+    //検索結果のID一覧
+    searchResultIDs: [],
+    viewer: {
+      //検索結果の中で何番目のアイテムを見ているか情報
+      index: null,
+    },
     edit: {
       editMode: false,
       selectedIDs: [],
@@ -86,6 +92,13 @@ const store = new Vuex.Store({
     },
     setEditMode(state, boolean) {
       state.edit.editMode = boolean
+    },
+    setSearchResult(state, ids) {
+      state.searchResultIDs = ids
+      state.viewer.index = null
+    },
+    setViewIndex(state, index) {
+      state.viewer.index = index
     },
   },
   actions: {
