@@ -20,7 +20,7 @@
               <v-icon>mdi-magnify</v-icon>
               {{ context.word ? context.word : "検索" }}
             </div>
-            <v-btn icon x-small @click.stop="resetSearch">
+            <v-btn v-show="context.word" icon x-small @click.stop="resetSearch">
               <v-icon small class="mx-0"> mdi-close </v-icon>
             </v-btn>
           </v-chip>
@@ -57,7 +57,7 @@
 
       <v-divider />
 
-      <ColumnSelector />
+      <ColumnSelector @select="onSearchColumnUpdate" />
     </v-card>
   </v-menu>
 </template>
@@ -76,6 +76,7 @@ export default {
       cardNudgeLeft: 113.5,
       context: {
         word: "",
+        searchColumns: null,
       },
     }
   },
@@ -96,7 +97,11 @@ export default {
   watch: {
     menu() {
       if (this.menu) {
-        this.$nextTick(() => this.syncContext())
+        const word = this.context.word
+        this.$nextTick(() => {
+          this.syncContext()
+          this.context.word = word
+        })
       }
     },
   },
@@ -115,22 +120,21 @@ export default {
     },
 
     executeSearch() {
-      if (this.menu) {
-        //検索画面に居るならシンプルに検索
-        if (this.$route.name === "Search") {
-          this.$search.mergeContext(this.context)
+      //検索画面に居るならシンプルに検索
+      if (this.$route.name === "Search") {
+        this.$search.mergeContext(this.context)
 
-          //検索画面でないなら検索画面に飛ぶ
-        } else {
-          this.$search.setContext(this.context)
-          this.$search.redirect()
-        }
-
-        this.menu = false
+        //検索画面でないなら検索画面に飛ぶ
+      } else {
+        this.$search.setContext(this.context)
+        this.$search.redirect()
       }
+
+      this.menu = false
     },
 
     //現状SearchColumnのコンポーネント内部値をcontextと同期する仕様はないので注意
+    //要するにColumnSelector→contextの一方向バインディング
     onSearchColumnUpdate(columns) {
       this.context.searchColumns = columns.map((column) => column.column)
     },

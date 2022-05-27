@@ -15,9 +15,9 @@
       <ImageViewer
         v-if="contentType === 'image'"
         :content="content"
-        :isItemExsists="isItemExsists"
+        :isItemExists="isItemExists"
         @toggle-magnify-mode="toggleMagnifyMode"
-        @change-item="changeItem"
+        @change-content="changeContent"
       />
     </div>
   </v-container>
@@ -49,7 +49,7 @@ export default {
         return null
       }
     },
-    isItemExsists() {
+    isItemExists() {
       return {
         next:
           this.$route.params.index !=
@@ -70,12 +70,13 @@ export default {
       this.$search.redirect()
     },
 
-    changeItem(relativeIndex) {
-      console.log(relativeIndex)
-      const newItemIndex = this.$route.params.index + relativeIndex
-      const newItemID = this.$store.state.searchResultIDs[newItemIndex]
+    changeContent(relativeIndex) {
+      const newContentIndex = this.$route.params.index + relativeIndex
+      const newContentID = this.$store.state.searchResultIDs[newContentIndex]
 
-      this.$contents.view(newItemID, newItemIndex)
+      if (typeof newContentID != "number") return
+
+      this.$contents.view(newContentID, newContentIndex)
     },
 
     async getContentData() {

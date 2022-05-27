@@ -5,31 +5,33 @@
     v-show="visible"
     rounded
   >
-    <v-btn icon x-small @click="hide">
-      <v-icon>mdi-menu-up</v-icon>
-    </v-btn>
-
     <FilterMenuTagPicker
-      class="mx-2"
+      class="me-2"
       :viewContext="viewContext"
       v-if="visible"
     />
     <FilterMenuFolderSelector
-      class="mx-2"
+      class="me-2"
       :folderID="viewContext.folder"
       v-if="visible"
     />
+
+    <v-spacer />
+
+    <FilterMenuUnselectButton @click="unselectContents" :show="editMode" />
   </v-toolbar>
 </template>
 
 <script>
 import FilterMenuFolderSelector from "./FilterMenuFolderSelector.vue"
 import FilterMenuTagPicker from "./FilterMenuTagPicker.vue"
+import FilterMenuUnselectButton from "./FilterMenuUnselectButton.vue"
 
 export default {
   components: {
     FilterMenuTagPicker,
     FilterMenuFolderSelector,
+    FilterMenuUnselectButton,
   },
 
   data() {
@@ -43,11 +45,18 @@ export default {
     viewContext() {
       return this.$store.state.viewContext
     },
+    editMode() {
+      return this.$store.state.edit.editMode
+    },
   },
 
   methods: {
     hide() {
       this.$store.commit("toggleFilterMenu", false)
+    },
+
+    unselectContents() {
+      this.$store.dispatch("endEditMode")
     },
   },
 }

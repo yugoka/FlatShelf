@@ -39,24 +39,27 @@
         >
           <v-img
             contain
+            eager
             :src="`file://${content.mainFilePath}`"
+            :key="content.contentID"
             class="image"
             @click="toggleMagnify"
+            @load="imageLoaded = true"
           />
 
-          <div class="text-body-2 text-center my-1">
+          <div v-show="imageLoaded" class="text-body-2 text-center my-1">
             {{ content.name }}
           </div>
         </div>
 
         <div v-show="!magnify">
-          <div class="page-button button-next" v-if="isItemExsists.next">
-            <v-btn icon x-large @click="changeItem(1)">
+          <div class="page-button button-next" v-if="isItemExists.next">
+            <v-btn icon x-large @click="changeContent(1)">
               <v-icon large>mdi-chevron-right</v-icon>
             </v-btn>
           </div>
-          <div class="page-button button-prev" v-if="isItemExsists.prev">
-            <v-btn icon x-large @click="changeItem(-1)">
+          <div class="page-button button-prev" v-if="isItemExists.prev">
+            <v-btn icon x-large @click="changeContent(-1)">
               <v-icon large>mdi-chevron-left</v-icon>
             </v-btn>
           </div>
@@ -107,7 +110,7 @@ export default {
 
   props: {
     content: Object,
-    isItemExsists: Object,
+    isItemExists: Object,
   },
 
   data() {
@@ -117,6 +120,7 @@ export default {
       imageResizeObserver: null,
       alwaysShowContentData: false,
       magnify: false,
+      imageLoaded: false,
     }
   },
 
@@ -126,6 +130,13 @@ export default {
     },
     editMode() {
       return this.$store.state.edit.editMode
+    },
+  },
+
+  watch: {
+    content() {
+      this.imageLoaded = false
+      this.registerImageObserver()
     },
   },
 
@@ -140,6 +151,7 @@ export default {
       }
     }, 10),
 
+    //画像の横幅が変更された時、画像データの開閉をするかどうかの処理が走る
     onResizeImage: throttle(function (entry) {
       if (this.magnify) return
 
@@ -182,17 +194,34 @@ export default {
       }
     },
 
-    changeItem(relativeIndex) {
-      this.$emit("change-item", relativeIndex)
+    //relativeIndex分だけ、検索結果で次のコンテンツに移動する。マイナスならその逆
+    changeContent(relativeIndex) {
+      this.$emit("change-content", relativeIndex)
+    },
+
+    unObserveImage() {
+      if (this.imageResizeObserver) {
+        this.imageResizeObserver.unobserve(this.$refs.imageResizeObserver)
+      }
+    },
+
+    registerImageObserver() {
+      this.unObserveImage()
+      this.$nextTick(() => {
+        this.imageResizeObserver = new ResizeObserver(
+          this.onResizeImage
+        ).observe(this.$refs.imageWrapper.firstChild)
+      })
     },
   },
 
   mounted() {
     this.$refs.viewer.onmousewheel = this.onWheel
+    this.registerImageObserver()
+  },
 
-    this.imageResizeObserver = new ResizeObserver(this.onResizeImage).observe(
-      this.$refs.imageWrapper.firstChild
-    )
+  beforeDestroy() {
+    this.unObserveImage()
   },
 }
 </script>
