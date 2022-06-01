@@ -7,7 +7,10 @@
     color="systemBar"
   >
     <div class="group-wrapper">
+      <HumburgerMenu />
+
       <span>FlatShelf</span>
+
       <SideMenuOpenButton class="clickable" />
     </div>
 
@@ -45,6 +48,7 @@ import Slider from "./Slider.vue"
 import SideMenuOpenButton from "./SideMenuOpenButton.vue"
 import SortMenu from "./SortMenu.vue"
 import FilterMenuButton from "./FilterMenuButton.vue"
+import HumburgerMenu from "./HumburgerMenu.vue"
 
 export default {
   name: "SystemBar",
@@ -56,6 +60,7 @@ export default {
     SideMenuOpenButton,
     SortMenu,
     FilterMenuButton,
+    HumburgerMenu,
   },
 
   data() {
@@ -82,6 +87,9 @@ export default {
     },
     onToggleMaximized(isMaximized) {
       this.maximized = isMaximized
+    },
+    openSettings() {
+      this.$router.push({ name: "Search" })
     },
   },
 

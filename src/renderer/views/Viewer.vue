@@ -1,15 +1,6 @@
 <template>
   <v-container class="viewer" :fluid="magnifyMode">
-    <v-btn
-      v-if="!magnifyMode"
-      fixed
-      icon
-      large
-      @click="back"
-      class="back-button"
-    >
-      <v-icon>mdi-close</v-icon>
-    </v-btn>
+    <BackToSearchButton v-if="!magnify" />
 
     <div class="viewport-wrapper">
       <ImageViewer
@@ -24,12 +15,13 @@
 </template>
 
 <script>
+import BackToSearchButton from "../components/app/miniparts/BackToSearchButton.vue"
 import ImageViewer from "../components/viewer/image/ImageViewer.vue"
 
 export default {
   name: "viewer",
 
-  components: { ImageViewer },
+  components: { ImageViewer, BackToSearchButton },
 
   data() {
     return {
@@ -66,10 +58,6 @@ export default {
   },
 
   methods: {
-    back() {
-      this.$search.redirect()
-    },
-
     changeContent(relativeIndex) {
       const newContentIndex = this.$route.params.index + relativeIndex
       const newContentID = this.$store.state.searchResultIDs[newContentIndex]

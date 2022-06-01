@@ -3,7 +3,6 @@
 //------------------------------------
 import store from "../store"
 import router from "../router"
-import config from "./renderer-config-manager"
 
 class RendererSearchManager {
   //検索の実行
