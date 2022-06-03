@@ -1,13 +1,15 @@
 <template>
   <v-list nav dense class="pt-1">
+    <NavUtilMenu />
+
+    <v-divider class="my-1" />
+
     <v-list-item-group
       v-model="selectedItem"
       color="primary"
       :mandatory="isMandatoryEnabled"
     >
       <NavItem title="すべて" icon="mdi-home" :context="contexts.all" />
-
-      <v-divider class="my-1" />
 
       <NavItem
         title="未分類"
@@ -24,12 +26,14 @@
 
 <script>
 import NavItem from "./NavItem.vue"
+import NavUtilMenu from "./NavUtilMenu.vue"
 
 export default {
   name: "SideMenuMainMenus",
 
   components: {
     NavItem,
+    NavUtilMenu,
   },
 
   data() {
