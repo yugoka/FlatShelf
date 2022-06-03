@@ -38,7 +38,7 @@ export class SideMenuDragger {
     this.saveConfigWidth = debounce(this.saveConfigWidth, 500)
   }
 
-  //AppSideBar.vueから呼び出されるメソッドはこれのみ
+  //AppSideBar.vueから呼び出されるメソッドはこれだけ
   startDragging() {
     //マウス移動を検知。重かったらdebounceで頻度調整も視野に入れておく
     document.addEventListener("mousemove", this.resize, false)
@@ -60,6 +60,9 @@ export class SideMenuDragger {
   }
 
   resize(e) {
+    //no-transitionが勝手に解除されてしまうので再追加。原因は追えてないです
+    this.targetMenu.classList.add("no-transition")
+
     const currentWidth = this.right
       ? window.innerWidth - e.clientX - 3
       : e.clientX + 3

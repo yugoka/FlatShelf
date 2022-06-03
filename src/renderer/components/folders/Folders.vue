@@ -75,6 +75,12 @@
         />
       </template>
     </v-treeview>
+
+    <div v-if="Array.isArray(folders) && !folders.length" class="mx-2 my-2 grey--text text-caption text-center">
+      フォルダがまだありません<br/>
+      <a href="#" @click="createNewFolder(1)">クリックでフォルダを作成</a>
+    </div>
+
   </div>
 </template>
 

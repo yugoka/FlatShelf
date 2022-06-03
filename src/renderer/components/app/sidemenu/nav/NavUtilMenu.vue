@@ -6,39 +6,68 @@
       </v-list-item-content>
     </template>
 
-    <v-divider class="my-1" />
+    <DummyFileInput ref="fileInput" />
 
-    <v-list-item class="sidebar-nav-item" @click="click">
-      <v-list-item-content>
-        <v-list-item-title>こども</v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
+    <v-divider />
+      <v-list-item v-for="menu in menus" :key="menu.id" @click="menu.action()" class="sidebar-nav-item mt-1 pl-5" color="primary">
+        <v-list-item-icon>
+          <v-icon>{{menu.icon}}</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>{{menu.name}}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
   </v-list-group>
 </template>
 
 <script>
-import RotatingIcon from "../../miniparts/RotatingIcon.vue"
+import DummyFileInput from "../../miniparts/DummyFileInput.vue"
 
 export default {
+  components: { DummyFileInput },
   data() {
     return {
       expand: false,
+      menus: [
+        {
+          id: "new-item",
+          name: "新規ファイル",
+          icon: "mdi-file-plus",
+          action: this.newFile
+        },
+        {
+          id: "help",
+          name: "ヘルプ",
+          icon: "mdi-help-circle-outline",
+          action: this.openHelp
+        },
+        {
+          id: "settings",
+          name: "設定",
+          icon: "mdi-cog",
+          action: this.openSettings
+        },
+      ]
     }
   },
   methods: {
     toggle() {
       this.expand = !this.expand
     },
-    click() {
-      console.log("click")
+    openSettings() {
+      if (this.$route.name != "Settings") {
+        this.$router.push({ name: "Settings" })
+      }
     },
+    newFile() {
+      this.$refs.fileInput.activate()
+    },
+    openHelp() {
+      console.log("たーすけてー！！")
+    }
   },
 }
 </script>
 
 <style scoped>
-.sidebar-nav-item .v-list-item__icon {
-  margin-bottom: 3px !important;
-  margin-top: 3px !important;
-}
 </style>

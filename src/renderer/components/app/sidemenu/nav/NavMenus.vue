@@ -2,7 +2,9 @@
   <v-list nav dense class="pt-1">
     <NavUtilMenu />
 
-    <v-divider class="my-1" />
+    <v-divider class="mt-2" />
+
+    <v-subheader>コンテンツ</v-subheader>
 
     <v-list-item-group
       v-model="selectedItem"
