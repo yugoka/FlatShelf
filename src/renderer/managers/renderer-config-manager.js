@@ -24,6 +24,20 @@ class RendererConfigManager {
     }
   }
 
+  get(key) {
+    const keyParse = key.split(".")
+    try {
+      let target = store.state.settings
+      for (const key of keyParse) {
+        target = target[key]
+      }
+      return target
+    } catch (err) {
+      console.error(`設定取得に失敗しました: ${err}`)
+      return null
+    }
+  }
+
   renderer() {
     return store.state.settings.renderer
   }

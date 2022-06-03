@@ -7,8 +7,6 @@
     color="systemBar"
   >
     <div class="group-wrapper">
-      <HumburgerMenu />
-
       <span>FlatShelf</span>
 
       <SideMenuOpenButton class="clickable" />
@@ -20,11 +18,19 @@
       <SearchBar />
 
       <Slider />
-
-      <FilterMenuButton />
     </div>
 
     <div>
+      <v-btn icon small @click="openSettings" class="mx-1">
+        <v-icon
+          small
+          class="mini-button-icon"
+          :color="$route.name === 'Settings' ? 'primary' : null"
+        >
+          mdi-cog
+        </v-icon>
+      </v-btn>
+
       <SystemButton icon="mdi-minus" @click.native="minimizeWindow" />
 
       <SystemButton
@@ -47,8 +53,6 @@ import SearchBar from "./search/SearchBar.vue"
 import Slider from "./Slider.vue"
 import SideMenuOpenButton from "./SideMenuOpenButton.vue"
 import SortMenu from "./SortMenu.vue"
-import FilterMenuButton from "./FilterMenuButton.vue"
-import HumburgerMenu from "./HumburgerMenu.vue"
 
 export default {
   name: "SystemBar",
@@ -59,8 +63,6 @@ export default {
     Slider,
     SideMenuOpenButton,
     SortMenu,
-    FilterMenuButton,
-    HumburgerMenu,
   },
 
   data() {
@@ -89,7 +91,9 @@ export default {
       this.maximized = isMaximized
     },
     openSettings() {
-      this.$router.push({ name: "Search" })
+      if (this.$route.name != "Settings") {
+        this.$router.push({ name: "Settings" })
+      }
     },
   },
 

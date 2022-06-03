@@ -1,6 +1,6 @@
 <template>
   <v-container class="viewer" :fluid="magnifyMode">
-    <BackToSearchButton v-if="!magnify" />
+    <BackToSearchButton v-if="!magnifyMode" />
 
     <div class="viewport-wrapper">
       <ImageViewer

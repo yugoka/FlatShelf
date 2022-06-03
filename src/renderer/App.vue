@@ -11,7 +11,7 @@
     <div id="main-content">
       <v-main id="main">
         <transition name="fade">
-          <router-view class="test" />
+          <router-view />
         </transition>
       </v-main>
     </div>
@@ -38,11 +38,23 @@ export default {
     return {}
   },
 
-  computed: {},
+  computed: {
+    darkmode() {
+      return this.$store.state.settings.renderer.darkmode
+    },
+  },
+
+  watch: {
+    darkmode() {
+      this.$vuetify.theme.dark = this.darkmode
+    },
+  },
 
   methods: {},
 
-  mounted() {},
+  created() {
+    this.$vuetify.theme.dark = this.darkmode
+  },
 }
 </script>
 
@@ -95,5 +107,4 @@ html {
   position: absolute;
   left: 0;
 }
-
 </style>

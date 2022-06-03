@@ -2,13 +2,25 @@
   <v-menu offset-y>
     <template v-slot:activator="{ on, attrs }">
       <v-btn icon small v-bind="attrs" v-on="on">
-        <v-icon small class="ms-1 mini-button-icon">mdi-menu</v-icon>
+        <v-icon small class="ms-1 mini-button-icon"> mdi-dots-vertical </v-icon>
       </v-btn>
     </template>
-    <v-list>
-      <v-list-item>
-        <v-list-item-title>あああ</v-list-item-title>
-      </v-list-item>
+    <v-list dense>
+      <v-list-item-group>
+        <v-list-item>
+          <v-list-item-title>
+            <v-icon small> mdi-file-plus </v-icon>
+            新規アイテム
+          </v-list-item-title>
+        </v-list-item>
+
+        <v-list-item>
+          <v-list-item-title>
+            <v-icon small> mdi-cog </v-icon>
+            設定
+          </v-list-item-title>
+        </v-list-item>
+      </v-list-item-group>
     </v-list>
   </v-menu>
 </template>

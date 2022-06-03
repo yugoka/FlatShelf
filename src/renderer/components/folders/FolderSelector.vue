@@ -52,6 +52,8 @@
               <v-icon small> mdi-close </v-icon>
             </v-btn>
           </div>
+          <v-divider class="mx-1" />
+
           <div class="scroll-content py-2 my-1">
             <Folders
               syncWithViewContext
