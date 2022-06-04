@@ -9,10 +9,16 @@
     <NoticeChip />
 
     <v-main id="main">
-      <transition name="fade">
-        <router-view />
-      </transition>
-      <AppProgressBar />
+      <div class="viewport-wrapper">
+        <div class="main-content">
+          <transition name="fade">
+            <router-view />
+          </transition>
+        </div>
+        <div class="footer">
+          <AppProgressBar />
+        </div>
+      </div>
     </v-main>
   </v-app>
 </template>
@@ -72,6 +78,23 @@ html {
   transition: unset;
   margin-top: 30px;
   height: calc(100vh - 30px);
+}
+
+#main .viewport-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#main .main-content {
+  flex-grow: 1;
+  flex-shrink: 1;
+  min-height: calc(100% - 30px);
+}
+
+#main .footer {
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 #main .slide-enter-active,

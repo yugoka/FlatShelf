@@ -29,6 +29,7 @@ const store = new Vuex.Store({
       selectedIDs: [],
       selectedContents: [],
     },
+    task: null,
   },
 
   //computed的なアレと認識してる

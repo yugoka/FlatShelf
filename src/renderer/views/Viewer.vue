@@ -93,7 +93,7 @@ export default {
 
 <style scoped>
 .viewer {
-  height: calc(100vh - 30px);
+  height: 100%;
 }
 .viewport-wrapper {
   z-index: 1;
