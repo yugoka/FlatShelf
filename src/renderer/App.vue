@@ -8,13 +8,12 @@
 
     <NoticeChip />
 
-    <div id="main-content">
-      <v-main id="main">
-        <transition name="fade">
-          <router-view />
-        </transition>
-      </v-main>
-    </div>
+    <v-main id="main">
+      <transition name="fade">
+        <router-view />
+      </transition>
+      <AppProgressBar />
+    </v-main>
   </v-app>
 </template>
 
@@ -23,6 +22,7 @@ import SystemBar from "./components/app/systembar/SystemBar"
 import SideMenu from "./components/app/sidemenu/SideMenu"
 import ContentsEditMenu from "./components/app/editmenu/AppEditMenu"
 import NoticeChip from "./components/app/NoticeChip"
+import AppProgressBar from "./components/app/progressbar/AppProgressBar.vue"
 
 export default {
   name: "App",
@@ -32,6 +32,7 @@ export default {
     SideMenu,
     ContentsEditMenu,
     NoticeChip,
+    AppProgressBar,
   },
 
   data() {
@@ -69,17 +70,8 @@ html {
 
 #main {
   transition: unset;
-}
-
-#main-content {
   margin-top: 30px;
-  width: 100vw;
   height: calc(100vh - 30px);
-  overflow-y: scroll;
-}
-
-#main-content::-webkit-scrollbar {
-  display: none;
 }
 
 #main .slide-enter-active,

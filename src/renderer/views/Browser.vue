@@ -74,7 +74,7 @@ export default {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  height: calc(100vh - 30px);
+  height: 100%;
 }
 
 .filtermenu {

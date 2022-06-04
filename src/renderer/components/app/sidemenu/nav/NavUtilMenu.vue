@@ -9,14 +9,22 @@
     <DummyFileInput ref="fileInput" />
 
     <v-divider />
-      <v-list-item v-for="menu in menus" :key="menu.id" @click="menu.action()" class="sidebar-nav-item mt-1 pl-5" color="primary">
-        <v-list-item-icon>
-          <v-icon>{{menu.icon}}</v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>{{menu.name}}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+    <v-list-item
+      v-for="menu in menus"
+      :key="menu.id"
+      @click="menu.action()"
+      class="sidebar-nav-item mt-1 pl-5"
+      color="primary"
+    >
+      <v-list-item-icon>
+        <v-icon>{{ menu.icon }}</v-icon>
+      </v-list-item-icon>
+      <v-list-item-content>
+        <v-list-item-title>
+          {{ menu.name }}
+        </v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
   </v-list-group>
 </template>
 
@@ -33,21 +41,21 @@ export default {
           id: "new-item",
           name: "新規ファイル",
           icon: "mdi-file-plus",
-          action: this.newFile
+          action: this.newFile,
         },
         {
           id: "help",
           name: "ヘルプ",
           icon: "mdi-help-circle-outline",
-          action: this.openHelp
+          action: this.openHelp,
         },
         {
           id: "settings",
           name: "設定",
           icon: "mdi-cog",
-          action: this.openSettings
+          action: this.openSettings,
         },
-      ]
+      ],
     }
   },
   methods: {
@@ -64,10 +72,9 @@ export default {
     },
     openHelp() {
       console.log("たーすけてー！！")
-    }
+    },
   },
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
