@@ -1,11 +1,11 @@
 <template>
   <v-expand-transition>
-    <v-card v-if="visible" tile class="footer py-0 rounded-t elevation-4">
+    <v-card v-if="task" tile class="footer py-0 rounded-t elevation-4">
       <div class="task-message caption px-2">
-        ファイルをインポートしています： aaa.zipああああああああああああ
+        {{ task.message }}
       </div>
 
-      <v-progress-linear height="3" class="progress-bar" value="80" />
+      <v-progress-linear height="3" class="progress-bar" value="100" indeterminate />
     </v-card>
   </v-expand-transition>
 </template>
@@ -22,9 +22,7 @@ export default {
     task() {
       return this.$store.state.task
     },
-  },
-
-  created() {},
+  }
 }
 </script>
 

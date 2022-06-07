@@ -64,6 +64,16 @@ export default {
           description: "",
           type: "check",
         },
+        {
+          id: "renderer.search.layout",
+          label: "検索のレイアウト",
+          description: "",
+          type: "select",
+          selects: [
+            { label: "水平レイアウト", value: "brick", icon: "mdi-wall" },
+            { label: "グリッドレイアウト", value: "grid", icon:"mdi-grid-large" },
+          ]
+        },
       ],
     }
   },

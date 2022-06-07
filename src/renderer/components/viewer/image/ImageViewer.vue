@@ -91,7 +91,7 @@
             クリックまたは下にスクロールで展開
           </div>
           <v-btn icon large @click="toggleExpandData">
-            <v-icon>mdi-chevron-up</v-icon>
+            <v-icon>mdi-chevron-down</v-icon>
           </v-btn>
         </div>
       </v-expand-transition>

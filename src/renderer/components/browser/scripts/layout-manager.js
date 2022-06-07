@@ -33,7 +33,7 @@ class LayoutManager {
   }
 
   switchLayouts(data, settings) {
-    if (data.layoutName === "brick") {
+    if (store.state.settings.renderer.search.layout === "brick") {
       return this.getBrickLayout(data, settings)
     } else {
       return this.getGridLayout(data, settings)

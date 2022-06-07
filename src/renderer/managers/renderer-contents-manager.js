@@ -13,6 +13,8 @@ class RendererContentsManager {
   }
 
   async create(data) {
+    store.commit("setTask", { message: "ファイルを追加中..." })
+
     //1. FilesはmapできないのでArrayにする。
     //2. Fileは各情報がprototypeにあるので改めてオブジェクトを作る
     const files = Array.from(data.files).map((file) => {
@@ -33,6 +35,8 @@ class RendererContentsManager {
 
     //保存したコンテンツを編集する
     store.dispatch("setSelectedItems", result)
+
+    store.commit("setTask", null)
 
     return result
   }

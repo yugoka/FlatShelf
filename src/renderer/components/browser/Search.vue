@@ -157,7 +157,6 @@ export default {
       if (!Array.isArray(this.contents)) return
 
       this.layouts = layoutManager.getLayouts({
-        layoutName: "brick",
         contents: this.contents,
         scrollerWidth: this.scrollerWidth,
         itemSize: this.itemSize,

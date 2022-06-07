@@ -22,9 +22,10 @@ const defaults = {
       search: {
         showItemName: false,
         itemSize: 150,
+        layout: "brick",
         query: {
-          includeDecendantFolders: false
-        }
+          includeDecendantFolders: false,
+        },
       },
     },
 

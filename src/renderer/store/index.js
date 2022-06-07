@@ -101,6 +101,9 @@ const store = new Vuex.Store({
     setViewIndex(state, index) {
       state.viewer.index = index
     },
+    setTask(state, task) {
+      state.task = task
+    },
   },
   actions: {
     //dispatchとかはいらないのでcontext.commitとcontext.stateだけ引数に取る
