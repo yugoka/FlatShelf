@@ -144,8 +144,4 @@ contextBridge.exposeInMainWorld("ipc", {
       callback(isMaximized)
     )
   },
-
-  onPushProgress: (callback) => {
-    ipcRenderer.on("push-progress", (event, { data }) => callback(data))
-  },
 })

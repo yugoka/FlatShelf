@@ -68,7 +68,7 @@ const createWindow = () => {
   } else {
     createProtocol("app")
     // Load the index.html when not in development
-    // デフォルトだとloadURL。ただし画像を読み込めなかったためこの設定に変更した
+    //デフォルトだとloadURL。ただし画像を読み込めなかったためこの設定に変更した
     // eslint-disable-next-line no-undef
     mainWindow.loadFile(path.join(__static, "index.html"))
   }
