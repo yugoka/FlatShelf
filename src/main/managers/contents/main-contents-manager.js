@@ -20,6 +20,7 @@ class ContentsManager {
       result.push(r)
     }    
     */
+
     const promises = data.files.map((file) => {
       return this.create({
         fileData: file,
@@ -27,6 +28,7 @@ class ContentsManager {
       })
     })
     const result = await Promise.all(promises)
+
     return result.map((content) => content.contentID)
   }
 

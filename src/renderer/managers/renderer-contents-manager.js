@@ -13,7 +13,9 @@ class RendererContentsManager {
   }
 
   async create(data) {
-    store.commit("setTask", { message: "ファイルを追加中..." })
+    store.commit("setTask", {
+      message: `${data.files.length}件のファイルを追加中...`,
+    })
 
     //1. FilesはmapできないのでArrayにする。
     //2. Fileは各情報がprototypeにあるので改めてオブジェクトを作る

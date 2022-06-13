@@ -63,6 +63,7 @@ class Search {
     await this.registerSearchWords()
     this.registerSearchTags()
     this.registerSearchFolders()
+    this.registerSearchTypes()
     this.registerOrders()
 
     //検索条件が一切ない場合where句を削除する
@@ -175,6 +176,21 @@ class Search {
 
     //クエリにフォルダ条件を追加する。複数のフォルダ条件がある場合or条件になる
     this.queryAnd.push({ folderID: folderIDs })
+  }
+
+  //------------------------------------
+  // タイプ条件
+  //------------------------------------
+  registerSearchTypes() {
+    if (!Array.isArray(this.query.types)) return
+    const typeQuery = this.query.types.map((type) => {
+      return { type: { [Op.like]: `%${type}%` } }
+    })
+
+    console.log(typeQuery)
+
+    //クエリにフォルダ条件を追加する。複数のフォルダ条件がある場合or条件になる
+    this.queryAnd.push({ [Op.or]: typeQuery })
   }
 
   //------------------------------------
