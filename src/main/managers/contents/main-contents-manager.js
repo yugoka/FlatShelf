@@ -6,8 +6,15 @@ const { imageManager } = require("./main-image-manager")
 const { bookManager } = require("./main-book-manager")
 const log = require("electron-log")
 const fs = require("fs").promises
-const imageFileExts = ["png", "jpg", "jpeg", "webp", "gif", "bmp"]
-const bookFileExts = ["zip"]
+const imageFileTypes = [
+  "image/png",
+  "image/jpg",
+  "image/jpeg",
+  "image/webp",
+  "image/gif",
+  "image/bmp",
+]
+const bookFileTypes = ["application/zip", "application/x-zip-compressed"]
 const { performance } = require("perf_hooks")
 
 class ContentsManager {
@@ -29,19 +36,20 @@ class ContentsManager {
     try {
       const fileData = data.fileData
       //ファイルの種類を判定
-      const type = fileData.type.split("/")[0]
-      const ext = fileData.type.split("/")[1].toLowerCase()
+      const type = fileData.type.toLowerCase()
+
+      console.log(type)
 
       //コンテンツの種類によって担当するマネージャーを変える
       //ここ分割予定
-      if (type === "image" && imageFileExts.includes(ext)) {
+      if (imageFileTypes.includes(type)) {
         return await imageManager.create(data)
-      } else if (bookFileExts.includes(ext)) {
+      } else if (bookFileTypes.includes(type)) {
         return await bookManager.create(data)
       }
 
       //ファイルタイプがどれにも該当しない or サポートされていないファイルの場合
-      log.error(`[fileImport] ${ext} is not supported`)
+      log.error(`[fileImport] ${type} is not supported`)
       return false
     } catch (err) {
       //登録に失敗した場合

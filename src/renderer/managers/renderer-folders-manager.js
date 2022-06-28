@@ -64,8 +64,17 @@ class RendererFoldersManager {
   async delete(folderID) {
     //rootを削除させない安全対策
     if (folderID === 1) return
+
+    const decendants = await this.getDecendants(folderID, "decendants", true)
+    const decendantIDs = decendants.map((dec) => dec.folderID)
+
     const foldersStructure = await window.ipc.deleteFolder(Number(folderID))
     this.setFolders(foldersStructure)
+
+    //現在閲覧中のフォルダが削除対象に含まれる場合
+    if (decendantIDs.includes(store.state.viewContext.folder)) {
+      store.commit("mergeContext", { folder: null })
+    }
 
     //Browserを再読み込みする
     window.dispatchEvent(this.events.reloadContents)

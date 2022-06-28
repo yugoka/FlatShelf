@@ -90,7 +90,7 @@ class FoldersManager {
   //フォルダを削除する(子フォルダ含む)
   async delete(folderID) {
     try {
-      log.info(`[folderDelete] Deleting folder${folderID}`)
+      log.info(`[folderDelete] Deleting folder ${folderID}`)
       //安全対策:rootフォルダを削除できないようにする
       if (Number(folderID) === 1) return
 
@@ -124,7 +124,7 @@ class FoldersManager {
     return this.root
   }
 
-  async getDecendants(folderID, mode="children", includeMe) {
+  async getDecendants(folderID, mode = "children", includeMe) {
     const targetFolder = this.root.getChildById(folderID)
     if (!targetFolder) return []
 
