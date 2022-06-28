@@ -3,24 +3,15 @@
 //------------------------------------
 const { Content } = require("../../db/models/content")
 const { imageManager } = require("./main-image-manager")
+const { bookManager } = require("./main-book-manager")
 const log = require("electron-log")
 const fs = require("fs").promises
 const imageFileExts = ["png", "jpg", "jpeg", "webp", "gif", "bmp"]
+const bookFileExts = ["zip"]
 const { performance } = require("perf_hooks")
 
 class ContentsManager {
   async createMany(data) {
-    /*
-    const result = []
-    for await (const file of data.files) {
-      const r = await this.create({
-        fileData: file,
-        folderID: data.folderID,
-      })
-      result.push(r)
-    }    
-    */
-
     const promises = data.files.map((file) => {
       return this.create({
         fileData: file,
@@ -39,14 +30,14 @@ class ContentsManager {
       const fileData = data.fileData
       //ファイルの種類を判定
       const type = fileData.type.split("/")[0]
-      const ext = fileData.type.split("/")[1]
+      const ext = fileData.type.split("/")[1].toLowerCase()
 
       //コンテンツの種類によって担当するマネージャーを変える
       //ここ分割予定
-      if (type === "image" && ext.indexOf(imageFileExts)) {
+      if (type === "image" && imageFileExts.includes(ext)) {
         return await imageManager.create(data)
-      } else if (type === "aaa") {
-        console.log("aaa")
+      } else if (bookFileExts.includes(ext)) {
+        return await bookManager.create(data)
       }
 
       //ファイルタイプがどれにも該当しない or サポートされていないファイルの場合
