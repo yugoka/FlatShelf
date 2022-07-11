@@ -31,19 +31,51 @@ class BookManager {
     //ディレクトリを作成
     await fs.promises.mkdir(targetDirectory, { recursive: true })
 
-    const zip = fs.createReadStream(filePath).pipe(unzipper.Parse())
+    const directory = await unzipper.Open.file(filePath)
+    await directory.extract({ path: targetDirectory, concurrency: 5 })
 
-    for await (const entry of zip) {
-      if (entry.path.toLowerCase().endsWith(".pdf")) {
-        entry.pipe(fs.createWriteStream(targetDirectory))
-      } else {
-        entry.autodrain()
+    await this.deleteFolder(path.join(targetDirectory, "__MACOSX"))
+
+    const files = await this.searchFiles(targetDirectory)
+    console.log(files)
+  }
+
+  //対象のフォルダが存在するなら削除
+  async deleteFolder(target) {
+    try {
+      await fs.promises.rmdir(target, { recursive: true })
+    } catch (e) {}
+  }
+
+  //特定の条件に基づいて再帰的にファイルを検索
+  async searchFiles(targetDirectory, condition = null) {
+    //conditionに関数が渡されなかった場合全ファイルを対象に検索する
+    const conditionFunc =
+      typeof condition === "function" ? condition : () => true
+
+    const allDirs = await fs.promises.readdir(targetDirectory, {
+      withFileTypes: true,
+    })
+    const files = []
+
+    for await (const dirent of allDirs) {
+      //検索対象がフォルダの場合
+      if (dirent.isDirectory()) {
+        const folderPath = path.join(targetDirectory, dirent.name)
+        result = await this.searchFiles(folderPath)
+        files.push(result)
+
+        //検索対象がファイルで、conditionを満たす場合
+      } else if (dirent.isFile() && conditionFunc(dirent)) {
+        files.push({
+          dir: path.join(targetDirectory, dirent.name),
+          name: dirent.name,
+          ext: path.extname(dirent.name),
+        })
       }
     }
 
-    console.log("end")
-
-    return null
+    return files.flat()
   }
 }
 
