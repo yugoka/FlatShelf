@@ -3,6 +3,7 @@
 //------------------------------------
 const sharp = require("sharp")
 const path = require("path")
+const { deleteFile } = require("./contents-manager-util")
 
 class ThumbnailGenerator {
   constructor() {
@@ -10,8 +11,8 @@ class ThumbnailGenerator {
     //(サイズ * ↓の値)以上のサイズを持つ画像はサムネイルが生成される
     this.thumbnailGenerateThreshold = 1.2
     this.sizes = [
-      { name: "medium", value: 512 },
-      { name: "small", value: 256 },
+      { name: "medium", value: 960 },
+      { name: "small", value: 480 },
     ]
   }
 
@@ -60,10 +61,10 @@ class ThumbnailGenerator {
       metadata.width <= size.value * this.thumbnailGenerateThreshold &&
       metadata.height <= size.value * this.thumbnailGenerateThreshold
     ) {
-      return path.basename(imagePath)
+      return path.relative(directory, imagePath)
     }
 
-    const fileName = `thumbnail-${size.name}.jpg`
+    const fileName = this.getThumbnailFileName(size.name)
     const filePath = path.join(directory, fileName)
 
     const resizedImage = await image.resize({
@@ -82,6 +83,24 @@ class ThumbnailGenerator {
       return 1
     } else {
       return metadata.width / metadata.height
+    }
+  }
+
+  getThumbnailFileName(size) {
+    return `thumbnail-${size}.jpg`
+  }
+
+//------------------------------------
+// 使うかわかんないけど、古いサムネイルファイルを削除する
+//------------------------------------
+  async deleteOldThumbnailFiles(directory) {
+    const fileNames = this.sizes.map(size => {
+      return this.getThumbnailFileName(size.name)
+    })
+
+    for (const fileName of fileNames) {
+      const target = path.join(directory, fileName)
+      await deleteFile(target)
     }
   }
 }

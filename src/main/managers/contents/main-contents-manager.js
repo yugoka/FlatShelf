@@ -27,7 +27,7 @@ class ContentsManager {
     })
     const result = await Promise.all(promises)
 
-    return result.map((content) => content.contentID)
+    return result.map((content) => (content ? content.contentID : null))
   }
 
   //コンテンツを登録する

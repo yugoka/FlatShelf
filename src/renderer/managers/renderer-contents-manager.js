@@ -13,34 +13,43 @@ class RendererContentsManager {
   }
 
   async create(data) {
-    store.commit("setTask", {
-      message: `${data.files.length}件のファイルを追加中...`,
-    })
+    try {
+      store.commit("setTask", {
+        message: `${data.files.length}件のファイルを追加中...`,
+      })
 
-    //1. FilesはmapできないのでArrayにする。
-    //2. Fileは各情報がprototypeにあるので改めてオブジェクトを作る
-    const files = Array.from(data.files).map((file) => {
-      return {
-        name: file.name,
-        type: file.type,
-        path: file.path,
-        size: file.size,
-      }
-    })
-    const result = await window.ipc.createContents({
-      files,
-      folderID: data.folderID || 1,
-    })
+      //1. FilesはmapできないのでArrayにする。
+      //2. Fileは各情報がprototypeにあるので改めてオブジェクトを作る
+      const files = Array.from(data.files).map((file) => {
+        return {
+          name: file.name,
+          type: file.type,
+          path: file.path,
+          size: file.size,
+        }
+      })
+      const result = await window.ipc.createContents({
+        files,
+        folderID: data.folderID || 1,
+      })
 
-    //browserをリロードする
-    window.dispatchEvent(this.events.reloadContents)
+      //browserをリロードする
+      window.dispatchEvent(this.events.reloadContents)
 
-    //保存したコンテンツを編集する
-    store.dispatch("setSelectedItems", result)
+      //保存したコンテンツを編集する
+      store.dispatch("setSelectedItems", result)
 
-    store.commit("setTask", null)
+      store.commit("setTask", null)
+      
 
-    return result
+      const successCount = result.filter(r => r != null).length
+      this.createdNotice(successCount, data.files.length)
+
+      return result
+    } catch (e) {
+      console.error(e)
+      store.commit("setTask", null)
+    }
   }
 
   //search.executeへのエイリアス
@@ -109,7 +118,7 @@ class RendererContentsManager {
     }
     store.commit("setNotice", {
       message: noticeMessage,
-      icon: successCount ? "mdi-check" : "mdi-alert-circle-outline",
+      icon: successCount === length ? "mdi-check" : "mdi-alert-circle-outline",
     })
   }
 
