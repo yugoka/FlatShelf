@@ -10,6 +10,7 @@ const log = require("electron-log")
 const { thumbnailGenerator } = require("./thumbnail.js")
 const { deleteFolder } = require("./contents-manager-util")
 const StreamZip = require('node-stream-zip')
+const { parsePDF } = require("./pdf-parser")
 
 //定数として分離したい
 const imageFileTypes = [
@@ -42,13 +43,19 @@ class BookManager {
       //ディレクトリを作成
       await fs.promises.mkdir(targetDirectory, { recursive: true })
 
-      const zip = new StreamZip.async({ file: filePath })
+      //zipファイルを読み込む
+      const zip = new StreamZip.async({ file: filePath, nameEncoding: 'shift-jis'})
       const fileCount = await zip.extract(null, targetDirectory)
       log.info(`[BookImport] Extracted ${fileCount} files`)
-      await zip.close();
+      await zip.close()
 
       await deleteFolder(path.join(targetDirectory, "__MACOSX"))
 
+      //pdfの数
+      const pdfFiles = await this.searchFiles(targetDirectory, this.isPDF)
+      await this.getFirstPageOfPDF(pdfFiles)
+
+      //pdf展開後の画像
       const imageFiles = await this.searchFiles(targetDirectory, this.isImage)
 
       //zipを開いた結果画像が無かった場合
@@ -57,7 +64,7 @@ class BookManager {
         return null
       }
 
-      //サムネイルを生成、thumbnail.jpgって名前のファイルあったらバグらない？
+      //サムネイルを生成
       const thumbnail = await thumbnailGenerator.generateAll(
         imageFiles[0].dir,
         targetDirectory
@@ -118,12 +125,44 @@ class BookManager {
     return files.flat()
   }
 
+  //------------------------------------
+  // PDFを展開して画像にする
+  //------------------------------------
+  async getFirstPageOfPDF(target) {
+    try {
+      const targets = Array.isArray(target)
+        ? target
+        : [target]
+      
+      const promises = targets.map((pdf) => {
+        return parsePDF(pdf.dir, 1, 1)
+      })
+
+      await Promise.all(promises)
+
+      return true
+
+    } catch (e) {
+      log.error(`[bookImport] Error on pdf parse: ${e}`)
+    }
+  }
+  
+  //------------------------------------
+  // 画像かどうかを判定
+  //------------------------------------
   isImage(dirent) {
     const imageFileExts = imageFileTypes.map(type => {
       return `.${type.split("/")[1]}`
     })
 
-    return imageFileExts.includes(path.extname(dirent.name))
+    return imageFileExts.includes(path.extname(dirent.name).toLowerCase())
+  }
+
+  //------------------------------------
+  // PDFかどうかを判定
+  //------------------------------------
+  isPDF(dirent) {
+    return path.extname(dirent.name).toLowerCase() === ".pdf"
   }
 }
 

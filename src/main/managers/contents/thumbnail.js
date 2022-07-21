@@ -40,8 +40,8 @@ class ThumbnailGenerator {
   }
 
   //画像切り取りの手法を選択する。
-  //coverならアスペクト比を維持せず短辺で切り取る。
-  //insideならアスペクト比を維持しつつ設定幅に収まるように切り取る。
+  //coverならアスペクト比を維持せず短辺で切り取る。→極端なアスペクト比用
+  //insideならアスペクト比を維持しつつ設定幅に収まるように切り取る。→通常用
   getFitMethod(metadata) {
     if (
       metadata.width / metadata.height > this.maxAspectRatio ||
@@ -86,8 +86,9 @@ class ThumbnailGenerator {
     }
   }
 
+  //新規生成のサムネイルはwebpで保存
   getThumbnailFileName(size) {
-    return `thumbnail-${size}.jpg`
+    return `thumbnail-${size}.webp`
   }
 
 //------------------------------------
