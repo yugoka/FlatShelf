@@ -3,7 +3,7 @@
     class="input"
     ref="input"
     type="file"
-    accept="image/jpeg, image/jpg, image/png, image/webp, "
+    accept="image/jpeg, image/jpg, image/png, image/webp, application/zip, application/x-zip-compressed"
     @change="onInput"
     multiple
   />
