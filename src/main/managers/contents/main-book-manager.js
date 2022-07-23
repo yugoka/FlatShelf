@@ -60,7 +60,7 @@ class BookManager {
 
       //zipを開いた結果画像が無かった場合
       if (!fileCount || !imageFiles.length) {
-        await deleteFolder(targetDirectory)
+        //await deleteFolder(targetDirectory)
         return null
       }
 
@@ -91,9 +91,9 @@ class BookManager {
   }
 
   //------------------------------------
-  // 条件に基づいてファイルを再帰的に列挙
+  // 条件に基づいてファイルを(再帰的に)列挙
   //------------------------------------
-  async searchFiles(targetDirectory, condition = null) {
+  async searchFiles(targetDirectory, condition = null, recursive = true) {
     //conditionに関数が渡されなかった場合全ファイルを対象に検索する
     const conditionFunc =
       typeof condition === "function"
@@ -106,8 +106,8 @@ class BookManager {
     const files = []
 
     for await (const dirent of allDirs) {
-      //検索対象がフォルダの場合
-      if (dirent.isDirectory()) {
+      //検索対象がフォルダかつ再帰的探索の場合
+      if (dirent.isDirectory() && recursive) {
         const folderPath = path.join(targetDirectory, dirent.name)
         const result = await this.searchFiles(folderPath, conditionFunc)
         files.push(result)
@@ -123,6 +123,43 @@ class BookManager {
     }
 
     return files.flat()
+  }
+
+  //------------------------------------
+  // ビューワーで今開いているフォルダのデータを頂く
+  //------------------------------------
+  async getBookFolderData(directory, getChildInfo=true) {
+    const allDirs = await fs.promises.readdir(targetDirectory, {
+      withFileTypes: true,
+    })
+
+    //直下の画像, PDF, フォルダ一覧
+    const images = await this.searchFiles(directory, this.isImage, false)
+    const pdfs = await this.searchFiles(directory, this.isPDF, false)
+    const folders = allDirs.filter(dirent => dirent.isDirectory())
+
+    if (getChildInfo) {
+      //子フォルダ直下の画像数, PDF数, フォルダ数をカウント
+      const childFoldersInfo = []
+      for await (const folder of folders) {
+        const info = await this.getBookFolderData(folder.name, false)
+        childFoldersInfo.push(info)
+      }
+
+      return {
+        images,
+        pdfs,
+        folders: childFoldersInfo
+      }
+    } else {
+      //このフォルダが終端ならisTerminus=true
+      return {
+        isTerminus: foldersCount === 0,
+        imagesCount: images.length,
+        pdfCount: pdfs.length,
+        foldersCount: folders.length,
+      }
+    }
   }
 
   //------------------------------------

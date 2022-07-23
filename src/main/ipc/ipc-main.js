@@ -3,6 +3,7 @@ const { config } = require("../managers/main-config-manager")
 const { folders } = require("../managers/folders/main-folders-manager")
 const { contents } = require("../managers/contents/main-contents-manager")
 const { tags } = require("../managers/tags/main-tags-manager")
+const { books } = require("../managers/contents/main-book-manager")
 const { executeSearch } = require("../managers/search/main-search-manager")
 
 //------------------------------------
@@ -138,6 +139,13 @@ export const registerIpcHandlers = ({ mainWindow }) => {
 
   ipcMain.handle("search-content", (event, { query }) => {
     return executeSearch(query)
+  })
+
+  //------------------------------------
+  // ブック関連
+  //------------------------------------
+  ipcMain.handle("get-book-folder-info", (event, { directory }) => {
+    return books.getBookFolderData(directory)
   })
 
   //------------------------------------

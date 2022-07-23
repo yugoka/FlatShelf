@@ -122,6 +122,13 @@ contextBridge.exposeInMainWorld("ipc", {
   },
 
   //------------------------------------
+  // ブック関連
+  //------------------------------------
+  getBookFolderInfo: async (directory) => {
+    return await ipcRenderer.invoke("get-book-folder-info", { directory })
+  },
+
+  //------------------------------------
   // 片道通信：レンダラー→メイン
   //------------------------------------
 

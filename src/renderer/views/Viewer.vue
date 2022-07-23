@@ -94,6 +94,7 @@ export default {
 <style scoped>
 .viewer {
   height: 100%;
+  overflow-y: scroll;
 }
 .viewport-wrapper {
   z-index: 1;
@@ -102,5 +103,14 @@ export default {
 
 .back-button {
   z-index: 2;
+}
+
+.viewer::-webkit-scrollbar {
+  overflow: visible;
+  width: 6px;
+}
+.viewer::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
 }
 </style>

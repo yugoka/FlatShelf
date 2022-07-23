@@ -16,16 +16,16 @@ const poppler = new Poppler(popplerPath)
 export const parsePDF = async (src, start=1, end=1) => {
   try {
     const options = {
-      pngFile: true,
+      jpegFile: true,
       firstPageToConvert: start,
       lastPageToConvert: end
     }
 
-    const outputFile = path.join(path.dirname(src), `${path.basename(src)}.png`)
+    const outputFile = path.join(path.dirname(src), `aaa`)
 
     await poppler.pdfToCairo(src, outputFile, options)
 
   } catch (error) {
-    log.error(`[pdfParse] Error: ${error}`)
+    log.error(`[pdfParse] ${error}`)
   }
 }
