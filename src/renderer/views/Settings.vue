@@ -48,10 +48,22 @@ export default {
       searchWord: "",
       searchResult: [],
       settings: [
+        //---ディスプレイ設定---//
+        {
+          id: "separator-display",
+          label: "ディスプレイ設定",
+          type: "separator"
+        },
         {
           id: "renderer.darkmode",
           label: "ダークモード",
           type: "check",
+        },
+        //---検索設定---//
+        {
+          id: "separator-search",
+          label: "検索設定",
+          type: "separator"
         },
         {
           id: "renderer.search.showItemName",
@@ -73,6 +85,17 @@ export default {
             { label: "水平レイアウト", value: "brick", icon: "mdi-wall" },
             { label: "グリッドレイアウト", value: "grid", icon:"mdi-grid-large" },
           ]
+        },
+        //---ブックビューワー設定---//
+        {
+          id: "separator-viewer-book",
+          label: "ブックビューア設定",
+          type: "separator"
+        },
+        {
+          id: "renderer.viewer.book.showImgName",
+          label: "プレビューに画像のファイル名を表示",
+          type: "check",
         },
       ],
     }

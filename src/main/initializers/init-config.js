@@ -27,6 +27,11 @@ const defaults = {
           includeDecendantFolders: false,
         },
       },
+      viewer: {
+        book: {
+          showImgName: true
+        }
+      }
     },
 
     //=======メインプロセス設定=======//
