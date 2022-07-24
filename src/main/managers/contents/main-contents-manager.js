@@ -3,7 +3,7 @@
 //------------------------------------
 const { Content } = require("../../db/models/content")
 const { imageManager } = require("./main-image-manager")
-const { bookManager } = require("./main-book-manager")
+const { books } = require("./main-book-manager")
 const log = require("electron-log")
 const fs = require("fs").promises
 const imageFileTypes = [
@@ -45,7 +45,7 @@ class ContentsManager {
       if (imageFileTypes.includes(type)) {
         return await imageManager.create(data)
       } else if (bookFileTypes.includes(type)) {
-        return await bookManager.create(data)
+        return await books.create(data)
       }
 
       //ファイルタイプがどれにも該当しない or サポートされていないファイルの場合

@@ -10,6 +10,11 @@
         @toggle-magnify-mode="toggleMagnifyMode"
         @change-content="changeContent"
       />
+      <BookViewer
+        v-if="contentType === 'book'"
+        :content="content"
+        @toggle-magnify-mode="toggleMagnifyMode"
+      />
     </div>
   </v-container>
 </template>
@@ -17,11 +22,12 @@
 <script>
 import BackToSearchButton from "../components/app/miniparts/BackToSearchButton.vue"
 import ImageViewer from "../components/viewer/image/ImageViewer.vue"
+import BookViewer from "../components/viewer/book/BookViewer.vue"
 
 export default {
   name: "viewer",
 
-  components: { ImageViewer, BackToSearchButton },
+  components: { ImageViewer, BookViewer, BackToSearchButton },
 
   data() {
     return {

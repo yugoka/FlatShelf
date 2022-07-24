@@ -124,8 +124,12 @@ contextBridge.exposeInMainWorld("ipc", {
   //------------------------------------
   // ブック関連
   //------------------------------------
-  getBookFolderInfo: async (directory) => {
-    return await ipcRenderer.invoke("get-book-folder-info", { directory })
+  getBookFolderInfo: async (directory, root) => {
+    return await ipcRenderer.invoke("get-book-folder-info", { directory, root })
+  },
+
+  bookFolderBack: async (rootDirectory, currentDirectory) => {
+    return await ipcRenderer.invoke("book-folder-back", { rootDirectory, currentDirectory })
   },
 
   //------------------------------------

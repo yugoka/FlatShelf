@@ -144,8 +144,12 @@ export const registerIpcHandlers = ({ mainWindow }) => {
   //------------------------------------
   // ブック関連
   //------------------------------------
-  ipcMain.handle("get-book-folder-info", (event, { directory }) => {
-    return books.getBookFolderData(directory)
+  ipcMain.handle("get-book-folder-info", (event, { directory, root }) => {
+    return books.getBookFolderData(directory, root)
+  })
+
+  ipcMain.handle("book-folder-back", (event, { rootDirectory, currentDirectory }) => {
+    return books.backDirectory(rootDirectory, currentDirectory)
   })
 
   //------------------------------------
@@ -171,6 +175,7 @@ export const registerIpcHandlers = ({ mainWindow }) => {
       mainWindow.maximize()
     }
   })
+
 
   //------------------------------------
   // 片道通信：メイン→レンダラー

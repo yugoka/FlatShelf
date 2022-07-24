@@ -126,15 +126,22 @@ class BookManager {
   }
 
   //------------------------------------
-  // ビューワーで今開いているフォルダのデータを頂く
+  // ビューワーで今開いているフォルダのデータを取得
+  // ちょっと煩雑なので修正の余地あり
+  //  第一引数は現在開いているフォルダ, 第二引数はそのコンテンツのルートフォルダ
   //------------------------------------
-  async getBookFolderData(directory, getChildInfo=true) {
-    const allDirs = await fs.promises.readdir(targetDirectory, {
+  async getBookFolderData(directory, rootDirectory, getChildInfo = true) {
+    const allDirs = await fs.promises.readdir(directory, {
       withFileTypes: true,
     })
 
     //直下の画像, PDF, フォルダ一覧
     const images = await this.searchFiles(directory, this.isImage, false)
+    //サムネイル以外の画像たち
+    const nonThumbnailImages = images.filter(image => {
+      return !image.name.startsWith("thumbnail-")
+    })
+
     const pdfs = await this.searchFiles(directory, this.isPDF, false)
     const folders = allDirs.filter(dirent => dirent.isDirectory())
 
@@ -142,23 +149,60 @@ class BookManager {
       //子フォルダ直下の画像数, PDF数, フォルダ数をカウント
       const childFoldersInfo = []
       for await (const folder of folders) {
-        const info = await this.getBookFolderData(folder.name, false)
+        const info = await this.getBookFolderData(
+          path.join(directory, folder.name),
+          rootDirectory,
+          false
+        )
         childFoldersInfo.push(info)
       }
 
+      //親フォルダの場合
       return {
-        images,
+        dir: directory,
+        //コンテンツのrootフォルダに対してサブディレクトリかどうか
+        isSubDirectory: this.checkSubDirectory(rootDirectory, directory),
+        images: nonThumbnailImages,
         pdfs,
         folders: childFoldersInfo
       }
     } else {
-      //このフォルダが終端ならisTerminus=true
+      //子フォルダ以下の場合
       return {
-        isTerminus: foldersCount === 0,
-        imagesCount: images.length,
+        name: path.basename(directory),
+        dir: directory,
+        imagesCount: nonThumbnailImages.length,
         pdfCount: pdfs.length,
         foldersCount: folders.length,
+        firstImage: images.length ? images[0] : null
       }
+    }
+  }
+
+  //------------------------------------
+  // ビューワーでフォルダー階層を1個上に戻す
+  //------------------------------------
+  async backDirectory(root, current) {
+    //何らかの原因でサブフォルダではない場所から戻ろうとした場合、表示をrootに戻す
+    if (!this.checkSubDirectory(root, current)) {
+      return await this.getBookFolderData(root, root)
+    } else {
+      const target = path.resolve(current, "../")
+      return await this.getBookFolderData(target, root)
+    }
+  }
+
+  //------------------------------------
+  // currentがrootのサブディレクトリであるかどうかを調べる
+  // (ビューワーで1個上の階層に戻れるかどうか調べる)
+  //------------------------------------
+  checkSubDirectory(root, current) {
+    const relative = path.relative(root, current)
+    const result = relative && !relative.startsWith('..') && !path.isAbsolute(relative)
+    if (result === "") {
+      return false
+    } else {
+      return result
     }
   }
 
@@ -203,4 +247,4 @@ class BookManager {
   }
 }
 
-export const bookManager = new BookManager()
+export const books = new BookManager()
