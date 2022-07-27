@@ -9,7 +9,7 @@ const { v4: UUID } = require("uuid")
 const log = require("electron-log")
 const { thumbnailGenerator } = require("./thumbnail.js")
 const { deleteFolder } = require("./contents-manager-util")
-const StreamZip = require('node-stream-zip')
+const StreamZip = require("node-stream-zip")
 const { parsePDF } = require("./pdf-parser")
 
 //定数として分離したい
@@ -33,7 +33,11 @@ class BookManager {
       const filePath = file.path
       //保存ディレクトリを生成
       const fileUUID = UUID()
-      const targetDirectory = path.join(WORKING_SPACE, "contents/books", fileUUID)
+      const targetDirectory = path.join(
+        WORKING_SPACE,
+        "contents/books",
+        fileUUID
+      )
       const type = "book"
 
       //コンテンツ本体ファイルを複製
@@ -44,7 +48,10 @@ class BookManager {
       await fs.promises.mkdir(targetDirectory, { recursive: true })
 
       //zipファイルを読み込む
-      const zip = new StreamZip.async({ file: filePath, nameEncoding: 'shift-jis'})
+      const zip = new StreamZip.async({
+        file: filePath,
+        nameEncoding: "shift-jis",
+      })
       const fileCount = await zip.extract(null, targetDirectory)
       log.info(`[BookImport] Extracted ${fileCount} files`)
       await zip.close()
@@ -96,9 +103,7 @@ class BookManager {
   async searchFiles(targetDirectory, condition = null, recursive = true) {
     //conditionに関数が渡されなかった場合全ファイルを対象に検索する
     const conditionFunc =
-      typeof condition === "function"
-        ? condition
-        : () => true
+      typeof condition === "function" ? condition : () => true
 
     const allDirs = await fs.promises.readdir(targetDirectory, {
       withFileTypes: true,
@@ -138,12 +143,12 @@ class BookManager {
     //直下の画像, PDF, フォルダ一覧
     const images = await this.searchFiles(directory, this.isImage, false)
     //サムネイル以外の画像たち
-    const nonThumbnailImages = images.filter(image => {
+    const nonThumbnailImages = images.filter((image) => {
       return !image.name.startsWith("thumbnail-")
     })
 
     const pdfs = await this.searchFiles(directory, this.isPDF, false)
-    const folders = allDirs.filter(dirent => dirent.isDirectory())
+    const folders = allDirs.filter((dirent) => dirent.isDirectory())
 
     if (getChildInfo) {
       //子フォルダ直下の画像数, PDF数, フォルダ数をカウント
@@ -164,7 +169,7 @@ class BookManager {
         isSubDirectory: this.checkSubDirectory(rootDirectory, directory),
         images: nonThumbnailImages,
         pdfs,
-        folders: childFoldersInfo
+        folders: childFoldersInfo,
       }
     } else {
       //子フォルダ以下の場合
@@ -174,7 +179,7 @@ class BookManager {
         imagesCount: nonThumbnailImages.length,
         pdfCount: pdfs.length,
         foldersCount: folders.length,
-        firstImage: images.length ? images[0] : null
+        firstImage: images.length ? images[0] : null,
       }
     }
   }
@@ -198,7 +203,8 @@ class BookManager {
   //------------------------------------
   checkSubDirectory(root, current) {
     const relative = path.relative(root, current)
-    const result = relative && !relative.startsWith('..') && !path.isAbsolute(relative)
+    const result =
+      relative && !relative.startsWith("..") && !path.isAbsolute(relative)
     if (result === "") {
       return false
     } else {
@@ -211,10 +217,8 @@ class BookManager {
   //------------------------------------
   async getFirstPageOfPDF(target) {
     try {
-      const targets = Array.isArray(target)
-        ? target
-        : [target]
-      
+      const targets = Array.isArray(target) ? target : [target]
+
       const promises = targets.map((pdf) => {
         return parsePDF(pdf.dir, 1, 1)
       })
@@ -222,17 +226,16 @@ class BookManager {
       await Promise.all(promises)
 
       return true
-
     } catch (e) {
       log.error(`[bookImport] Error on pdf parse: ${e}`)
     }
   }
-  
+
   //------------------------------------
   // 画像かどうかを判定
   //------------------------------------
   isImage(dirent) {
-    const imageFileExts = imageFileTypes.map(type => {
+    const imageFileExts = imageFileTypes.map((type) => {
       return `.${type.split("/")[1]}`
     })
 

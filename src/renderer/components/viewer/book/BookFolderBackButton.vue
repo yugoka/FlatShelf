@@ -1,12 +1,5 @@
 <template>
-  <v-btn 
-    icon 
-    large 
-    @click="back" 
-    fixed 
-    class="mt-10" 
-    :color="isSubDirectory ? 'primary' : null"
-  >
+  <v-btn icon large @click="back" fixed :color="highlight ? 'primary' : null">
     <v-icon>mdi-arrow-u-left-bottom</v-icon>
   </v-btn>
 </template>
@@ -14,7 +7,7 @@
 <script>
 export default {
   props: {
-    isSubDirectory: {
+    highlight: {
       type: Boolean,
       default: false,
     },
@@ -27,5 +20,4 @@ export default {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -98,6 +98,7 @@ export default {
 <style>
 #sidemenu {
   margin-top: 30px;
+  user-select: none;
 }
 
 #sidemenu .v-navigation-drawer__content {
