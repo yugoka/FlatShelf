@@ -1,16 +1,22 @@
 <template>
   <div class="book-viewer">
     <BookFolderBackButton
+      v-if="!viewMode"
       @click="back"
       :highlight="folderInfo.isSubDirectory"
       class="mt-10"
     />
 
-    <BookReader v-if="viewMode" :folderInfo="folderInfo" @back="back" />
+    <BookReader
+      ref="reader"
+      v-if="viewMode"
+      :folderInfo="folderInfo"
+      @back="back"
+    />
 
     <v-row v-else justify="center" no-gutters class="mt-3">
       <v-col cols="10">
-        <BookTop :folderInfo="folderInfo" :content="content" @view="view" />
+        <BookTop :folderInfo="folderInfo" :content="content" @view="view(0)" />
 
         <v-divider
           class="my-4"
@@ -27,7 +33,7 @@
           v-if="folderInfo.images && folderInfo.images.length"
         />
 
-        <BookViewerThumbnails :images="folderInfo.images" />
+        <BookViewerThumbnails :images="folderInfo.images" @view="view" />
       </v-col>
     </v-row>
   </div>
@@ -58,6 +64,8 @@ export default {
     return {
       folderInfo: {},
       viewMode: false,
+      //閲覧モードから戻ってきた時にサイドバーを元に戻す
+      isSideMenuTemporarilyClosed: null,
     }
   },
 
@@ -98,12 +106,23 @@ export default {
     //閲覧モードに切り替える
     view(page) {
       this.viewMode = true
+      this.$nextTick(() => {
+        this.$refs.reader.showPage(page)
+      })
     },
   },
 
   watch: {
     viewMode() {
       this.$emit("toggle-magnify-mode", this.viewMode)
+      if (this.viewMode) {
+        this.isSideMenuTemporarilyClosed = this.$store.state.isSideMenuShown
+        this.$store.dispatch("toggleSideMenu", false)
+      } else {
+        if (this.isSideMenuTemporarilyClosed) {
+          this.$store.dispatch("toggleSideMenu", true)
+        }
+      }
     },
   },
 

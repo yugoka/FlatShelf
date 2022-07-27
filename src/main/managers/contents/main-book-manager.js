@@ -10,7 +10,7 @@ const log = require("electron-log")
 const { thumbnailGenerator } = require("./thumbnail.js")
 const { deleteFolder } = require("./contents-manager-util")
 const StreamZip = require("node-stream-zip")
-const { parsePDF } = require("./pdf-parser")
+//const { parsePDF } = require("./pdf-parser")
 
 //定数として分離したい
 const imageFileTypes = [
@@ -217,11 +217,12 @@ class BookManager {
   //------------------------------------
   async getFirstPageOfPDF(target) {
     try {
+      return null
       const targets = Array.isArray(target) ? target : [target]
 
-      const promises = targets.map((pdf) => {
-        return parsePDF(pdf.dir, 1, 1)
-      })
+      //const promises = targets.map((pdf) => {
+      //  return parsePDF(pdf.dir, 1, 1)
+      //})
 
       await Promise.all(promises)
 

@@ -10,12 +10,14 @@
         v-for="image in images"
         :key="image.name"
       >
-        <v-card elevation="5">
-          <v-img :src="`file://${image.dir}`" class="rounded" />
-          <div v-if="showImgName" class="text-center caption">
-            {{ image.name }}
-          </div>
-        </v-card>
+        <v-lazy>
+          <v-card elevation="5" @click="showPage(image)">
+            <img :src="`file://${image.dir}`" class="rounded card-img" />
+            <div v-if="showImgName" class="text-center caption">
+              {{ image.name }}
+            </div>
+          </v-card>
+        </v-lazy>
       </v-col>
     </v-row>
   </div>
@@ -32,5 +34,21 @@ export default {
       return this.$store.state.settings.renderer.viewer.book.showImgName
     },
   },
+
+  methods: {
+    showPage(image) {
+      const index = this.images.findIndex((img) => img === image)
+      if (index != -1) {
+        this.$emit("view", index)
+      }
+    },
+  },
 }
 </script>
+
+<style scoped>
+.card-img {
+  object-fit: cover;
+  width: 100%;
+}
+</style>

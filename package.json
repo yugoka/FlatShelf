@@ -75,10 +75,5 @@
   ],
   "prettier": {
     "semi": false
-  },
-  "build": {
-    "extraResources": [
-      "bin/"
-    ]
   }
 }
