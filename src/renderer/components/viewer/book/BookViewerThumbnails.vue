@@ -36,6 +36,7 @@ export default {
   },
 
   methods: {
+    //ビューワーで特定のページを表示
     showPage(image) {
       const index = this.images.findIndex((img) => img === image)
       if (index != -1) {

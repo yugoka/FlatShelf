@@ -1,8 +1,8 @@
 <template>
   <v-container class="viewer" :fluid="magnifyMode">
     <BackToSearchButton v-if="!magnifyMode" />
-
-    <div class="viewport-wrapper">
+    <PDFTest class="mx-10 my-10" />
+    <div class="viewport-wrapper" v-if="false">
       <ImageViewer
         v-if="contentType === 'image'"
         :content="content"
@@ -23,11 +23,12 @@
 import BackToSearchButton from "../components/app/miniparts/BackToSearchButton.vue"
 import ImageViewer from "../components/viewer/image/ImageViewer.vue"
 import BookViewer from "../components/viewer/book/BookViewer.vue"
+import PDFTest from "../components/viewer/book/reader/ResponsivePDFPage.vue"
 
 export default {
   name: "viewer",
 
-  components: { ImageViewer, BookViewer, BackToSearchButton },
+  components: { ImageViewer, BookViewer, BackToSearchButton, PDFTest },
 
   data() {
     return {
@@ -47,6 +48,8 @@ export default {
         return null
       }
     },
+
+    //検索コンテキストについて次, 前のアイテムが存在するかどうか
     isItemExists() {
       return {
         next:
@@ -64,6 +67,7 @@ export default {
   },
 
   methods: {
+    //検索上でrelativeIndex分だけ次のアイテムに移動する
     changeContent(relativeIndex) {
       const newContentIndex = this.$route.params.index + relativeIndex
       const newContentID = this.$store.state.searchResultIDs[newContentIndex]
@@ -78,12 +82,14 @@ export default {
       this.content = result[0]
     },
 
+    //magnify-modeならバツボタン非表示, 横幅制限解除
     toggleMagnifyMode(bool) {
       this.magnifyMode = bool
     },
   },
 
   created() {
+    //アイテムに更新があった場合更新
     window.addEventListener("reloadContents", this.getContentData)
   },
 
