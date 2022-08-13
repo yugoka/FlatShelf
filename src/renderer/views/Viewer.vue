@@ -1,8 +1,7 @@
 <template>
   <v-container class="viewer" :fluid="magnifyMode">
     <BackToSearchButton v-if="!magnifyMode" />
-    <PDFTest class="mx-10 my-10" />
-    <div class="viewport-wrapper" v-if="false">
+    <div class="viewport-wrapper">
       <ImageViewer
         v-if="contentType === 'image'"
         :content="content"
@@ -23,12 +22,11 @@
 import BackToSearchButton from "../components/app/miniparts/BackToSearchButton.vue"
 import ImageViewer from "../components/viewer/image/ImageViewer.vue"
 import BookViewer from "../components/viewer/book/BookViewer.vue"
-import PDFTest from "../components/viewer/book/reader/ResponsivePDFPage.vue"
 
 export default {
   name: "viewer",
 
-  components: { ImageViewer, BookViewer, BackToSearchButton, PDFTest },
+  components: { ImageViewer, BookViewer, BackToSearchButton },
 
   data() {
     return {

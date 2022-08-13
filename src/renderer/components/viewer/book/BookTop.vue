@@ -59,11 +59,9 @@ export default {
       //ルートフォルダの場合
       if (this.folderInfo.dir === this.content.folderPath) {
         return this.content.name
+      } else {
+        return this.folderInfo.name
       }
-
-      const dir = this.folderInfo.dir.split("/")
-      if (!dir.length) return
-      return dir[dir.length - 1]
     },
   },
 

@@ -10,7 +10,7 @@ const log = require("electron-log")
 const { thumbnailGenerator } = require("./thumbnail.js")
 const { deleteFolder } = require("./contents-manager-util")
 const StreamZip = require("node-stream-zip")
-//const { parsePDF } = require("./pdf-parser")
+const { getPDFThumbnail } = require("./pdf-parser")
 
 //定数として分離したい
 const imageFileTypes = [
@@ -60,7 +60,7 @@ class BookManager {
 
       //pdfの数
       const pdfFiles = await this.searchFiles(targetDirectory, this.isPDF)
-      await this.getFirstPageOfPDF(pdfFiles)
+      await this.generatePDFThumbnails(pdfFiles)
 
       //pdf展開後の画像
       const imageFiles = await this.searchFiles(targetDirectory, this.isImage)
@@ -165,6 +165,7 @@ class BookManager {
       //親フォルダの場合
       return {
         dir: directory,
+        name: path.basename(directory),
         //コンテンツのrootフォルダに対してサブディレクトリかどうか
         isSubDirectory: this.checkSubDirectory(rootDirectory, directory),
         images: nonThumbnailImages,
@@ -215,16 +216,17 @@ class BookManager {
   //------------------------------------
   // PDFを展開して画像にする
   //------------------------------------
-  async getFirstPageOfPDF(target) {
+  async generatePDFThumbnails(target) {
     try {
-      return null
       const targets = Array.isArray(target) ? target : [target]
 
-      //const promises = targets.map((pdf) => {
-      //  return parsePDF(pdf.dir, 1, 1)
-      //})
+      const promises = targets.map((pdf) => {
+        return getPDFThumbnail(pdf)
+      })
 
       await Promise.all(promises)
+
+      console.log("done")
 
       return true
     } catch (e) {
