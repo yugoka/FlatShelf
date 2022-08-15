@@ -10,11 +10,14 @@ import * as pdfjs from "pdfjs-dist"
 pdfjs.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry")
 
 export default {
+  props: {
+    pdf: String,
+    pageNum: Number,
+  },
+
   data() {
     return {
-      pdf: "C:/Users/watas/Downloads/a.pdf",
-      pageNum: 1,
-      page: null,
+      currentPage: null,
       resizeObserver: null,
     }
   },
@@ -25,7 +28,7 @@ export default {
         url: this.pdf,
       }).promise
 
-      this.page = await pdf.getPage(this.pageNum)
+      this.currentPage = await pdf.getPage(this.pageNum)
     },
 
     async renderPage() {
@@ -34,9 +37,9 @@ export default {
       const canvasWrapper = this.$refs.canvasWrapper
 
       //一度pdf自体の幅を取得し、親divの幅から表示スケールを計算
-      const pdfWidth = this.page.getViewport({ scale: 1 }).width
+      const pdfWidth = this.currentPage.getViewport({ scale: 1 }).width
       const scale = canvasWrapper.clientWidth / pdfWidth
-      const viewport = this.page.getViewport({ scale })
+      const viewport = this.currentPage.getViewport({ scale })
 
       //高DPI環境をサポート
       const outputScale = window.devicePixelRatio || 1
@@ -55,7 +58,7 @@ export default {
         transform: transform,
         viewport: viewport,
       }
-      await this.page.render(renderContext)
+      await this.currentPage.render(renderContext)
     },
 
     onResize: debounce(async function () {

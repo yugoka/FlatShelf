@@ -18,6 +18,7 @@ class RendererContentsManager {
         message: `${data.files.length}件のファイルを追加中...`,
       })
 
+      //ipc送信時の注意
       //1. FilesはmapできないのでArrayにする。
       //2. Fileは各情報がprototypeにあるので改めてオブジェクトを作る
       const files = Array.from(data.files).map((file) => {
@@ -40,9 +41,8 @@ class RendererContentsManager {
       store.dispatch("setSelectedItems", result)
 
       store.commit("setTask", null)
-      
 
-      const successCount = result.filter(r => r != null).length
+      const successCount = result.filter((r) => r != null).length
       this.createdNotice(successCount, data.files.length)
 
       return result

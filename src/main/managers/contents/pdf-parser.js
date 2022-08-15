@@ -28,7 +28,7 @@ export const getPDFThumbnail = async (pdf) => {
     //最終的に保存したい場所
     const targetFile = path.join(
       path.dirname(pdf.dir),
-      `thumbnail-pdf-${path.basename(pdf.dir, path.extname(pdf.dir))}.jpg`
+      `thumbnail-${pdf.name}.jpg`
     )
 
     console.log(targetFile)
@@ -46,6 +46,7 @@ export const getPDFThumbnail = async (pdf) => {
     //temp内に画像を生成
     await poppler.pdfToCairo(pdf.dir, outputPath, options)
 
+    //tempの画像をコピーして削除
     await fs.copyFile(tempFile, targetFile)
     await fs.unlink(tempFile)
   } catch (error) {

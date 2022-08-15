@@ -40,8 +40,6 @@ export default {
 
   props: {
     folderInfo: Object,
-    pdfMode: Boolean,
-    pdfPath: String,
   },
 
   methods: {

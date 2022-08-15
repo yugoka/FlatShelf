@@ -148,6 +148,18 @@ class BookManager {
     })
 
     const pdfs = await this.searchFiles(directory, this.isPDF, false)
+
+    //pdfにサムネイル情報を付加したもの
+    const pdfsWithThumbnail = pdfs.map((pdf) => {
+      return {
+        ...pdf,
+        thumbnail: path.join(
+          path.dirname(pdf.dir),
+          `thumbnail-${pdf.name}.jpg`
+        ),
+      }
+    })
+
     const folders = allDirs.filter((dirent) => dirent.isDirectory())
 
     if (getChildInfo) {
@@ -169,7 +181,7 @@ class BookManager {
         //コンテンツのrootフォルダに対してサブディレクトリかどうか
         isSubDirectory: this.checkSubDirectory(rootDirectory, directory),
         images: nonThumbnailImages,
-        pdfs,
+        pdfs: pdfsWithThumbnail,
         folders: childFoldersInfo,
       }
     } else {

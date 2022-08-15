@@ -16,7 +16,11 @@
 
     <v-row v-else justify="center" no-gutters class="mt-3">
       <v-col cols="10">
-        <BookTop :folderInfo="folderInfo" :content="content" @view="view(0)" />
+        <BookTop
+          :folderInfo="folderInfo"
+          :content="content"
+          @view="viewFolder(0)"
+        />
 
         <v-divider
           class="my-4"
@@ -26,6 +30,7 @@
         <BookViewerFolders
           :folderInfo="folderInfo"
           @onClickFolder="changeCurrentFolder"
+          @onClickPDF="viewPDF"
         />
 
         <v-divider
@@ -33,14 +38,14 @@
           v-if="folderInfo.images && folderInfo.images.length"
         />
 
-        <BookViewerThumbnails :images="folderInfo.images" @view="view" />
+        <BookViewerThumbnails :images="folderInfo.images" @view="viewFolder" />
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
-import BookViewerFolders from "./BookViewerFolders.vue"
+import BookViewerFolders from "./subs/BookViewerSubs.vue"
 import BookViewerThumbnails from "./BookViewerThumbnails.vue"
 import BookFolderBackButton from "./BookFolderBackButton.vue"
 import BookTop from "./BookTop.vue"
@@ -63,7 +68,10 @@ export default {
   data() {
     return {
       folderInfo: {},
+      //現在が閲覧モードかどうか
       viewMode: false,
+      //閲覧時にpdfとして扱うかどうか
+      pdfMode: false,
       //閲覧モードから戻ってきた時にサイドバーを元に戻す
       isSideMenuTemporarilyClosed: null,
     }
@@ -103,12 +111,17 @@ export default {
       )
     },
 
-    //閲覧モードに切り替える
-    view(page) {
+    //フォルダ閲覧モードに切り替える
+    viewFolder(page) {
       this.viewMode = true
       this.$nextTick(() => {
+        this.$refs.reader.setFolder(this.folderInfo)
         this.$refs.reader.showPage(page)
       })
+    },
+
+    async viewPDF(pdf) {
+      this.viewMode = true
     },
   },
 
@@ -128,6 +141,7 @@ export default {
 
   async created() {
     this.folderInfo = await this.getFolderInfo(this.content.folderPath)
+    console.log(this.folderInfo)
   },
 }
 </script>
