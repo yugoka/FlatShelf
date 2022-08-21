@@ -11,7 +11,7 @@
           dense
           height="45"
           min="1"
-          :max="folderInfo.images.length"
+          :max="pageCount"
           v-model="page"
           @change="onSlide"
           hide-details
@@ -36,6 +36,7 @@ export default {
     folderInfo: Object,
     show: Boolean,
     currentPage: Number,
+    pageCount: Number,
   },
 
   data() {

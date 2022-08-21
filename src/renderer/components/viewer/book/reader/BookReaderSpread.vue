@@ -7,7 +7,12 @@
       <v-row no-gutters>
         <v-col :cols="12 / pageSpread" v-for="page in viewPage" :key="page">
           <div class="image-wrapper" v-if="page != -1">
-            <BookReaderPage :book="book" :isPDF="isPDF" :page="page" />
+            <BookReaderPage
+              :book="book"
+              :isPDF="isPDF"
+              :pdf="pdf"
+              :page="page"
+            />
           </div>
         </v-col>
       </v-row>
@@ -17,13 +22,16 @@
 
 <script>
 import BookReaderPage from "./BookReaderPage.vue"
+
 export default {
   components: { BookReaderPage },
   props: {
     folderInfo: Object,
     book: Object,
     page: Number,
+    pageCount: Number,
     isPDF: Boolean,
+    pdf: Object,
   },
 
   data() {
@@ -36,16 +44,6 @@ export default {
   },
 
   computed: {
-    pageCount() {
-      if (this.isPDF) {
-        return 10
-      } else if (this.book) {
-        return this.book.images.length
-      } else {
-        return 10
-      }
-    },
-
     isLastPage() {
       if (!this.pageInversion) {
         return this.pageCount <= this.page + this.pageSpread
@@ -63,6 +61,10 @@ export default {
     // pageSpread=1,2に対応
     // -----------------
     currentPages() {
+      if (this.pageCount === null) {
+        return []
+      }
+
       if (this.pageSpread == 1) {
         return [this.page]
       }
@@ -118,10 +120,6 @@ export default {
     viewPage() {
       return this.currentPages.slice().reverse()
     },
-  },
-
-  watch: {
-    currentPages() {},
   },
 
   methods: {

@@ -6,6 +6,7 @@
         :folderInfo="folderInfo"
         :show="toolbar"
         :currentPage="page"
+        :pageCount="pageCount"
         @back="back"
         @showPage="showPage"
       />
@@ -16,9 +17,11 @@
       class="reader"
       v-if="currentViewMode === 'spread'"
       :isPDF="isPDF"
+      :pdf="pdf"
       :folderInfo="folderInfo"
       :book="book"
       :page="page"
+      :pageCount="pageCount"
       @back="back"
       @setPage="setPage"
     />
@@ -26,6 +29,8 @@
 </template>
 
 <script>
+import * as pdfjs from "pdfjs-dist"
+pdfjs.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry")
 import BookReaderSpread from "./BookReaderSpread.vue"
 import BookReaderToolbar from "./BookReaderToolbar.vue"
 import debounce from "lodash.debounce"
@@ -43,6 +48,7 @@ export default {
       toolbar: false,
       page: 0,
       book: null,
+      pdf: null,
     }
   },
 
@@ -51,6 +57,20 @@ export default {
     isPDF() {
       if (!this.book) return false
       return this.book.dir.toLowerCase().endsWith(".pdf")
+    },
+
+    pageCount() {
+      if (this.isPDF) {
+        if (!this.pdf) {
+          return null
+        } else {
+          return this.pdf.numPages
+        }
+      } else if (this.book) {
+        return this.book.images.length
+      } else {
+        return null
+      }
     },
   },
 
@@ -85,6 +105,18 @@ export default {
     hideToolbar: debounce(function () {
       this.toolbar = false
     }, 1000),
+  },
+
+  watch: {
+    async book() {
+      if (this.isPDF) {
+        this.pdf = await pdfjs.getDocument({
+          url: this.book.dir,
+        }).promise
+      } else {
+        this.pdf = null
+      }
+    },
   },
 }
 </script>

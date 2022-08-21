@@ -6,13 +6,11 @@
 
 <script>
 import debounce from "lodash.throttle"
-import * as pdfjs from "pdfjs-dist"
-pdfjs.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry")
 
 export default {
   props: {
-    pdfPath: String,
     pageNum: Number,
+    pdf: Object,
   },
 
   data() {
@@ -24,11 +22,7 @@ export default {
 
   methods: {
     async getPage() {
-      const pdf = await pdfjs.getDocument({
-        url: this.pdfPath,
-      }).promise
-
-      this.currentPage = await pdf.getPage(this.pageNum)
+      this.currentPage = await this.pdf.getPage(this.pageNum)
     },
 
     async renderPage() {

@@ -1,7 +1,7 @@
 <template>
-  <div v-if="book" class="img-wrapper">
-    <v-img v-if="!isPDF" :src="`file://${book.images[page].dir}`" />
-    <ResponsivePDFPage v-else :pdfPath="book.dir" :pageNum="page + 1" />
+  <div v-if="ready" class="img-wrapper">
+    <ResponsivePDFPage v-if="isPDF" :pdf="pdf" :pageNum="page + 1" />
+    <v-img v-else :src="`file://${book.images[page].dir}`" />
   </div>
 </template>
 
@@ -17,6 +17,13 @@ export default {
     book: Object,
     page: Number,
     isPDF: Boolean,
+    pdf: Object,
+  },
+
+  computed: {
+    ready() {
+      return this.book && ((this.isPDF && this.pdf) || !this.isPDF)
+    },
   },
 }
 </script>
