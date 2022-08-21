@@ -16,7 +16,7 @@
 
         <v-btn
           v-if="imageExists"
-          @click="view"
+          @click="view(0)"
           color="primary"
           class="text-subtitle-1"
           large
@@ -67,7 +67,8 @@ export default {
 
   methods: {
     view(page = 0) {
-      this.$emit("view", page)
+      if (typeof page != "number") page = 0
+      this.$emit("view", { page, target: this.folderInfo })
     },
   },
 }

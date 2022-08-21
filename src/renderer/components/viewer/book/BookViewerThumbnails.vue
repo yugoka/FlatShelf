@@ -26,12 +26,16 @@
 <script>
 export default {
   props: {
-    images: Array,
+    folderInfo: Object,
   },
 
   computed: {
     showImgName() {
       return this.$store.state.settings.renderer.viewer.book.showImgName
+    },
+
+    images() {
+      return this.folderInfo.images
     },
   },
 
@@ -40,7 +44,7 @@ export default {
     showPage(image) {
       const index = this.images.findIndex((img) => img === image)
       if (index != -1) {
-        this.$emit("view", index)
+        this.$emit("view", { page: index, target: this.folderInfo })
       }
     },
   },

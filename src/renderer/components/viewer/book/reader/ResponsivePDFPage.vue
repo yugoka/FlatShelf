@@ -11,7 +11,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry
 
 export default {
   props: {
-    pdf: String,
+    pdfPath: String,
     pageNum: Number,
   },
 
@@ -25,7 +25,7 @@ export default {
   methods: {
     async getPage() {
       const pdf = await pdfjs.getDocument({
-        url: this.pdf,
+        url: this.pdfPath,
       }).promise
 
       this.currentPage = await pdf.getPage(this.pageNum)

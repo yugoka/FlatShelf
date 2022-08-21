@@ -56,7 +56,7 @@ export default {
       this.$emit("onClickFolder", folder)
     },
     onClickPDF(pdf) {
-      this.$emit("onClickPDF", pdf)
+      this.$emit("onClickPDF", { page: 0, target: pdf })
     },
   },
   components: { BookViewerSubFolder, BookViewerSubPDF, BookViewerSubPDF },

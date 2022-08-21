@@ -16,21 +16,17 @@
 
     <v-row v-else justify="center" no-gutters class="mt-3">
       <v-col cols="10">
-        <BookTop
-          :folderInfo="folderInfo"
-          :content="content"
-          @view="viewFolder(0)"
-        />
+        <BookTop :folderInfo="folderInfo" :content="content" @view="viewBook" />
 
         <v-divider
           class="my-4"
           v-if="folderInfo.folders && folderInfo.folders.length"
         />
 
-        <BookViewerFolders
+        <BookViewerSubs
           :folderInfo="folderInfo"
           @onClickFolder="changeCurrentFolder"
-          @onClickPDF="viewPDF"
+          @onClickPDF="viewBook"
         />
 
         <v-divider
@@ -38,14 +34,14 @@
           v-if="folderInfo.images && folderInfo.images.length"
         />
 
-        <BookViewerThumbnails :images="folderInfo.images" @view="viewFolder" />
+        <BookViewerThumbnails :folderInfo="folderInfo" @view="viewBook" />
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
-import BookViewerFolders from "./subs/BookViewerSubs.vue"
+import BookViewerSubs from "./subs/BookViewerSubs.vue"
 import BookViewerThumbnails from "./BookViewerThumbnails.vue"
 import BookFolderBackButton from "./BookFolderBackButton.vue"
 import BookTop from "./BookTop.vue"
@@ -58,7 +54,7 @@ export default {
     content: Object,
   },
   components: {
-    BookViewerFolders,
+    BookViewerSubs,
     BookViewerThumbnails,
     BookFolderBackButton,
     BookTop,
@@ -112,16 +108,13 @@ export default {
     },
 
     //フォルダ閲覧モードに切り替える
-    viewFolder(page) {
+    viewBook({ page = 0, target = this.folderInfo } = {}) {
+      console.log(page, target)
       this.viewMode = true
       this.$nextTick(() => {
-        this.$refs.reader.setFolder(this.folderInfo)
+        this.$refs.reader.setBook(target)
         this.$refs.reader.showPage(page)
       })
-    },
-
-    async viewPDF(pdf) {
-      this.viewMode = true
     },
   },
 
@@ -141,7 +134,6 @@ export default {
 
   async created() {
     this.folderInfo = await this.getFolderInfo(this.content.folderPath)
-    console.log(this.folderInfo)
   },
 }
 </script>

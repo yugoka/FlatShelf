@@ -1,6 +1,8 @@
 <template>
-  <v-img v-if="!isPDF" :src="`file://${target.images[page].dir}`" />
-  <ResponsivePDFPage v-else :pdf="target" :pageNum="page" />
+  <div v-if="book" class="img-wrapper">
+    <v-img v-if="!isPDF" :src="`file://${book.images[page].dir}`" />
+    <ResponsivePDFPage v-else :pdfPath="book.dir" :pageNum="page + 1" />
+  </div>
 </template>
 
 <script>
@@ -12,14 +14,15 @@ import ResponsivePDFPage from "./ResponsivePDFPage.vue"
 export default {
   components: { ResponsivePDFPage },
   props: {
-    target: String,
+    book: Object,
     page: Number,
-  },
-
-  computed: {
-    isPDF() {
-      return target.name.endsWith(".pdf")
-    },
+    isPDF: Boolean,
   },
 }
 </script>
+
+<style scoped>
+.img-wrapper {
+  width: 100%;
+}
+</style>
