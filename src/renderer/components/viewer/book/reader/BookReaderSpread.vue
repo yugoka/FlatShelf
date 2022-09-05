@@ -38,12 +38,14 @@ export default {
     return {
       //一度に表示するページ数
       pageSpread: 2,
-      //1ページ分ずらすかどうか
-      pageInversion: true,
     }
   },
 
   computed: {
+    pageInversion() {
+      return this.$store.state.settings.renderer.viewer.book.pageInversion
+    },
+
     isLastPage() {
       if (!this.pageInversion) {
         return this.pageCount <= this.page + this.pageSpread

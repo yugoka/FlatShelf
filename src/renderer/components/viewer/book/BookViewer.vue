@@ -109,7 +109,6 @@ export default {
 
     //フォルダ閲覧モードに切り替える
     viewBook({ page = 0, target = this.folderInfo } = {}) {
-      console.log(page, target)
       this.viewMode = true
       this.$nextTick(() => {
         this.$refs.reader.setBook(target)

@@ -29,9 +29,12 @@ const defaults = {
       },
       viewer: {
         book: {
-          showImgName: true
-        }
-      }
+          showImgName: true,
+          //空のフォルダをスキップする
+          skipBlankFolder: true,
+          pageInversion: false,
+        },
+      },
     },
 
     //=======メインプロセス設定=======//

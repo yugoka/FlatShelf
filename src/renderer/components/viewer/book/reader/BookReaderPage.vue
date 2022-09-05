@@ -1,7 +1,7 @@
 <template>
   <div v-if="ready" class="img-wrapper">
     <ResponsivePDFPage v-if="isPDF" :pdf="pdf" :pageNum="page + 1" />
-    <v-img v-else :src="`file://${book.images[page].dir}`" />
+    <img v-else :src="`file://${book.images[page].dir}`" class="img" />
   </div>
 </template>
 
@@ -30,6 +30,10 @@ export default {
 
 <style scoped>
 .img-wrapper {
+  width: 100%;
+}
+
+.img {
   width: 100%;
 }
 </style>

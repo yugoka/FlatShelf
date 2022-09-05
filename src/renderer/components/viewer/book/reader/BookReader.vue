@@ -32,7 +32,7 @@
 import * as pdfjs from "pdfjs-dist"
 pdfjs.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry")
 import BookReaderSpread from "./BookReaderSpread.vue"
-import BookReaderToolbar from "./BookReaderToolbar.vue"
+import BookReaderToolbar from "./toolbar/BookReaderToolbar.vue"
 import debounce from "lodash.debounce"
 
 export default {
@@ -49,6 +49,8 @@ export default {
       page: 0,
       book: null,
       pdf: null,
+      //プリロードするページ数
+      pageBuffer: 3,
     }
   },
 
@@ -105,6 +107,16 @@ export default {
     hideToolbar: debounce(function () {
       this.toolbar = false
     }, 1000),
+
+    //対象のページをプリロードする。効果は未検証
+    preloadPage(pages) {
+      if (this.isPDF) return
+
+      for (const page of pages) {
+        const imgTag = new Image()
+        imgTag.src = `file://${page.dir}`
+      }
+    },
   },
 
   watch: {
@@ -117,6 +129,24 @@ export default {
         this.pdf = null
       }
     },
+
+    //ページが更新された時に画像をプリロードする(画像モードのみ)
+    page() {
+      if (!this.isPDF) {
+        const start = Math.max(0, this.page - this.pageBuffer)
+        const end = Math.min(
+          this.book.images.length - 1,
+          this.page + this.pageBuffer
+        )
+        this.preloadPage(this.book.images.slice(start, end))
+      }
+    },
+  },
+
+  mounted() {
+    if (this.isPDF) {
+      this.preloadPage(this.book.images.slice(0, this.pageBuffer))
+    }
   },
 }
 </script>

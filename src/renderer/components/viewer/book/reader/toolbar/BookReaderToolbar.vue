@@ -1,6 +1,6 @@
 <template>
   <v-slide-y-transition>
-    <v-card class="toolbar pa-1" elevation="10" v-show="show">
+    <v-card class="toolbar pa-1" elevation="10" v-show="show || fixed">
       <div>
         <v-btn icon large @click="back" color="primary">
           <v-icon>mdi-arrow-u-left-bottom</v-icon>
@@ -20,9 +20,7 @@
         />
       </div>
       <div>
-        <v-btn icon large>
-          <v-icon>mdi-cog</v-icon>
-        </v-btn>
+        <BookReaderToolbarSettings @toggleMenu="onToggleSettingsMenu" />
       </div>
     </v-card>
   </v-slide-y-transition>
@@ -30,8 +28,10 @@
 
 <script>
 import debounce from "lodash.debounce"
+import BookReaderToolbarSettings from "./BookReaderToolbarSettings.vue"
 
 export default {
+  components: { BookReaderToolbarSettings },
   props: {
     folderInfo: Object,
     show: Boolean,
@@ -42,6 +42,7 @@ export default {
   data() {
     return {
       page: this.currentPage,
+      fixed: this.show,
     }
   },
 
@@ -53,6 +54,11 @@ export default {
     onSlide: debounce(function () {
       this.$emit("showPage", this.page - 1)
     }, 300),
+
+    //設定メニューが開かれている間はツールバーを固定する
+    onToggleSettingsMenu(bool) {
+      this.fixed = bool
+    },
   },
 
   watch: {

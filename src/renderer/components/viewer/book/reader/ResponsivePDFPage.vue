@@ -57,7 +57,7 @@ export default {
 
     onResize: debounce(async function () {
       await this.renderPage()
-    }, 300),
+    }, 100),
   },
 
   async mounted() {
