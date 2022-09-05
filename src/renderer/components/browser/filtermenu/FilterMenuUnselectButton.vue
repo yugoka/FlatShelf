@@ -2,6 +2,7 @@
   <v-slide-x-reverse-transition>
     <v-chip
       v-show="show"
+      class="chip"
       small
       label
       outlined
@@ -27,3 +28,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.chip {
+  min-width: 100px;
+}
+</style>

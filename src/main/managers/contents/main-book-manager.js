@@ -2,6 +2,7 @@
 // ブックファイルのCRUD
 //------------------------------------
 const { Content } = require("../../db/models/content")
+const { config } = require("../main-config-manager")
 const { WORKING_SPACE } = require("../../initializers/global-settings")
 const fs = require("fs")
 const path = require("path")
@@ -131,11 +132,15 @@ class BookManager {
   }
 
   //------------------------------------
-  // ビューワーで今開いているフォルダのデータを取得
-  // ちょっと煩雑なので修正の余地あり
-  //  第一引数は現在開いているフォルダ, 第二引数はそのコンテンツのルートフォルダ
+  // ビューワーで対象フォルダのデータを取得
+  // とんでもなく読み辛いのでそのうち修正したい
+  // 第一引数は現在開いているフォルダ, 第二引数はそのブックのルートフォルダ
   //------------------------------------
-  async getBookFolderData(directory, rootDirectory, getChildInfo = true) {
+  async getBookFolderData(
+    directory,
+    rootDirectory,
+    { getChildInfo = true, back = false } = {}
+  ) {
     const allDirs = await fs.promises.readdir(directory, {
       withFileTypes: true,
     })
@@ -162,19 +167,43 @@ class BookManager {
 
     const folders = allDirs.filter((dirent) => dirent.isDirectory())
 
+    //親フォルダの場合
     if (getChildInfo) {
+      //スキップ対象のフォルダなら１階層分次に行ってやりなおし
+      if (
+        this.isSkippedFolder(
+          folders.length,
+          nonThumbnailImages.length,
+          pdfs.length
+        )
+      ) {
+        const currentFolder = path.join(directory, folders[0].name)
+        //戻る方面の場合
+        if (back) {
+          return this.backDirectory(
+            rootDirectory,
+            path.resolve(currentFolder, "../")
+          )
+        } else {
+          return this.getBookFolderData(
+            currentFolder,
+            rootDirectory,
+            getChildInfo
+          )
+        }
+      }
+
       //子フォルダ直下の画像数, PDF数, フォルダ数をカウント
       const childFoldersInfo = []
       for await (const folder of folders) {
         const info = await this.getBookFolderData(
           path.join(directory, folder.name),
           rootDirectory,
-          false
+          { getChildInfo: false }
         )
         childFoldersInfo.push(info)
       }
 
-      //親フォルダの場合
       return {
         dir: directory,
         name: path.basename(directory),
@@ -201,12 +230,16 @@ class BookManager {
   // ビューワーでフォルダー階層を1個上に戻す
   //------------------------------------
   async backDirectory(root, current) {
+    if (path.relative(root, current) === "") {
+      return false
+    }
+
     //何らかの原因でサブフォルダではない場所から戻ろうとした場合、表示をrootに戻す
     if (!this.checkSubDirectory(root, current)) {
       return await this.getBookFolderData(root, root)
     } else {
       const target = path.resolve(current, "../")
-      return await this.getBookFolderData(target, root)
+      return await this.getBookFolderData(target, root, { back: true })
     }
   }
 
@@ -238,8 +271,6 @@ class BookManager {
 
       await Promise.all(promises)
 
-      console.log("done")
-
       return true
     } catch (e) {
       log.error(`[bookImport] Error on pdf parse: ${e}`)
@@ -262,6 +293,16 @@ class BookManager {
   //------------------------------------
   isPDF(dirent) {
     return path.extname(dirent.name).toLowerCase() === ".pdf"
+  }
+
+  //------------------------------------
+  // スキップ対象のフォルダかどうかを判定
+  //------------------------------------
+  isSkippedFolder(folderCount, imagesCount, pdfCount) {
+    const skipBlankFolder = config.get("renderer.viewer.book.skipBlankFolder")
+    return (
+      skipBlankFolder && folderCount == 1 && imagesCount == 0 && pdfCount == 0
+    )
   }
 }
 

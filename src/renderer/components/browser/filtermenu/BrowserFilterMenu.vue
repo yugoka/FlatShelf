@@ -4,21 +4,24 @@
     height="30"
     v-show="visible"
     rounded
+    ref="toolbar"
   >
-    <FilterMenuTagPicker
-      class="me-2"
-      :viewContext="viewContext"
-      v-if="visible"
-    />
-    <FilterMenuFolderSelector
-      class="me-2"
-      :folderID="viewContext.folder"
-      v-if="visible"
-    />
+    <v-slide-group show-arrows class="slider">
+      <FilterMenuTagPicker
+        class="me-2"
+        :viewContext="viewContext"
+        v-if="visible"
+      />
+      <FilterMenuFolderSelector
+        class="me-2"
+        :folderID="viewContext.folder"
+        v-if="visible"
+      />
 
-    <v-spacer />
+      <v-spacer />
 
-    <FilterMenuUnselectButton @click="unselectContents" :show="editMode" />
+      <FilterMenuUnselectButton @click="unselectContents" :show="editMode" />
+    </v-slide-group>
   </v-toolbar>
 </template>
 
@@ -62,4 +65,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.slider {
+  width: 100%;
+}
+</style>

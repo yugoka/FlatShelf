@@ -1,11 +1,6 @@
 <template>
   <div class="book-viewer">
-    <BookFolderBackButton
-      v-if="!viewMode"
-      @click="back"
-      :highlight="folderInfo.isSubDirectory"
-      class="mt-10"
-    />
+    <BookFolderBackButton v-if="!viewMode" @click="back" class="mt-10" />
 
     <BookReader
       ref="reader"
@@ -94,17 +89,24 @@ export default {
         this.viewMode = false
         return
       }
-
       //ブック内最上層フォルダから戻ろうとした場合
       if (this.folderInfo.dir === this.content.folderPath) {
         this.$search.redirect()
         return
       }
 
-      this.folderInfo = await window.ipc.bookFolderBack(
+      //戻った先のフォルダ情報。これ以上戻れないならfalseが帰ってくる
+      const backFolder = await window.ipc.bookFolderBack(
         this.content.folderPath,
         this.folderInfo.dir
       )
+
+      //戻った先がスキップフォルダを含めて最下層だった場合
+      if (backFolder === false) {
+        this.$search.redirect()
+      } else {
+        this.folderInfo = backFolder
+      }
     },
 
     //フォルダ閲覧モードに切り替える

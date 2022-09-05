@@ -96,30 +96,4 @@ html {
   flex-grow: 0;
   flex-shrink: 0;
 }
-
-#main .slide-enter-active,
-#main .slide-leave-active {
-  max-width: 100%;
-  transition: all 0.3s ease-out;
-}
-
-#main .slide-enter-to {
-  position: absolute;
-  right: 0;
-}
-
-#main .slide-enter {
-  position: absolute;
-  right: -100%;
-}
-
-#main .slide-leave-to {
-  position: absolute;
-  left: -100%;
-}
-
-#main .slide-leave {
-  position: absolute;
-  left: 0;
-}
 </style>
