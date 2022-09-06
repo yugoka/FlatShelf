@@ -5,7 +5,14 @@
         {{ task.message }}
       </div>
 
-      <v-progress-linear height="3" class="progress-bar" value="100" indeterminate />
+      <v-progress-linear
+        height="3"
+        class="progress-bar"
+        :value="task.progress"
+        :indeterminate="indeterminate"
+        :stream="!indeterminate"
+        buffer-value="0"
+      />
     </v-card>
   </v-expand-transition>
 </template>
@@ -22,7 +29,11 @@ export default {
     task() {
       return this.$store.state.task
     },
-  }
+
+    indeterminate() {
+      return this.task.progress === null || this.task.progress === undefined
+    },
+  },
 }
 </script>
 

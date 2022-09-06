@@ -20,7 +20,6 @@ const imageFileTypes = [
   "image/jpeg",
   "image/webp",
   "image/gif",
-  "image/bmp",
 ]
 
 class BookManager {

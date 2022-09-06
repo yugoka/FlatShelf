@@ -2,6 +2,7 @@ const { ipcMain, app } = require("electron")
 const { config } = require("../managers/main-config-manager")
 const { folders } = require("../managers/folders/main-folders-manager")
 const { contents } = require("../managers/contents/main-contents-manager")
+const { scraping } = require("../managers/contents/contents-scraping")
 const { tags } = require("../managers/tags/main-tags-manager")
 const { books } = require("../managers/contents/main-book-manager")
 const { executeSearch } = require("../managers/search/main-search-manager")
@@ -60,6 +61,11 @@ export const registerIpcHandlers = ({ mainWindow }) => {
   //コンテンツ削除
   ipcMain.handle("delete-content", (event, { data }) => {
     return contents.delete(data)
+  })
+
+  //コンテンツ情報のスクレイピング
+  ipcMain.handle("add-scraping-task", (event, { contentIDs }) => {
+    return scraping.addTask(contentIDs)
   })
 
   //------------------------------------
@@ -148,9 +154,12 @@ export const registerIpcHandlers = ({ mainWindow }) => {
     return books.getBookFolderData(directory, root)
   })
 
-  ipcMain.handle("book-folder-back", (event, { rootDirectory, currentDirectory }) => {
-    return books.backDirectory(rootDirectory, currentDirectory)
-  })
+  ipcMain.handle(
+    "book-folder-back",
+    (event, { rootDirectory, currentDirectory }) => {
+      return books.backDirectory(rootDirectory, currentDirectory)
+    }
+  )
 
   //------------------------------------
   // 片道通信：レンダラー→メイン
@@ -175,7 +184,6 @@ export const registerIpcHandlers = ({ mainWindow }) => {
       mainWindow.maximize()
     }
   })
-
 
   //------------------------------------
   // 片道通信：メイン→レンダラー

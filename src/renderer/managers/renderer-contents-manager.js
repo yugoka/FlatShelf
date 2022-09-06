@@ -12,14 +12,18 @@ class RendererContentsManager {
     }
   }
 
+  //------------------------------------
+  //コンテンツ作成
+  //------------------------------------
   async create(data) {
     try {
       store.commit("setTask", {
+        id: "create",
         message: `${data.files.length}件のファイルを追加中...`,
       })
 
       //ipc送信時の注意
-      //1. FilesはmapできないのでArrayにする。
+      //1. FilesオブジェクトはmapできないのでArrayに変換する。
       //2. Fileは各情報がprototypeにあるので改めてオブジェクトを作る
       const files = Array.from(data.files).map((file) => {
         return {
@@ -29,6 +33,8 @@ class RendererContentsManager {
           size: file.size,
         }
       })
+
+      //コンテンツを新規作成
       const result = await window.ipc.createContents({
         files,
         folderID: data.folderID || 1,
@@ -36,35 +42,40 @@ class RendererContentsManager {
 
       //browserをリロードする
       window.dispatchEvent(this.events.reloadContents)
-
       //保存したコンテンツを編集する
       store.dispatch("setSelectedItems", result)
-
       store.commit("setTask", null)
 
-      const successCount = result.filter((r) => r != null).length
-      this.createdNotice(successCount, data.files.length)
+      //正常に登録できたコンテンツ
+      const success = result.filter((r) => r != null)
+      this.createdNotice(success.length, data.files.length)
 
-      return result
+      await this.addScrapingTask(success)
     } catch (e) {
       console.error(e)
       store.commit("setTask", null)
     }
   }
 
+  //------------------------------------
   //search.executeへのエイリアス
+  //------------------------------------
   async search(query) {
     const result = await searchManager.execute(query)
     return result
   }
 
+  //------------------------------------
+  //IDからコンテンツ情報を取得
+  //------------------------------------
   async getData(contentIDs) {
     const result = await this.search({ contentIDs })
     return result
   }
-
+  //------------------------------------
   //指定されたコンテンツで、columnsカラムの値が全て共通するかどうかを調べる。(共通する場合はその値、共通しない場合はnull)
   //columns = ["name", "author"]の場合、{ name: null, author: '葛飾北斎' } みたいに帰ってくる
+  //------------------------------------
   async checkCommonValues(contentIDs, columns) {
     if (!contentIDs.length || !columns.length) return
     const result = await window.ipc.checkContentCommonValues({
@@ -74,6 +85,9 @@ class RendererContentsManager {
     return result
   }
 
+  //------------------------------------
+  // コンテンツ更新
+  //------------------------------------
   async update(IDs, values) {
     if (!values || !IDs) return
     const result = await window.ipc.updateContent({
@@ -85,6 +99,9 @@ class RendererContentsManager {
     return result
   }
 
+  //------------------------------------
+  // コンテンツ削除
+  //------------------------------------
   async delete(IDs) {
     if (!IDs) return
     const result = await window.ipc.deleteContent(IDs)
@@ -93,6 +110,9 @@ class RendererContentsManager {
     return result
   }
 
+  //------------------------------------
+  // サムネイルのパスを取得する
+  //------------------------------------
   getThumbnail(content, size = "medium") {
     if (size === "small" || size === "s") {
       return `file://${content.folderPath}/${content.thumbnailSmall}`
@@ -101,6 +121,9 @@ class RendererContentsManager {
     }
   }
 
+  //------------------------------------
+  // 作成時の通知
+  //------------------------------------
   createdNotice(successCount, length) {
     //通知を表示する
     let noticeMessage
@@ -122,6 +145,9 @@ class RendererContentsManager {
     })
   }
 
+  //------------------------------------
+  // 閲覧画面へ移動
+  //------------------------------------
   view(contentID, contentIndex = null) {
     const index =
       contentIndex === null
@@ -129,6 +155,13 @@ class RendererContentsManager {
         : contentIndex
 
     router.push({ name: "View", params: { contentID, index } })
+  }
+
+  //------------------------------------
+  // コンテンツ情報をスクレイピングする
+  //------------------------------------
+  async addScrapingTask(contentIDs) {
+    await window.ipc.addScrapingTask(contentIDs)
   }
 }
 

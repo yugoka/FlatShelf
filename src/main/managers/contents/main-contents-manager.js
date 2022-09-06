@@ -12,10 +12,8 @@ const imageFileTypes = [
   "image/jpeg",
   "image/webp",
   "image/gif",
-  "image/bmp",
 ]
 const bookFileTypes = ["application/zip", "application/x-zip-compressed"]
-const { performance } = require("perf_hooks")
 
 class ContentsManager {
   async createMany(data) {

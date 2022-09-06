@@ -14,7 +14,6 @@ class TagsManager {
   //------------------------------------
   async getTagsByContentIDs(contentIDs) {
     if (!Array.isArray(contentIDs) && typeof contentIDs != "number") return []
-    console.log(contentIDs)
 
     if (typeof contentIDs === "number") {
       const result = await this.getContentTags({

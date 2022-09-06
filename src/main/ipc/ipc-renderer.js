@@ -1,4 +1,5 @@
 const { contextBridge, ipcRenderer } = require("electron")
+const { async } = require("node-stream-zip")
 
 //------------------------------------
 // プリロード設定
@@ -54,6 +55,11 @@ contextBridge.exposeInMainWorld("ipc", {
   //コンテンツ削除
   deleteContent: async (data) => {
     return await ipcRenderer.invoke("delete-content", { data })
+  },
+
+  //コンテンツ情報のスクレイピング
+  addScrapingTask: async (contentIDs) => {
+    return await ipcRenderer.invoke("add-scraping-task", { contentIDs })
   },
 
   //------------------------------------
@@ -129,7 +135,10 @@ contextBridge.exposeInMainWorld("ipc", {
   },
 
   bookFolderBack: async (rootDirectory, currentDirectory) => {
-    return await ipcRenderer.invoke("book-folder-back", { rootDirectory, currentDirectory })
+    return await ipcRenderer.invoke("book-folder-back", {
+      rootDirectory,
+      currentDirectory,
+    })
   },
 
   //------------------------------------
