@@ -2,26 +2,26 @@
   <v-btn
     icon
     large
-    @click="back"
+    @click="click"
     fixed
     class="button"
-    :color="highlight ? 'primary' : null"
+    :color="editMode ? 'primary' : null"
   >
-    <v-icon>mdi-arrow-u-left-bottom</v-icon>
+    <v-icon>mdi-pencil</v-icon>
   </v-btn>
 </template>
 
 <script>
 export default {
-  props: {
-    highlight: {
-      type: Boolean,
-      default: false,
+  methods: {
+    click() {
+      this.$emit("click")
     },
   },
-  methods: {
-    back() {
-      this.$emit("click")
+
+  computed: {
+    editMode() {
+      return this.$store.state.edit.editMode
     },
   },
 }
@@ -29,6 +29,6 @@ export default {
 
 <style scoped>
 .button {
-  margin-top: 40px;
+  margin-top: 80px;
 }
 </style>

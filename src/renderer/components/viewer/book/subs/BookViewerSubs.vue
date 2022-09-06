@@ -1,11 +1,11 @@
 <template>
-  <div v-if="Array.isArray(folders) && folders.length">
+  <div v-if="visible">
     <v-expansion-panels v-model="panel" class="folders-wrapper pa-2">
       <v-expansion-panel>
         <v-expansion-panel-header>
           <span>
             <v-icon class="me-1"> mdi-folder </v-icon>
-            サブフォルダ
+            サブアイテム
           </span>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -49,6 +49,14 @@ export default {
     },
     pdfs() {
       return this.folderInfo.pdfs
+    },
+
+    //サブアイテム一覧を表示するかどうか
+    visible() {
+      return (
+        (Array.isArray(this.folders) && this.folders.length) ||
+        (Array.isArray(this.pdfs) && this.pdfs.length)
+      )
     },
   },
   methods: {

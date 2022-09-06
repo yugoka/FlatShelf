@@ -5,13 +5,32 @@
       <div class="go-prev" @click="prev" />
 
       <v-row no-gutters>
-        <v-col :cols="12 / pageSpread" v-for="page in viewPage" :key="page">
-          <div class="image-wrapper" v-if="page != -1">
+        <v-col cols="6">
+          <div
+            class="image-wrapper"
+            v-if="viewPages[0] != undefined && viewPages[0] != -1"
+          >
             <BookReaderPage
               :book="book"
               :isPDF="isPDF"
               :pdf="pdf"
-              :page="page"
+              :page="viewPages[0]"
+              pagePosition="left"
+            />
+          </div>
+        </v-col>
+
+        <v-col cols="6">
+          <div
+            class="image-wrapper"
+            v-if="viewPages[1] != undefined && viewPages[1] != -1"
+          >
+            <BookReaderPage
+              :book="book"
+              :isPDF="isPDF"
+              :pdf="pdf"
+              :page="viewPages[1]"
+              pagePosition="right"
             />
           </div>
         </v-col>
@@ -37,6 +56,7 @@ export default {
   data() {
     return {
       //一度に表示するページ数
+      //現状ほぼ意味ない定数
       pageSpread: 2,
     }
   },
@@ -119,7 +139,7 @@ export default {
     },
 
     //閲覧ページ
-    viewPage() {
+    viewPages() {
       return this.currentPages.slice().reverse()
     },
   },
@@ -149,6 +169,17 @@ export default {
         this.$emit("setPage", newPage)
       }
     },
+
+    //右ページか左ページか
+    pagePosition(page) {
+      const right = this.pageInversion ? page % 2 == 0 : page % 2 != 0
+
+      if (right) {
+        return "right"
+      } else {
+        return "left"
+      }
+    },
   },
 
   created() {},
@@ -157,7 +188,7 @@ export default {
 
 <style scoped>
 .reader-wrapper {
-  height: 100%;
+  height: calc(100% - 30px);
   display: flex;
   flex-direction: column;
   justify-content: center;

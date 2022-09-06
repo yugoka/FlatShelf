@@ -1,6 +1,7 @@
 <template>
   <div class="book-viewer">
-    <BookFolderBackButton v-if="!viewMode" @click="back" class="mt-10" />
+    <BookFolderBackButton v-if="!viewMode" @click="back" />
+    <BookEditButton v-if="!viewMode" @click="toggleEditMode" />
 
     <BookReader
       ref="reader"
@@ -41,6 +42,7 @@ import BookViewerThumbnails from "./BookViewerThumbnails.vue"
 import BookFolderBackButton from "./BookFolderBackButton.vue"
 import BookTop from "./BookTop.vue"
 import BookReader from "./reader/BookReader.vue"
+import BookEditButton from "./BookEditButton.vue"
 
 export default {
   name: "book-viewer",
@@ -54,6 +56,7 @@ export default {
     BookFolderBackButton,
     BookTop,
     BookReader,
+    BookEditButton,
   },
 
   data() {
@@ -106,6 +109,15 @@ export default {
         this.$search.redirect()
       } else {
         this.folderInfo = backFolder
+      }
+    },
+
+    //編集モードの切り替え
+    toggleEditMode() {
+      if (!this.$store.state.edit.editMode) {
+        this.$store.commit("setSelectedItems", [this.content])
+      } else {
+        this.$store.dispatch("endEditMode")
       }
     },
 

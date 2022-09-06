@@ -28,7 +28,7 @@
 
     <v-col cols="9" sm="7" md="6" lg="5" v-if="imageExists">
       <v-card @click="view" outlined>
-        <v-img class="rounded" :src="topImage" />
+        <img class="image rounded" :src="topImage" />
       </v-card>
     </v-col>
   </v-row>
@@ -80,5 +80,9 @@ export default {
   flex-direction: column;
   justify-content: center;
   min-height: 100px;
+}
+
+.image {
+  width: 100%;
 }
 </style>

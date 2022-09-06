@@ -1,24 +1,18 @@
 <template>
-    <v-btn
-      class="clickable"
-      height="30"
-      tile
-      text
-      :color="color"
-    >
-      <v-icon>{{icon}}</v-icon>
-    </v-btn>
+  <v-btn class="clickable" height="30" tile text :color="color">
+    <v-icon small>{{ icon }}</v-icon>
+  </v-btn>
 </template>
 
 <script>
-  export default {
-    name: 'SystemButton',
+export default {
+  name: "SystemButton",
 
-    props: {
-      color: String,
-      icon: String
-    },
-  }
+  props: {
+    color: String,
+    icon: String,
+  },
+}
 </script>
 
 <style scoped>

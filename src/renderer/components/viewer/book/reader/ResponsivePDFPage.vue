@@ -52,12 +52,13 @@ export default {
         transform: transform,
         viewport: viewport,
       }
+
       await this.currentPage.render(renderContext)
     },
 
     onResize: debounce(async function () {
       await this.renderPage()
-    }, 100),
+    }, 300),
   },
 
   async mounted() {

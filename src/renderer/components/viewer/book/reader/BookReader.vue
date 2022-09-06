@@ -30,7 +30,8 @@
 
 <script>
 import * as pdfjs from "pdfjs-dist"
-pdfjs.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry")
+import * as pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry"
+pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 import BookReaderSpread from "./BookReaderSpread.vue"
 import BookReaderToolbar from "./toolbar/BookReaderToolbar.vue"
 import debounce from "lodash.debounce"

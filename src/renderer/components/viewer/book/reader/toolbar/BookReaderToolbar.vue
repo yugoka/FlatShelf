@@ -2,6 +2,9 @@
   <v-slide-y-transition>
     <v-card class="toolbar pa-1" elevation="10" v-show="show || fixed">
       <div>
+        <v-btn icon large @click="endView" color="primary">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
         <v-btn icon large @click="back" color="primary">
           <v-icon>mdi-arrow-u-left-bottom</v-icon>
         </v-btn>
@@ -49,6 +52,11 @@ export default {
   methods: {
     back() {
       this.$emit("back")
+    },
+
+    endView() {
+      this.$store.commit("toggleSideMenu", true)
+      this.$search.redirect()
     },
 
     onSlide: debounce(function () {

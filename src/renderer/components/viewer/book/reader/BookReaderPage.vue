@@ -1,7 +1,12 @@
 <template>
-  <div v-if="ready" class="img-wrapper">
+  <div class="page-wrapper">
     <ResponsivePDFPage v-if="isPDF" :pdf="pdf" :pageNum="page + 1" />
-    <img v-else :src="`file://${book.images[page].dir}`" class="img" />
+    <img
+      v-else
+      :src="`file://${book.images[page].dir}`"
+      class="img"
+      :class="pagePosition"
+    />
   </div>
 </template>
 
@@ -18,22 +23,29 @@ export default {
     page: Number,
     isPDF: Boolean,
     pdf: Object,
+    pagePosition: String,
   },
 
-  computed: {
-    ready() {
-      return this.book && ((this.isPDF && this.pdf) || !this.isPDF)
-    },
-  },
+  computed: {},
 }
 </script>
 
 <style scoped>
-.img-wrapper {
+.page-wrapper {
+  height: 100%;
   width: 100%;
 }
 
 .img {
   width: 100%;
+  height: calc(100vh - 50px);
+  object-fit: contain;
+}
+
+.img.left {
+  object-position: right;
+}
+.img.right {
+  object-position: left;
 }
 </style>
