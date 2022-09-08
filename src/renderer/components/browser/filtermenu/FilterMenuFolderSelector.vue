@@ -4,6 +4,7 @@
       :folderID="folderID"
       @select="onSelect"
       @unselect="onUnselect"
+      highlight
     />
   </div>
 </template>

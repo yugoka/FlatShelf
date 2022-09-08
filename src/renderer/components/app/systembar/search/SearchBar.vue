@@ -17,7 +17,7 @@
             v-on="{ ...tooltip, ...menu }"
           >
             <div class="search-chip-text-wrapper">
-              <v-icon>mdi-magnify</v-icon>
+              <v-icon small>mdi-magnify</v-icon>
               {{ context.word ? context.word : "検索" }}
             </div>
             <v-btn v-show="context.word" icon x-small @click.stop="resetSearch">

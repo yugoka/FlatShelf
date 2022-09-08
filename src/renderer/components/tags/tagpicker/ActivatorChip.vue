@@ -54,6 +54,7 @@ export default {
 .picker {
   display: flex;
   max-width: 250px;
+  cursor: pointer;
 }
 .picker-icon {
   flex-shrink: 0;

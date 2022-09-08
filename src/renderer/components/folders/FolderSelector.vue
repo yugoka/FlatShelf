@@ -8,7 +8,7 @@
       <template v-slot:activator="{ on: menu, attrs }">
         <v-tooltip
           bottom
-          open-delay="300"
+          open-delay="700"
           :disabled="isMenuOpen || disableToolTip"
         >
           <template v-slot:activator="{ on: tooltip }">
@@ -22,9 +22,17 @@
               ripple
               @click="show"
             >
-              <v-icon small class="selector-icon ms-1 me-1"
-                >mdi-folder-outline</v-icon
+              <v-icon
+                small
+                class="selector-icon ms-1 me-1"
+                :color="highlight && isFolderSelected ? 'primary' : ''"
               >
+                {{
+                  highlight && isFolderSelected
+                    ? "mdi-folder"
+                    : "mdi-folder-outline"
+                }}
+              </v-icon>
 
               <div class="selector-text">
                 {{ isFolderSelected ? folder.name : "フォルダを選択" }}
@@ -75,6 +83,10 @@ export default {
   components: { Folders },
   props: {
     folderID: Number,
+    highlight: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -128,6 +140,7 @@ export default {
 .selector {
   display: flex;
   max-width: 200px;
+  cursor: pointer;
 }
 
 .selector-text {
