@@ -1,5 +1,4 @@
 const { contextBridge, ipcRenderer } = require("electron")
-const { async } = require("node-stream-zip")
 
 //------------------------------------
 // プリロード設定

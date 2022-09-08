@@ -69,7 +69,7 @@ class RendererContentsManager {
   //IDからコンテンツ情報を取得
   //------------------------------------
   async getData(contentIDs) {
-    const result = await this.search({ contentIDs })
+    const result = await searchManager.execute({ contentIDs })
     return result
   }
   //------------------------------------

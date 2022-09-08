@@ -1,6 +1,5 @@
 const fs = require("fs")
 
-
 //YYYY-MM-DD-mm-ss-msms方式で日時を出力
 export const getDate = () => {
   const date = new Date()
@@ -27,9 +26,8 @@ export const getDate = () => {
 //------------------------------------
 export const deleteFolder = async (target) => {
   try {
-    await fs.promises.rmdir(target, { recursive: true })
-  } catch (e) {
-  }
+    await fs.promises.rm(target, { recursive: true })
+  } catch (e) {}
 }
 
 export const deleteFile = async (target) => {
@@ -39,4 +37,3 @@ export const deleteFile = async (target) => {
     console.log(e)
   }
 }
-

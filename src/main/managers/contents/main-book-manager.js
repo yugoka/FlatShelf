@@ -12,6 +12,7 @@ const { thumbnailGenerator } = require("./thumbnail.js")
 const { deleteFolder } = require("./contents-manager-util")
 const StreamZip = require("node-stream-zip")
 const { getPDFThumbnail } = require("./pdf-parser")
+const chardet = require("chardet")
 
 //定数として分離したい
 const imageFileTypes = [
@@ -27,17 +28,15 @@ class BookManager {
   // ブック保存
   //------------------------------------
   async create(data) {
+    //保存ディレクトリを生成
+    //catchで使いたいのでtryの外に出してる
+    const fileUUID = UUID()
+    const targetDirectory = path.join(WORKING_SPACE, "contents/books", fileUUID)
+
     try {
       const file = data.fileData
       const fileName = file.name
       const filePath = file.path
-      //保存ディレクトリを生成
-      const fileUUID = UUID()
-      const targetDirectory = path.join(
-        WORKING_SPACE,
-        "contents/books",
-        fileUUID
-      )
       const type = "book"
 
       //コンテンツ本体ファイルを複製
@@ -48,10 +47,12 @@ class BookManager {
       await fs.promises.mkdir(targetDirectory, { recursive: true })
 
       //zipファイルを読み込む
+      //Todo: utf-8にも対応したい
       const zip = new StreamZip.async({
         file: filePath,
         nameEncoding: "shift-jis",
       })
+
       const fileCount = await zip.extract(null, targetDirectory)
       log.info(`[BookImport] Extracted ${fileCount} files`)
       await zip.close()
@@ -67,7 +68,7 @@ class BookManager {
 
       //zipを開いた結果画像が無かった場合
       if (!fileCount || !imageFiles.length) {
-        //await deleteFolder(targetDirectory)
+        await deleteFolder(targetDirectory)
         return null
       }
 
@@ -91,8 +92,8 @@ class BookManager {
       })
       return newContent.get({ plain: true })
     } catch (e) {
-      log.error(e)
-      await this.deleteFolder(targetDirectory)
+      log.error(`[BookImport]${e}`)
+      //await deleteFolder(targetDirectory)
       return null
     }
   }
