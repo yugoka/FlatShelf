@@ -39,7 +39,6 @@ import layoutManager from "./scripts/layout-manager"
 import CardDragGhost from "./cards/CardDragGhost.vue"
 import BeforeSearchContents from "./BeforeSearchContents.vue"
 import ItemNotFound from "./ItemNotFound.vue"
-import { throws } from "assert"
 
 export default {
   name: "SearchContents",
@@ -174,6 +173,9 @@ export default {
       this.scrollerHeight = scrollerRect.height
     },
 
+    //------------------------------------
+    // スクロール位置に対して描画したいカードを返す
+    //------------------------------------
     getVisibleCards() {
       if (!this.layouts) {
         this.visibleCards = []
@@ -183,9 +185,38 @@ export default {
       const maxScrollTop =
         this.scrollTop + this.scrollerHeight + this.buffer - this.prependHeight
 
-      this.visibleCards = this.layouts.boxes.filter((box) => {
-        return minScrollTop < box.top && box.top < maxScrollTop
-      })
+      const maxIndex = this.layouts.boxes.length - 1
+
+      //最小indexを探索
+      const lowIndex =
+        this.visibleCardBinarySearch(minScrollTop, 0, maxIndex) - 1
+      //最大indexを探索
+      const highIndex = this.visibleCardBinarySearch(
+        maxScrollTop,
+        lowIndex,
+        maxIndex
+      )
+
+      this.visibleCards = this.layouts.boxes.slice(lowIndex, highIndex)
+    },
+
+    //------------------------------------
+    // 描画カードの端を二分探索で求める
+    //------------------------------------
+    visibleCardBinarySearch(target, lowIndex, highIndex) {
+      let low = lowIndex
+      let high = highIndex
+
+      while (Math.abs(high - low) > 1) {
+        const center = Math.floor((low + high) / 2)
+        if (this.layouts.boxes[center].top < target) {
+          low = center
+        } else {
+          high = center
+        }
+      }
+
+      return high
     },
 
     //------------------------------------

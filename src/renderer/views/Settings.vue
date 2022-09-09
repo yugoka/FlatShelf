@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="settings-wrapper">
     <BackToSearchButton type="fixed" class="mt-4 ml-2" />
     <v-container>
       <v-row class="pt-1" justify="center">
@@ -10,13 +10,9 @@
             dense
             prepend-inner-icon="mdi-magnify"
             placeholder="設定項目を検索"
-          >
-            <template v-slot:append>
-              <v-btn v-if="searchWord" icon small @click="clearSearch">
-                <v-icon small>mdi-close</v-icon>
-              </v-btn>
-            </template>
-          </v-text-field>
+            class="search-field"
+            clearable
+          />
 
           <SettingsRow
             v-for="data in searchResult"
@@ -90,7 +86,24 @@ export default {
             },
           ],
         },
-        //---ブックビューワー設定---//
+        //---インポート設定---//
+        {
+          id: "separator-import",
+          label: "インポート設定",
+          type: "separator",
+        },
+        {
+          id: "main.import.getBookDataOnImport",
+          label: "同人誌インポート時に販売サイトから情報を取得",
+          type: "switch",
+        },
+        {
+          id: "main.import.getTagOnScraping",
+          label: "同人誌の情報取得時にタグを自動追加",
+          type: "switch",
+        },
+
+        //---ブックビューア設定---//
         {
           id: "separator-viewer-book",
           label: "ブックビューア設定",
@@ -144,4 +157,24 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.settings-wrapper {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.settings-wrapper::-webkit-scrollbar {
+  overflow: visible;
+  width: 8px;
+}
+.settings-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.3);
+  border-radius: 4px;
+}
+
+.search-field {
+  position: sticky;
+  top: 16px;
+  z-index: 2;
+}
+</style>

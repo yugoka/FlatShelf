@@ -42,12 +42,17 @@ class RendererContentsManager {
 
       //正常に登録できたコンテンツ
       const success = result.filter((r) => r != null)
-      this.createdNotice(success.length, data.files.length)
 
-      //ブックの情報をスクレイピングする
-      await this.addScrapingTask(success)
+      //設定がオンならブックの情報をスクレイピングする
+      if (store.state.settings.main.import.getBookDataOnImport) {
+        await this.addScrapingTask(success)
+      }
+
       //browserをリロードする
       window.dispatchEvent(this.events.reloadContents)
+
+      this.createdNotice(success.length, data.files.length)
+
       //保存したコンテンツを編集する
       store.dispatch("setSelectedItems", result)
       store.commit("setTask", null)

@@ -249,7 +249,7 @@ export default {
   opacity: 1;
 }
 #editmenu:hover ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(128, 128, 128, 0.3);
 }
 
 /*サイドメニュー幅調整*/

@@ -20,8 +20,8 @@ const defaults = {
         initiallyOpened: [],
       },
       search: {
-        showItemName: false,
-        itemSize: 150,
+        showItemName: true,
+        itemSize: 200,
         layout: "brick",
         query: {
           includeDecendantFolders: false,
@@ -45,8 +45,9 @@ const defaults = {
       },
       import: {
         //インポート時に同人誌のデータをスクレイピングするかどうか
-        getBookDataOnImport: false,
-        getTagOnScraping: false,
+        getBookDataOnImport: true,
+        //同人誌データ取得時にタグを追加する
+        getTagOnScraping: true,
       },
     },
   },

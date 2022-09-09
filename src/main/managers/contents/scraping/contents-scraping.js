@@ -24,12 +24,9 @@ class ScrapingTaskManager {
   // whileで待機処理書いてるけどあんまり良い実装じゃなさそう
   //------------------------------------
   async addTask(contentIDs) {
-    const contentsData = await executeSearch({ contentIDs })
-    const bookContentsData = contentsData.filter(
-      (content) => content.type === "book"
-    )
+    const contentsData = await executeSearch({ contentIDs, type: "book" })
 
-    for await (const content of bookContentsData) {
+    for await (const content of contentsData) {
       const maxTryCount = 100
       let tryCount = 0
       while (tryCount < maxTryCount) {

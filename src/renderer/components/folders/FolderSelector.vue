@@ -177,7 +177,7 @@ export default {
   width: 4px;
 }
 .card ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(128, 128, 128, 0.3);
   border-radius: 2px;
 }
 </style>
