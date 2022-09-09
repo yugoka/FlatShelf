@@ -43,6 +43,11 @@ const defaults = {
         size: [1200, 900],
         position: [360, 90],
       },
+      import: {
+        //インポート時に同人誌のデータをスクレイピングするかどうか
+        getBookDataOnImport: false,
+        getTagOnScraping: false,
+      },
     },
   },
 }

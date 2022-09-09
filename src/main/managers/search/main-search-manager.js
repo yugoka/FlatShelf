@@ -10,13 +10,17 @@ const log = require("electron-log")
 
 //Searchインスタンスを生成して検索を実行する。
 export const executeSearch = (query) => {
-  const search = new Search(query)
-  return search.execute()
+  try {
+    const search = new Search(query)
+    return search.execute()
+  } catch (e) {
+    log.error(`[contentSearch] ${e}`)
+  }
 }
 
 class Search {
   constructor(query, raw = true) {
-    log.info(`[contentSearch] Creating search instance`)
+    log.info(`[contentSearch] Create search instance`)
 
     this.query = query
 
@@ -208,8 +212,6 @@ class Search {
   // 検索実行
   //------------------------------------
   async execute() {
-    log.info(`[contentSearch] Start searching`)
-
     await this.registerQuerys()
 
     //notFoundフラグが立っている場合(タグ検索ワードを見つけられなかった場合など)は空の配列を結果として返す

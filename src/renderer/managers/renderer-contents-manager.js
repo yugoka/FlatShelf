@@ -40,17 +40,17 @@ class RendererContentsManager {
         folderID: data.folderID || 1,
       })
 
+      //正常に登録できたコンテンツ
+      const success = result.filter((r) => r != null)
+      this.createdNotice(success.length, data.files.length)
+
+      //ブックの情報をスクレイピングする
+      await this.addScrapingTask(success)
       //browserをリロードする
       window.dispatchEvent(this.events.reloadContents)
       //保存したコンテンツを編集する
       store.dispatch("setSelectedItems", result)
       store.commit("setTask", null)
-
-      //正常に登録できたコンテンツ
-      const success = result.filter((r) => r != null)
-      this.createdNotice(success.length, data.files.length)
-
-      await this.addScrapingTask(success)
     } catch (e) {
       console.error(e)
       store.commit("setTask", null)

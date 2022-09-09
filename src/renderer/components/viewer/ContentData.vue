@@ -14,10 +14,11 @@
     </div>
 
     <div v-for="data in datas" :key="data.column" class="mb-2">
-      <div class="text-body-2">{{ data.name }}</div>
-      <div class="caption mb-2">
-        {{ content[data.column] || "未記入" }}
-      </div>
+      <div class="text-subtitle-2">{{ data.name }}</div>
+      <div
+        class="caption mb-2 content-text"
+        v-text="content[data.column] || '未記入'"
+      />
     </div>
 
     <div class="text-body-2 mb-1">フォルダ</div>
@@ -40,6 +41,11 @@ export default {
       tags: [],
       folder: {},
       datas: [
+        {
+          column: "name",
+          name: "タイトル",
+          icon: "mdi-note-text-outline",
+        },
         {
           column: "description",
           name: "説明",
@@ -94,3 +100,10 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.content-text {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+</style>

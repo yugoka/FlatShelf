@@ -87,19 +87,20 @@ class ContentsManager {
   //コンテンツのメタデータを変更
   async update(data) {
     try {
+      log.info(`[contentsUpdate] Update contents, ID:${data.contentIDs}`)
       await Content.update(data.values, {
         where: { contentID: data.contentIDs },
       })
       return true
     } catch (err) {
-      log.error(`[contentUpdate] Error: ${err}`)
+      log.error(`[contentsUpdate] Error: ${err}`)
       return false
     }
   }
 
   async delete(IDs) {
     try {
-      log.info(`[contentDelete] Deleting ${IDs.length} items`)
+      log.info(`[contentDelete] Deleting ${IDs.length ? IDs.length : 1} items`)
       await this.deleteDatas(IDs)
       await Content.destroy({
         where: {
@@ -109,7 +110,7 @@ class ContentsManager {
 
       return true
     } catch (err) {
-      log.error(`[contentDelete] Error: ${err}`)
+      log.error(`[contentsDelete] Error: ${err}`)
       return false
     }
   }
@@ -125,8 +126,8 @@ class ContentsManager {
     })
 
     for await (const content of targetContents) {
-      log.info(`[contentDelete] Deleting ${content.folderPath}`)
-      await fs.rmdir(content.folderPath, { recursive: true })
+      log.info(`[contentsDelete] Deleting ${content.folderPath}`)
+      await fs.rm(content.folderPath, { recursive: true })
     }
   }
 }
