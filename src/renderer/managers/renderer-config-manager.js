@@ -20,7 +20,7 @@ class RendererConfigManager {
       //resultで帰ってきたsettingsでstateを上書きする
       store.commit("setConfig", result)
     } else {
-      console.log(`設定の保存に失敗しました：${key}:${value}`)
+      console.error(`設定の保存に失敗しました：${key}:${value}`)
     }
   }
 

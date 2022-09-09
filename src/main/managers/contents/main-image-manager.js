@@ -32,13 +32,13 @@ class ImageManager {
 
     //ディレクトリを作成
     await fs.mkdir(targetDirectory, { recursive: true })
-    //サムネイルを生成
-    const thumbnail = await thumbnailGenerator.generateAll(
-      file.path,
-      targetDirectory
-    )
     //画像本体をコピー
     await fs.copyFile(file.path, targetFile)
+    //サムネイルを生成
+    const thumbnail = await thumbnailGenerator.generateAll(
+      targetFile,
+      targetDirectory
+    )
 
     //dbにデータを登録する
     const newContent = await Content.create({
@@ -52,7 +52,7 @@ class ImageManager {
       thumbnailAspectRatio: thumbnail.aspectRatio,
       folderID: data.folderID,
     })
-    return newContent.get({plain:true})
+    return newContent.get({ plain: true })
   }
 }
 

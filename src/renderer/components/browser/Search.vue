@@ -119,6 +119,7 @@ export default {
       async handler() {
         await this.loadContents()
         this.setScrollTop(0)
+        console.log("VC")
       },
       deep: true,
     },
@@ -191,11 +192,8 @@ export default {
       const lowIndex =
         this.visibleCardBinarySearch(minScrollTop, 0, maxIndex) - 1
       //最大indexを探索
-      const highIndex = this.visibleCardBinarySearch(
-        maxScrollTop,
-        lowIndex,
-        maxIndex
-      )
+      const highIndex =
+        this.visibleCardBinarySearch(maxScrollTop, lowIndex, maxIndex) + 1
 
       this.visibleCards = this.layouts.boxes.slice(lowIndex, highIndex)
     },

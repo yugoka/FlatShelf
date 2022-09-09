@@ -46,6 +46,10 @@ const defaults = {
       import: {
         //インポート時に同人誌のデータをスクレイピングするかどうか
         getBookDataOnImport: true,
+        //インポート時に編集モードを開く
+        editOnImport: true,
+      },
+      scraping: {
         //同人誌データ取得時にタグを追加する
         getTagOnScraping: true,
       },

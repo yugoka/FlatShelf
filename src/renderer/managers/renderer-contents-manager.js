@@ -53,8 +53,11 @@ class RendererContentsManager {
 
       this.createdNotice(success.length, data.files.length)
 
-      //保存したコンテンツを編集する
-      store.dispatch("setSelectedItems", result)
+      //設定がオンなら保存したコンテンツを編集する
+      if (store.state.settings.main.import.editOnImport) {
+        store.dispatch("setSelectedItems", result)
+      }
+
       store.commit("setTask", null)
     } catch (e) {
       console.error(e)

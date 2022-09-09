@@ -69,6 +69,7 @@ const store = new Vuex.Store({
       state.notice = notice
     },
     mergeContext(state, context) {
+      console.log(context)
       state.viewContext = cloneDeep(merge(state.viewContext, context))
 
       //mergeで配列が統合されてしまうので上書きする。あまり良い実装ではない

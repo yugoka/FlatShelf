@@ -24,14 +24,14 @@ class ThumbnailGenerator {
     const imageNames = {}
 
     for (const size of this.sizes) {
-      imageNames[size.name] = await this.generate(
+      imageNames[size.name] = await this.generate({
         directory,
         imagePath,
         image,
         metadata,
         fit,
-        size
-      )
+        size,
+      })
     }
     return {
       names: imageNames,
@@ -53,7 +53,7 @@ class ThumbnailGenerator {
     }
   }
 
-  async generate(directory, imagePath, image, metadata, fit, size) {
+  async generate({ directory, imagePath, image, metadata, fit, size }) {
     //最小サムネイルサイズを下回る大きさなら元画像をサムネイルにする
     if (
       this.fit != "cover" &&
@@ -91,11 +91,11 @@ class ThumbnailGenerator {
     return `thumbnail-${size}.webp`
   }
 
-//------------------------------------
-// 使うかわかんないけど、古いサムネイルファイルを削除する
-//------------------------------------
+  //------------------------------------
+  // 使うかわかんないけど、古いサムネイルファイルを削除する
+  //------------------------------------
   async deleteOldThumbnailFiles(directory) {
-    const fileNames = this.sizes.map(size => {
+    const fileNames = this.sizes.map((size) => {
       return this.getThumbnailFileName(size.name)
     })
 

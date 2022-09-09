@@ -195,8 +195,6 @@ class Search {
       return { type: { [Op.like]: `%${type}%` } }
     })
 
-    console.log(typeQuery)
-
     //クエリにフォルダ条件を追加する。複数のフォルダ条件がある場合or条件になる
     this.queryAnd.push({ [Op.or]: typeQuery })
   }

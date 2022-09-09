@@ -19,6 +19,7 @@ const poppler = new Poppler(popplerPath)
 //------------------------------------
 export const getPDFThumbnail = async (pdf) => {
   try {
+    log.info(`[pdfParse] Generating thumbnail for ${pdf.name}`)
     //tempフォルダ内にflatshelfフォルダを作成
     await fs.mkdir(path.join(app.getPath("temp"), "flatshelf")).catch(() => {})
 
@@ -30,9 +31,6 @@ export const getPDFThumbnail = async (pdf) => {
       path.dirname(pdf.dir),
       `thumbnail-${pdf.name}.jpg`
     )
-
-    console.log(targetFile)
-    console.log(tempFile)
 
     const options = {
       jpegFile: true,

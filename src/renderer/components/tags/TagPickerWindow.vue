@@ -1,5 +1,5 @@
 <template>
-  <v-card class="card">
+  <v-card class="card" @mouseleave="onMouseLeave">
     <v-text-field
       autofocus
       flat
@@ -86,6 +86,10 @@ export default {
   },
 
   methods: {
+    onMouseLeave() {
+      this.$emit("close")
+    },
+
     onInput: debounce(async function () {
       if (!this.word.length) {
         this.tagSearchResult = []

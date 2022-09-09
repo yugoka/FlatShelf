@@ -33,6 +33,7 @@
         :selectedTags="selectedTags"
         @close="hide"
         @toggle-tag="toggleTag"
+        @mouseleave="hide"
       />
     </v-menu>
   </div>

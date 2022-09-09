@@ -179,14 +179,14 @@ class TagsManager {
       })
 
       await tag[0].addContents(contents)
-      await this.setTimeStamp(tag[0])
+      await this.setTimestamp(tag[0])
 
       return {
         tag: tag[0].dataValues,
         created: tag[1],
       }
     } catch (err) {
-      log.error(err)
+      log.error(`[TagSet] ${err}`)
       return false
     }
   }
@@ -203,6 +203,14 @@ class TagsManager {
     } catch (err) {
       log.error(err)
       return false
+    }
+  }
+
+  async setMany(contentIDs, tagNames) {
+    if (!Array.isArray(contentIDs) || !Array.isArray(tagNames)) return
+
+    for await (const tagName of tagNames) {
+      await this.set(contentIDs, tagName)
     }
   }
 

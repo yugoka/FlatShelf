@@ -93,12 +93,24 @@ export default {
           type: "separator",
         },
         {
+          id: "main.import.editOnImport",
+          label: "インポート時に編集モードを開く",
+          type: "switch",
+        },
+        {
           id: "main.import.getBookDataOnImport",
           label: "同人誌インポート時に販売サイトから情報を取得",
           type: "switch",
         },
+
+        //---情報取得設定---//
         {
-          id: "main.import.getTagOnScraping",
+          id: "separator-scraping",
+          label: "情報取得設定",
+          type: "separator",
+        },
+        {
+          id: "main.scraping.getTagOnScraping",
           label: "同人誌の情報取得時にタグを自動追加",
           type: "switch",
         },

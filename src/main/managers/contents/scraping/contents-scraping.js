@@ -3,6 +3,8 @@
 //------------------------------------
 const { productIDRegex, scrapingWaitTime } = require("./scraping-constants")
 const { executeSearch } = require("../../search/main-search-manager")
+const { config } = require("../../main-config-manager")
+const { tags } = require("../../tags/main-tags-manager")
 const { contents } = require("../main-contents-manager")
 const { setTimeout } = require("timers/promises")
 const log = require("electron-log")
@@ -24,10 +26,12 @@ class ScrapingTaskManager {
   // whileで待機処理書いてるけどあんまり良い実装じゃなさそう
   //------------------------------------
   async addTask(contentIDs) {
-    const contentsData = await executeSearch({ contentIDs, type: "book" })
+    const contentsData = await executeSearch({ contentIDs, types: ["book"] })
 
     for await (const content of contentsData) {
+      //最大何回アクセスを試みるか
       const maxTryCount = 100
+
       let tryCount = 0
       while (tryCount < maxTryCount) {
         tryCount += 1
@@ -64,6 +68,12 @@ class ScrapingTaskManager {
         contentIDs: content.contentID,
         values: result.data,
       })
+
+      //設定がオンならタグを追加する
+      if (config.get("main.scraping.getTagOnScraping")) {
+        tags.setMany([content.contentID], result.tags)
+      }
+
       return true
     } catch (e) {
       log.error(`[BookScraping] ${e}`)
@@ -105,7 +115,7 @@ const getDLSiteData = async (bookName) => {
   const $ = cheerio.load(response.body)
 
   //各種情報を抜き出し
-  const name = $("#work_name").text().trimStart().trimEnd()
+  const name = $("#work_name").text().trim()
   const author = $("#work_maker")
     .find("td")
     .eq(0)
@@ -113,7 +123,10 @@ const getDLSiteData = async (bookName) => {
     .replace(/  +/g, " ")
     .trimStart()
     .trimEnd()
-  const description = $(".work_parts_area").text().trimStart().trimEnd()
+  const description = $(".work_parts_area").text().trim()
+
+  //タグを抜き出し
+  const tags = $(".main_genre").eq(0).text().trim().split(/\s+/)
 
   return {
     data: {
@@ -121,6 +134,7 @@ const getDLSiteData = async (bookName) => {
       author,
       description,
     },
+    tags,
   }
 }
 
@@ -143,9 +157,16 @@ const getFANZAData = async (bookName) => {
   const saleText = $(".productTitle__txt .productTitle__txt--campaign").text()
 
   //各種情報を抜き出し
-  const name = productTitle.replace(saleText, "").trimStart().trimEnd()
+  const name = productTitle.replace(saleText, "").trim()
   const author = $(".circleName__txt").text()
-  const description = $(".summary__txt").text().trimStart().trimEnd()
+  const description = $(".summary__txt").text().trim()
+
+  //タグ抜き出し
+  const tags = $(".informationList__item")
+    .text()
+    .trim()
+    .split(/\s+/)
+    .filter((tag) => tag != "クーポン対象")
 
   return {
     data: {
@@ -153,6 +174,7 @@ const getFANZAData = async (bookName) => {
       author,
       description,
     },
+    tags,
   }
 }
 
