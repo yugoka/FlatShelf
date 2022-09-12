@@ -7,7 +7,10 @@
     color="systemBar"
   >
     <div class="group-wrapper">
-      <span>FlatShelf</span>
+      <span>
+        FlatShelf
+        <v-icon small class="ms-1">mdi-beta</v-icon>
+      </span>
 
       <SideMenuOpenButton class="clickable" />
     </div>
@@ -17,11 +20,11 @@
 
       <SearchBar />
 
-      <Slider />
+      <Slider class="systembar-slider" />
     </div>
 
-    <div>
-      <v-btn icon small @click="openSettings" class="mx-1">
+    <div class="system-button-group">
+      <v-btn icon small @click="openSettings" class="mx-1 clickable">
         <v-icon
           small
           class="mini-button-icon"
@@ -42,7 +45,7 @@
         @click.native="toggleMaximized"
       />
 
-      <SystemButton color="red" icon="mdi-close" @click.native="quitApp" />
+      <SystemButton icon="mdi-close" @click.native="quitApp" />
     </div>
   </v-system-bar>
 </template>
@@ -111,6 +114,7 @@ export default {
   -webkit-app-region: drag;
   display: flex;
   justify-content: space-between;
+  max-width: 100%;
 }
 
 #systembar .clickable {
@@ -124,6 +128,15 @@ export default {
   justify-content: center;
   align-items: center;
   height: 30px;
+  flex-shrink: 1;
+}
+
+#systembar .system-button-group {
+  flex-shrink: 0;
+}
+
+#systembar .systembar-slider {
+  flex-shrink: 1;
 }
 
 #systembar .mini-button-icon {

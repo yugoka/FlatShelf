@@ -26,7 +26,7 @@ class ScrapingTaskManager {
   // whileで待機処理書いてるけどあんまり良い実装じゃなさそう
   //------------------------------------
   async addTask(contentIDs) {
-    const contentsData = await executeSearch({ contentIDs, types: ["book"] })
+    const contentsData = await executeSearch({ contentIDs, type: "book" })
 
     for await (const content of contentsData) {
       //最大何回アクセスを試みるか
@@ -133,7 +133,7 @@ const getDLSiteData = async (bookName) => {
       name,
       author,
       description,
-      productID
+      productID,
     },
     tags,
   }
@@ -174,7 +174,7 @@ const getFANZAData = async (bookName) => {
       name,
       author,
       description,
-      productID
+      productID,
     },
     tags,
   }

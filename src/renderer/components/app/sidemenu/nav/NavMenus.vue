@@ -14,14 +14,28 @@
       <NavItem title="すべて" icon="mdi-home" :context="contexts.all" />
 
       <NavItem
+        title="画像"
+        icon="mdi-image-outline"
+        :context="contexts.images"
+      />
+
+      <NavItem
+        title="ブック"
+        icon="mdi-book-open-variant"
+        :context="contexts.books"
+      />
+
+      <NavItem
         title="未分類"
         icon="mdi-folder-question-outline"
         :context="contexts.noFolder"
       />
 
-      <NavItem title="タグなし" icon="mdi-tag-off-outline" />
-
-      <NavItem title="最近追加" icon="mdi-archive-outline" />
+      <NavItem
+        title="タグなし"
+        icon="mdi-tag-off-outline"
+        :context="contexts.noTags"
+      />
     </v-list-item-group>
   </v-list>
 </template>
@@ -51,8 +65,15 @@ export default {
         noFolder: {
           folder: 1,
         },
-        noTags: {},
-        recent: {},
+        noTags: {
+          noTags: true,
+        },
+        books: {
+          type: "book",
+        },
+        images: {
+          type: "image",
+        },
       },
     }
   },

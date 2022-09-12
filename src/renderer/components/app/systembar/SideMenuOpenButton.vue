@@ -1,16 +1,12 @@
 <template>
-  <v-tooltip 
-    bottom
-    open-delay="300"
-    v-model="showToolTip"
-  >
+  <v-tooltip bottom open-delay="300" v-model="showToolTip">
     <template v-slot:activator="{ on, attrs }">
       <v-btn
         v-show="!isSideMenuShown"
         :class="[
           { 'animate__animated animate__swing': shakeButton },
-          'ms-5', 
-          'me-1'
+          'ms-2',
+          'me-1',
         ]"
         icon
         small
@@ -18,25 +14,18 @@
         v-on="on"
         @click="click"
       >
-        <v-icon 
-          class="button-icon"
-          small
-        >
-          mdi-menu
-        </v-icon>
+        <v-icon class="button-icon" small> mdi-menu </v-icon>
       </v-btn>
     </template>
     <span class="caption">
-      {{hintMessage}}
+      {{ hintMessage }}
     </span>
   </v-tooltip>
 </template>
 
 <script>
-
-
 export default {
-  name: 'SystemBarSideMenuOpenButton',
+  name: "SystemBarSideMenuOpenButton",
 
   data() {
     return {
@@ -50,7 +39,7 @@ export default {
   computed: {
     isSideMenuShown() {
       return this.$store.state.isSideMenuShown
-    }
+    },
   },
 
   methods: {
@@ -64,9 +53,9 @@ export default {
       setTimeout(() => {
         this.showToolTip = false
         this.shakeButton = false
-        setTimeout(() => this.hintMessage = "メニューを開く", 500)
+        setTimeout(() => (this.hintMessage = "メニューを開く"), 500)
       }, 4000)
-    }
+    },
   },
 
   watch: {
@@ -77,9 +66,8 @@ export default {
           this.hint = false
         }, 500)
       }
-    }
-  }
-  
+    },
+  },
 }
 </script>
 

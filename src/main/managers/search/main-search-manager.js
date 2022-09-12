@@ -65,6 +65,7 @@ class Search {
     //↓ここでquery.tagsに条件追加されるので前後関係に注意
     //あんまりいい実装じゃないかも
     await this.registerSearchWords()
+    this.registerNoTags()
     this.registerSearchTags()
     this.registerSearchFolders()
     this.registerSearchTypes()
@@ -168,6 +169,24 @@ class Search {
   }
 
   //------------------------------------
+  // タグなし条件
+  //------------------------------------
+  registerNoTags() {
+    if (!this.query.noTags) return
+    //タグ検索条件の基本オブジェクト
+    console.log("no tag")
+    const tagInclude = {
+      model: Tag,
+      attributes: ["tagID"],
+      through: { attributes: [] },
+    }
+
+    this.queryObject.include.push(tagInclude)
+
+    this.queryObject.having.push(where(fn("COUNT", col("tagID")), 0))
+  }
+
+  //------------------------------------
   // フォルダ条件
   //------------------------------------
   registerSearchFolders() {
@@ -190,8 +209,11 @@ class Search {
   // タイプ条件
   //------------------------------------
   registerSearchTypes() {
-    if (!Array.isArray(this.query.types)) return
-    const typeQuery = this.query.types.map((type) => {
+    if (!this.query.type) return
+    const types = Array.isArray(this.query.type)
+      ? this.query.type
+      : [this.query.type]
+    const typeQuery = types.map((type) => {
       return { type: { [Op.like]: `%${type}%` } }
     })
 

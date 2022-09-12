@@ -1,5 +1,8 @@
 <template>
-  <div v-show="$route.name === 'Search'" class="slider-wrapper">
+  <div
+    v-show="$route.name === 'Search' && $vuetify.breakpoint.width > 700"
+    class="slider-wrapper"
+  >
     <v-slider
       dense
       height="30"
