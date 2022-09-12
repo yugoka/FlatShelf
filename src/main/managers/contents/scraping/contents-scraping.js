@@ -133,6 +133,7 @@ const getDLSiteData = async (bookName) => {
       name,
       author,
       description,
+      productID
     },
     tags,
   }
@@ -173,6 +174,7 @@ const getFANZAData = async (bookName) => {
       name,
       author,
       description,
+      productID
     },
     tags,
   }

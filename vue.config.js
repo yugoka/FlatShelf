@@ -24,7 +24,9 @@ module.exports = {
       //sequelizeをWebpackのバンドル対象から外す
       externals: ["sequelize"],
 
-      extraResources: ["bin/"],
+      builderOptions: {
+        extraResources: ["bin/"],
+      },
     },
   },
 }

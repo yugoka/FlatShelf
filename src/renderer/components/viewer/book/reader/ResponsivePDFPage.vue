@@ -17,7 +17,19 @@ export default {
     return {
       currentPage: null,
       resizeObserver: null,
+      renderContext: null,
     }
+  },
+
+  watch: {
+    async pageNum() {
+      if (this.renderContext) {
+        await this.getPage()
+        await this.renderPage()
+      } else {
+        await this.initPage()
+      }
+    },
   },
 
   methods: {
@@ -26,6 +38,10 @@ export default {
     },
 
     async renderPage() {
+      await this.currentPage.render(this.renderContext)
+    },
+
+    async initPage() {
       //canvas本体のdom要素を取得
       const canvas = this.$refs.canvas
       const canvasWrapper = this.$refs.canvasWrapper
@@ -47,29 +63,27 @@ export default {
       const transform =
         outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null
 
-      const renderContext = {
+      this.renderContext = {
         canvasContext: context,
         transform: transform,
         viewport: viewport,
       }
-
-      await this.currentPage.render(renderContext)
     },
 
     onResize: debounce(async function () {
+      await this.initPage()
       await this.renderPage()
     }, 300),
   },
 
   async mounted() {
-    const canvasWrapper = this.$refs.canvasWrapper
     await this.getPage()
-    await this.renderPage()
+    await this.initPage()
     this.resizeObserver = new ResizeObserver((entries) => {
       this.onResize()
     })
 
-    this.resizeObserver.observe(canvasWrapper)
+    this.resizeObserver.observe(this.$refs.canvasWrapper)
   },
 
   beforeDestroy() {

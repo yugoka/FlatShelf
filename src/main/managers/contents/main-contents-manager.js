@@ -25,7 +25,7 @@ class ContentsManager {
     })
     const result = await Promise.all(promises)
 
-    return result.map((content) => (content ? content.contentID : null))
+    return result
   }
 
   //コンテンツを登録する
@@ -48,11 +48,20 @@ class ContentsManager {
 
       //ファイルタイプがどれにも該当しない or サポートされていないファイルの場合
       log.error(`[fileImport] ${type} is not supported`)
-      return false
+      const message = type
+        ? `${type}形式のファイルはサポートされていません`
+        : `この形式のファイルはサポートされていません`
+      return {
+        status: "fail",
+        message,
+      }
     } catch (err) {
       //登録に失敗した場合
-      log.error(`[fileImport]Error: ${err}`)
-      return false
+      log.error(`[fileImport] ${err}`)
+      return {
+        status: "fail",
+        message: `インポート中にエラーが発生しました： ${err}`,
+      }
     }
   }
 

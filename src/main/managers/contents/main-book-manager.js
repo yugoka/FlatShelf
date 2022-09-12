@@ -69,7 +69,12 @@ class BookManager {
       //zipを開いた結果画像が無かった場合
       if (!fileCount || !imageFiles.length) {
         await deleteFolder(targetDirectory)
-        return null
+        return {
+          status: "fail",
+          message: `${path.extname(
+            fileName
+          )}ファイル内にpdfまたは画像が存在しません`,
+        }
       }
 
       //サムネイルを生成
@@ -90,11 +95,18 @@ class BookManager {
         thumbnailAspectRatio: thumbnail.aspectRatio,
         folderID: data.folderID,
       })
-      return newContent.get({ plain: true })
-    } catch (e) {
-      log.error(`[BookImport]${e}`)
+
+      return {
+        status: "success",
+        content: newContent.get({ plain: true }),
+      }
+    } catch (err) {
+      log.error(`[BookImport]${err}`)
       //await deleteFolder(targetDirectory)
-      return null
+      return {
+        status: "fail",
+        message: `ブックの保存中にエラーが発生しました： ${err}`,
+      }
     }
   }
 

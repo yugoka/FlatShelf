@@ -41,21 +41,22 @@ class RendererContentsManager {
       })
 
       //正常に登録できたコンテンツ
-      const success = result.filter((r) => r != null)
+      const success = result.filter((r) => r.status === "success")
+      const successContentIDs = success.map((r) => r.content.contentID)
 
       //設定がオンならブックの情報をスクレイピングする
       if (store.state.settings.main.import.getBookDataOnImport) {
-        await this.addScrapingTask(success)
+        await this.addScrapingTask(successContentIDs)
       }
 
       //browserをリロードする
       window.dispatchEvent(this.events.reloadContents)
 
-      this.createdNotice(success.length, data.files.length)
+      this.createdNotice(result, success.length)
 
       //設定がオンなら保存したコンテンツを編集する
       if (store.state.settings.main.import.editOnImport) {
-        store.dispatch("setSelectedItems", result)
+        store.dispatch("setSelectedItems", successContentIDs)
       }
 
       store.commit("setTask", null)
@@ -132,16 +133,17 @@ class RendererContentsManager {
   //------------------------------------
   // 作成時の通知
   //------------------------------------
-  createdNotice(successCount, length) {
+  createdNotice(result, successCount) {
+    const length = result.length
     //通知を表示する
     let noticeMessage
     if (length === 1) {
       noticeMessage = successCount
         ? `アイテムの保存が完了しました。`
-        : `アイテムの保存に失敗しました。`
+        : `${result[0].message}`
     } else {
       noticeMessage =
-        successCount - length < 0
+        successCount < length
           ? `${length}件中${
               length - successCount
             }件のアイテムの保存に失敗しました。`
