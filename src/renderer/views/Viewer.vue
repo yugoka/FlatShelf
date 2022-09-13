@@ -52,7 +52,7 @@ export default {
       return {
         next:
           this.$route.params.index !=
-          this.$store.state.searchResultIDs.length - 1,
+          this.$store.state.browser.searchResultIDs.length - 1,
         prev: this.$route.params.index != 0,
       }
     },
@@ -68,7 +68,8 @@ export default {
     //検索上でrelativeIndex分だけ次のアイテムに移動する
     changeContent(relativeIndex) {
       const newContentIndex = this.$route.params.index + relativeIndex
-      const newContentID = this.$store.state.searchResultIDs[newContentIndex]
+      const newContentID =
+        this.$store.state.browser.searchResultIDs[newContentIndex]
 
       if (typeof newContentID != "number") return
 

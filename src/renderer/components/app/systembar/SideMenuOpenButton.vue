@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip bottom open-delay="300" v-model="showToolTip">
+  <v-tooltip bottom open-delay="500" v-model="showToolTip">
     <template v-slot:activator="{ on, attrs }">
       <v-btn
         v-show="!isSideMenuShown"
@@ -40,21 +40,30 @@ export default {
     isSideMenuShown() {
       return this.$store.state.isSideMenuShown
     },
+    disableHint() {
+      return this.$store.state.settings.renderer.tips.openSideMenuAgain
+    },
   },
 
   methods: {
     click() {
       this.$store.dispatch("toggleSideMenu")
+      if (!this.disableHint) {
+        //ヒントを無効化する
+        this.$config.set("renderer.tips.openSideMenuAgain", true)
+      }
     },
     showHint() {
-      this.hintMessage = "もう一度メニューを開く"
-      this.showToolTip = true
-      this.shakeButton = true
-      setTimeout(() => {
-        this.showToolTip = false
-        this.shakeButton = false
-        setTimeout(() => (this.hintMessage = "メニューを開く"), 500)
-      }, 4000)
+      if (!this.disableHint) {
+        this.hintMessage = "もう一度メニューを開く"
+        this.showToolTip = true
+        this.shakeButton = true
+        setTimeout(() => {
+          this.showToolTip = false
+          this.shakeButton = false
+          setTimeout(() => (this.hintMessage = "メニューを開く"), 500)
+        }, 4000)
+      }
     },
   },
 

@@ -7,9 +7,12 @@
     color="systemBar"
   >
     <div class="group-wrapper">
-      <span>
+      <span class="logo">
         FlatShelf
-        <v-icon small class="ms-1">mdi-beta</v-icon>
+        <span v-show="$vuetify.breakpoint.width > 600">
+          <v-icon x-small class="ms-1 me-0">mdi-beta</v-icon>
+          0.1.0
+        </span>
       </span>
 
       <SideMenuOpenButton class="clickable" />
@@ -110,6 +113,7 @@ export default {
 #systembar {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
   user-select: none;
+  white-space: nowrap;
   -webkit-user-select: none;
   -webkit-app-region: drag;
   display: flex;

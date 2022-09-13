@@ -78,7 +78,7 @@ export default {
         Shift: [this.endHighlight],
       },
       tips: {
-        selectMany: true,
+        selectMany: !this.$store.state.settings.renderer.tips.browserSelectMany,
       },
     }
   },
@@ -112,6 +112,10 @@ export default {
     contentIDs() {
       return this.contents.map((content) => content.contentID)
     },
+
+    selectedIDs() {
+      return this.$store.state.edit.selectedIDs
+    },
   },
 
   watch: {
@@ -120,7 +124,6 @@ export default {
       async handler() {
         await this.loadContents()
         this.setScrollTop(0)
-        console.log("VC")
       },
       deep: true,
     },
@@ -257,14 +260,25 @@ export default {
       }
 
       //新規選択の場合
-      if (!this.keys.Shift || this.selectStartIndex === null) {
+      if (
+        !this.keys.Shift ||
+        this.selectStartIndex === null ||
+        this.selectedIDs.length === 0
+      ) {
         this.$store.dispatch("addSelectedItems", contentID)
+
+        //Shift+選択の場合
       } else {
         const newSelectItem =
           this.selectStartIndex < cardIndex
             ? this.contentIDs.slice(this.selectStartIndex + 1, cardIndex + 1)
             : this.contentIDs.slice(cardIndex, this.selectStartIndex)
         this.$store.dispatch("addSelectedItems", newSelectItem)
+
+        //Shift+選択のヒントを無効化する
+        if (!this.$store.state.settings.renderer.tips.browserSelectMany) {
+          this.$config.set("renderer.tips.browserSelectMany", true)
+        }
       }
       this.selectStartIndex = cardIndex
     },
@@ -333,12 +347,16 @@ export default {
       if (this.keys.Shift) this.highlightCards()
     },
 
+    //スクロール時に表示を更新
     onScroll: throttle(function () {
       this.scrollTop = this.$refs.scroller.scrollTop
       this.getVisibleCards()
       this.hideContextMenu()
     }, 300),
 
+    //------------------------------------
+    // キー検知
+    //------------------------------------
     onKeyUp(e) {
       for (const keyName in this.keys) {
         if (e.key === keyName) this.keys[keyName] = false
@@ -382,17 +400,26 @@ export default {
     window.addEventListener("keyup", this.onKeyUp)
   },
 
-  mounted() {
+  async mounted() {
     this.getScrollerSize()
 
+    //最初に１回呼び出されてしまう問題あり
     this.resizeObserver = new ResizeObserver(this.onResize).observe(
       this.$refs.scroller
     )
 
     this.$refs.scroller.addEventListener("scroll", this.onScroll)
+
+    //一度だけcontainerHeightを監視する
+    const containerHeightWatcher = this.$watch("containerHeight", () => {
+      this.setScrollTop(this.$store.state.browser.scrollTop)
+      containerHeightWatcher()
+    })
   },
 
   beforeDestroy() {
+    this.$store.commit("saveBrowserScrollTop", this.scrollTop)
+
     if (this.resizeObserver) {
       this.resizeObserver.unobserve(this.$refs.scroller)
     }

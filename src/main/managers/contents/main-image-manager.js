@@ -44,7 +44,7 @@ class ImageManager {
       //dbにデータを登録する
       const newContent = await Content.create({
         name: fileName,
-        type: type,
+        type: "image",
         mainFilePath: targetFile,
         folderPath: targetDirectory,
         UUID: fileUUID,

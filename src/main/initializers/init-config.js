@@ -36,6 +36,13 @@ const defaults = {
           pageInversion: false,
         },
       },
+
+      //=======ヒント設定=======//
+      //「trueで表示済み」なので注意
+      tips: {
+        openSideMenuAgain: false,
+        browserSelectMany: false,
+      },
     },
 
     //=======メインプロセス設定=======//

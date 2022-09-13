@@ -18,8 +18,11 @@ const store = new Vuex.Store({
       tags: null,
       order: [["createdAt", "ASC"]],
     },
-    //検索結果のID一覧
-    searchResultIDs: [],
+    browser: {
+      //検索結果のID一覧
+      searchResultIDs: [],
+      scrollTop: 0,
+    },
     viewer: {
       //検索結果の中で何番目のアイテムを見ているか情報
       index: null,
@@ -35,8 +38,6 @@ const store = new Vuex.Store({
   //computed的なアレと認識してる
   getters: {
     //stateのviewContextにsettings.renderer.search.queryを加えたもの
-    //これstate.settingsが変わるたびに呼び出されてしまってるぽおい！
-    //→config全部上書きしてるせいだわ
     searchContext(state) {
       return {
         ...state.viewContext,
@@ -86,8 +87,11 @@ const store = new Vuex.Store({
     setEditMode(state, boolean) {
       state.edit.editMode = boolean
     },
+    saveBrowserScrollTop(state, scrollTop) {
+      state.browser.scrollTop = scrollTop
+    },
     setSearchResult(state, ids) {
-      state.searchResultIDs = ids
+      state.browser.searchResultIDs = ids
       state.viewer.index = null
     },
     setViewIndex(state, index) {
