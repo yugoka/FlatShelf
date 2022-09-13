@@ -81,19 +81,6 @@ export default {
     }
   },
 
-  computed: {
-    //現在検索対象のフォルダ
-    viewContext() {
-      return this.$store.state.viewContext
-    },
-    contextChanged() {
-      return (
-        this.context.word.length ||
-        (Array.isArray(this.context.tags) && this.context.tags.length)
-      )
-    },
-  },
-
   watch: {
     menu() {
       if (this.menu) {
@@ -116,7 +103,7 @@ export default {
     //this.contextはviewContextとは別で動き、executeされた時に初めてviewContextに反映される。
     //これを実現するためにlodash.cloneDeepを使っている
     async syncContext() {
-      this.context = cloneDeep(this.viewContext)
+      this.context = cloneDeep(this.$store.state.viewContext)
     },
 
     executeSearch() {

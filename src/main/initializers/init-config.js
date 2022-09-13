@@ -16,6 +16,7 @@ const defaults = {
         sideMenuWidth: 250,
         editMenuWidth: 250,
       },
+      sideMenu: {},
       folders: {
         initiallyOpened: [],
       },

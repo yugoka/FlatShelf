@@ -89,7 +89,8 @@ export default {
     },
 
     viewContext() {
-      return this.$store.getters.viewContext
+      //stateのviewContextにsettings.renderer.search.queryを加えたもの
+      return this.$store.getters.searchContext
     },
 
     editMode() {

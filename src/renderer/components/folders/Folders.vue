@@ -154,13 +154,16 @@ export default {
     },
 
     //this.syncWithViewContext = trueなら、ハイライトされたフォルダとviewContextを同期する
-    viewContextFolder() {
-      if (!this.syncWithViewContext) return
-      if (this.viewContextFolder) {
-        this.highlightFolder(this.viewContextFolder)
-      } else {
-        this.unselect()
-      }
+    viewContextFolder: {
+      handler() {
+        if (!this.syncWithViewContext) return
+        if (this.viewContextFolder) {
+          this.highlightFolder(this.viewContextFolder)
+        } else {
+          this.unselect()
+        }
+      },
+      deep: true,
     },
   },
 

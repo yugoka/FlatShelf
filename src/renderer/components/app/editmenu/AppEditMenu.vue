@@ -147,8 +147,11 @@ export default {
         await this.getCommonValues()
       }
     },
-    viewContext() {
-      this.show = false
+    viewContext: {
+      handler() {
+        this.show = false
+      },
+      deep: true,
     },
   },
 

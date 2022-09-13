@@ -40,7 +40,7 @@ export default {
         {
           id: "new-item",
           name: "新規ファイル",
-          icon: "mdi-file-plus",
+          icon: "mdi-file-plus-outline",
           action: this.newFile,
         },
         {
@@ -48,6 +48,12 @@ export default {
           name: "ヘルプ",
           icon: "mdi-help-circle-outline",
           action: this.openHelp,
+        },
+        {
+          id: "feedback",
+          name: "要望を送る",
+          icon: "mdi-email-outline",
+          action: this.feedBack,
         },
         {
           id: "settings",
@@ -72,6 +78,9 @@ export default {
     },
     openHelp() {
       console.log("たーすけてー！！")
+    },
+    feedBack() {
+      console.log("feedback")
     },
   },
 }

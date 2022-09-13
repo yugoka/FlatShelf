@@ -1,6 +1,6 @@
 import Vue from "vue"
 import Vuex from "vuex"
-import { merge, cloneDeep } from "lodash"
+import { merge } from "./merge-vue-object"
 import contentsManager from "../managers/renderer-contents-manager"
 
 Vue.use(Vuex)
@@ -37,7 +37,7 @@ const store = new Vuex.Store({
     //stateのviewContextにsettings.renderer.search.queryを加えたもの
     //これstate.settingsが変わるたびに呼び出されてしまってるぽおい！
     //→config全部上書きしてるせいだわ
-    viewContext(state) {
+    searchContext(state) {
       return {
         ...state.viewContext,
         config: state.settings.renderer.search.query,
@@ -48,8 +48,8 @@ const store = new Vuex.Store({
   mutations: {
     //レンダラー設定をまとめて保存する
     //設定を保存するたびに全ての設定項目が再読み込みされる問題。
-    setConfig(state, settings) {
-      state.settings = settings
+    setConfig(state, diff) {
+      merge(state.settings, diff)
     },
     setFolders(state, folders) {
       state.folders = folders
@@ -69,16 +69,7 @@ const store = new Vuex.Store({
       state.notice = notice
     },
     mergeContext(state, context) {
-      console.log(context)
-      state.viewContext = cloneDeep(merge(state.viewContext, context))
-
-      //mergeで配列が統合されてしまうので上書きする。あまり良い実装ではない
-      if (Array.isArray(context.tags)) {
-        state.viewContext.tags = context.tags
-      }
-      if (Array.isArray(context.searchColumns)) {
-        state.viewContext.searchColumns = context.searchColumns
-      }
+      merge(state.viewContext, context)
     },
     //コンテキストを直接指定する。ただし並び替えだけは保持
     setContext(state, context) {
