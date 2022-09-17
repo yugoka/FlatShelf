@@ -1,77 +1,48 @@
 <template>
   <div>
-    <FolderMoveDialog
-      ref="folderMoveDialog"
-    />
+    <FolderMoveDialog ref="folderMoveDialog" />
     <ContextMenu ref="contextMenu">
+      <MenuButton @click="open"> 開く </MenuButton>
 
-      <MenuButton
-        @click.native="open"
-      >
-        開く
-      </MenuButton>
+      <v-divider class="my-1" />
 
-      <v-divider 
-        class="my-1"
-      />
+      <MenuButton @click="edit"> 編集 </MenuButton>
 
-      <MenuButton 
-        @click.native="edit"
-      >
-        編集
-      </MenuButton>
+      <MenuButton @click="moveFolder"> フォルダを移動 </MenuButton>
 
-      <MenuButton
-        @click.native="moveFolder"
-      >
-        フォルダを選択
-      </MenuButton>
-
-      <MenuButton 
-        v-if="isCardSelected"
-        @click.native="unselect"
-      >
+      <MenuButton v-if="isCardSelected" @click="unselect">
         選択を解除
       </MenuButton>
 
-      <v-divider 
-        class="my-1"
-      />
+      <v-divider class="my-1" />
 
-      <MenuButton
-        @click.native="remove(selectedIDs)"
-        v-if="isManySelected"
-      >
-        {{selectedIDs.length}}件のアイテムを削除
+      <MenuButton @click="openLocalFolder"> ファイルを確認 </MenuButton>
+
+      <MenuButton @click="remove(selectedIDs)" v-if="isManySelected">
+        {{ selectedIDs.length }}件のアイテムを削除
       </MenuButton>
 
-      <MenuButton
-        @click.native="remove(contentID)"
-        v-else
-      >
-        削除
-      </MenuButton>
-
+      <MenuButton @click="remove(contentID)" v-else> 削除 </MenuButton>
     </ContextMenu>
   </div>
 </template>
 
 <script>
-import ContextMenu from '../app/contextmenu/ContextMenu'
-import MenuButton from '../app/contextmenu/ContextMenuButton'
-import FolderMoveDialog from '../window/FolderMoveDialog.vue'
+import ContextMenu from "../app/contextmenu/ContextMenu"
+import MenuButton from "../app/contextmenu/ContextMenuButton"
+import FolderMoveDialog from "../window/FolderMoveDialog.vue"
 
 export default {
   components: {
     ContextMenu,
     MenuButton,
-    FolderMoveDialog
+    FolderMoveDialog,
   },
 
   data() {
     return {
       contentID: null,
-      showFolderMoveDialog: false
+      showFolderMoveDialog: false,
     }
   },
 
@@ -87,7 +58,7 @@ export default {
     //複数項目を選択中かつ選択している項目を右クリックしたかどうか
     isManySelected() {
       return this.selectedIDs.length >= 2 && this.isCardSelected
-    }
+    },
   },
 
   methods: {
@@ -101,7 +72,7 @@ export default {
     },
 
     open() {
-      console.log("open", this.contentID)
+      this.$contents.view(this.contentID)
     },
 
     edit() {
@@ -119,12 +90,17 @@ export default {
       this.$refs.folderMoveDialog.show(targetContentIDs)
     },
 
+    async openLocalFolder() {
+      const contentData = await this.$contents.getData(this.contentID)
+      window.ipc.openLocalFile(contentData[0].folderPath)
+    },
+
     remove(IDs) {
       this.$contents.delete(IDs)
       if (this.isCardSelected) {
         this.$store.dispatch("endEditMode")
-      } 
-    }
-  }
+      }
+    },
+  },
 }
 </script>

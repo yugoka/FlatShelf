@@ -144,6 +144,9 @@ contextBridge.exposeInMainWorld("ipc", {
   // 片道通信：レンダラー→メイン
   //------------------------------------
 
+  //------------------------------------
+  // ウィンドウ関連
+  //------------------------------------
   quitApp: () => {
     ipcRenderer.send("quit-app")
   },
@@ -152,6 +155,13 @@ contextBridge.exposeInMainWorld("ipc", {
   },
   toggleMaximized: () => {
     ipcRenderer.send("toggle-maximized")
+  },
+
+  //------------------------------------
+  // ローカルファイル関連
+  //------------------------------------
+  openLocalFile: (path) => {
+    ipcRenderer.send("open-local-file", { filePath: path })
   },
 
   //------------------------------------

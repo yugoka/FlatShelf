@@ -1,24 +1,41 @@
 <template>
-  <div ref="canvasWrapper" class="canvas-wrapper">
-    <canvas ref="canvas" class="pdf-canvas" />
+  <div ref="canvasWrapper" class="canvas-wrapper" :class="pagePosition">
+    <canvas ref="canvas" class="pdf-canvas" :class="pagePosition" />
   </div>
 </template>
 
 <script>
-import debounce from "lodash.throttle"
+import debounce from "lodash.debounce"
 
 export default {
   props: {
     pageNum: Number,
     pdf: Object,
+    pagePosition: String,
   },
 
   data() {
     return {
       currentPage: null,
-      resizeObserver: null,
+      resizeObserver: new ResizeObserver((entries) => {
+        this.onResize()
+      }),
       renderContext: null,
+      //pdf.render()のタスク。複数のタスクが同時に起こらないようにする
+      renderingTask: null,
+
+      onResize: debounce(async function () {
+        await this.initPage()
+        await this.renderPage()
+      }, 300),
     }
+  },
+
+  computed: {
+    pageAspectRatio() {
+      if (!this.currentPage) return null
+      return this.currentPage.view[2] / this.currentPage.view[3]
+    },
   },
 
   watch: {
@@ -30,6 +47,10 @@ export default {
         await this.initPage()
       }
     },
+
+    async pageAspectRatio() {
+      this.initPage()
+    },
   },
 
   methods: {
@@ -38,23 +59,29 @@ export default {
     },
 
     async renderPage() {
-      await this.currentPage.render(this.renderContext)
+      //既にレンダリングが実行中ならキャンセル
+      if (this.renderingTask) {
+        await this.renderingTask.cancel()
+        this.renderingTask = null
+      }
+
+      this.renderingTask = this.currentPage.render(this.renderContext)
+      this.renderingTask._internalRenderTask.callback = () => {
+        this.renderingTask = null
+      }
+      await this.renderingTask.promise
     },
 
-    async initPage() {
+    initPage() {
       //canvas本体のdom要素を取得
       const canvas = this.$refs.canvas
-      const canvasWrapper = this.$refs.canvasWrapper
-
-      //一度pdf自体の幅を取得し、親divの幅から表示スケールを計算
-      const pdfWidth = this.currentPage.getViewport({ scale: 1 }).width
-      const scale = canvasWrapper.clientWidth / pdfWidth
-      const viewport = this.currentPage.getViewport({ scale })
-
       //高DPI環境をサポート
       const outputScale = window.devicePixelRatio || 1
+      //ビューポートのサイズを計算＆取得
+      const viewport = this.getViewPort()
 
       const context = canvas.getContext("2d")
+
       canvas.width = Math.floor(viewport.width * outputScale)
       canvas.height = Math.floor(viewport.height * outputScale)
       canvas.style.width = Math.floor(viewport.width) + "px"
@@ -70,27 +97,58 @@ export default {
       }
     },
 
-    onResize: debounce(async function () {
-      await this.initPage()
-      await this.renderPage()
-    }, 300),
+    getViewPort() {
+      const wrapperWidth = this.$refs.canvasWrapper.clientWidth
+      const wrapperHeight = this.$refs.canvasWrapper.clientHeight
+      //一度pdf自体の幅を取得し、親divの幅から表示スケールを計算
+      const scale = wrapperWidth / this.currentPage.view[2]
+      const viewport = this.currentPage.getViewport({ scale })
+
+      if (viewport.height <= wrapperHeight) {
+        return viewport
+        //画面サイズに収まらない場合
+      } else {
+        return this.currentPage.getViewport({
+          scale: (scale * wrapperHeight) / viewport.height,
+        })
+      }
+    },
   },
 
   async mounted() {
     await this.getPage()
-    await this.initPage()
-    this.resizeObserver = new ResizeObserver((entries) => {
-      this.onResize()
-    })
+    this.initPage()
 
     this.resizeObserver.observe(this.$refs.canvasWrapper)
   },
 
   beforeDestroy() {
-    const canvasWrapper = this.$refs.canvasWrapper
-    this.resizeObserver.unobserve(canvasWrapper)
+    this.resizeObserver.unobserve(this.$refs.canvasWrapper)
   },
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.canvas-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.pdf-canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+
+.pdf-canvas.right {
+  margin: auto auto auto 0;
+}
+
+.pdf-canvas.left {
+  margin: auto 0 auto auto;
+}
+</style>

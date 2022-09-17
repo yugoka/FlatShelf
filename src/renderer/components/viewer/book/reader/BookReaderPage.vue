@@ -1,6 +1,11 @@
 <template>
   <div class="page-wrapper">
-    <ResponsivePDFPage v-if="isPDF" :pdf="pdf" :pageNum="page + 1" />
+    <ResponsivePDFPage
+      v-if="isPDF"
+      :pdf="pdf"
+      :pageNum="page + 1"
+      :pagePosition="pagePosition"
+    />
     <img
       v-else
       :src="`file://${book.images[page].dir}`"

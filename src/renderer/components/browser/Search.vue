@@ -53,7 +53,7 @@ export default {
 
   data() {
     return {
-      buffer: 2000,
+      buffer: 1000,
       contents: [],
       isActive: false,
       scrollerWidth: null,
@@ -350,8 +350,7 @@ export default {
     //スクロール時に表示を更新
     onScroll: throttle(function () {
       this.scrollTop = this.$refs.scroller.scrollTop
-      this.getVisibleCards()
-      this.hideContextMenu()
+      window.requestAnimationFrame(this.getVisibleCards)
     }, 300),
 
     //------------------------------------
@@ -413,6 +412,7 @@ export default {
     //一度だけcontainerHeightを監視する
     const containerHeightWatcher = this.$watch("containerHeight", () => {
       this.setScrollTop(this.$store.state.browser.scrollTop)
+      //監視を停止
       containerHeightWatcher()
     })
   },

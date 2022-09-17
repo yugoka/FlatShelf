@@ -4,7 +4,7 @@
       <div class="go-next" @click="next" />
       <div class="go-prev" @click="prev" />
 
-      <v-row no-gutters>
+      <v-row no-gutters class="full-height">
         <v-col cols="6">
           <div
             class="image-wrapper"
@@ -194,7 +194,12 @@ export default {
   justify-content: center;
 }
 
+.full-height {
+  height: 100%;
+}
+
 .image-area {
+  height: 100%;
   position: relative;
   user-select: none;
 }

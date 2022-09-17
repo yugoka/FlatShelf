@@ -35,6 +35,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 import BookReaderSpread from "./BookReaderSpread.vue"
 import BookReaderToolbar from "./toolbar/BookReaderToolbar.vue"
 import debounce from "lodash.debounce"
+console.log(__static)
 
 export default {
   components: { BookReaderSpread, BookReaderToolbar },

@@ -3,11 +3,11 @@
     v-if="allowLoad"
     :class="{
       'drag-ghost': true,
-      'visible': visible
+      visible: visible,
     }"
     :style="{
-      'left': position.x + 'px',
-      'top': position.y + 'px',
+      left: position.x + 'px',
+      top: position.y + 'px',
     }"
   >
     <div class="drag-ghost-img-wrapper">
@@ -18,73 +18,73 @@
         class="count-chip"
         color="primary"
       >
-        {{$store.state.edit.selectedIDs.length}}
+        {{ $store.state.edit.selectedIDs.length }}
       </v-chip>
-      <img 
-        class="drag-ghost-img"
-        :src="imgSrc"
-      />
+      <img class="drag-ghost-img" :src="imgSrc" />
     </div>
   </div>
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        visible: false,
-        content: null,
-        imgSrc: null,
-        position: {
-          x: -999,
-          y: -999
-        },
-        allowLoad: false
-      }
-    },
-
-    computed: {
-      //複数選択の場合
-      multipleSelect() {
-        return this.$store.state.edit.selectedIDs.length >= 2 && this.$store.state.edit.selectedIDs.includes(this.content.contentID)
-      }
-    },
-
-    methods: {
-      show(content) {
-        this.content = content
-        this.imgSrc = this.$contents.getThumbnail(this.content, 'small')
-        this.allowLoad = true
-        document.addEventListener("drag", this.setMousePosition)
-        setTimeout(() => this.visible = true, 10)
+export default {
+  data() {
+    return {
+      visible: false,
+      content: null,
+      imgSrc: null,
+      position: {
+        x: -999,
+        y: -999,
       },
-
-      hide() {
-        this.visible = false
-        this.allowLoad = false
-        this.imgSrc = null
-        this.position = {
-          x: -999,
-          y: -999
-        }
-        document.removeEventListener("drag", this.setMousePosition)
-      },
-
-      setMousePosition(e) {
-        if (e.clientX === 0 && e.clientY === 0) return
-        this.position.x = e.clientX - 80
-        this.position.y = e.clientY
-      }
-    },
-
-    created() {
-      this.setMousePosition = this.setMousePosition.bind(this)
-    },
-
-    beforeDestroy() {
-      document.removeEventListener("drag", this.setMousePosition)
+      allowLoad: false,
     }
-  }
+  },
+
+  computed: {
+    //複数選択の場合
+    multipleSelect() {
+      return (
+        this.$store.state.edit.selectedIDs.length >= 2 &&
+        this.$store.state.edit.selectedIDs.includes(this.content.contentID)
+      )
+    },
+  },
+
+  methods: {
+    show(content) {
+      this.content = content
+      this.imgSrc = this.$contents.getThumbnail(this.content, "small")
+      this.allowLoad = true
+      document.addEventListener("drag", this.setMousePosition)
+      setTimeout(() => (this.visible = true), 10)
+    },
+
+    hide() {
+      this.visible = false
+      this.allowLoad = false
+      this.imgSrc = null
+      this.position = {
+        x: -999,
+        y: -999,
+      }
+      document.removeEventListener("drag", this.setMousePosition)
+    },
+
+    setMousePosition(e) {
+      if (e.clientX === 0 && e.clientY === 0) return
+      this.position.x = e.clientX - 80
+      this.position.y = e.clientY
+    },
+  },
+
+  created() {
+    this.setMousePosition = this.setMousePosition.bind(this)
+  },
+
+  beforeDestroy() {
+    document.removeEventListener("drag", this.setMousePosition)
+  },
+}
 </script>
 
 <style scoped>

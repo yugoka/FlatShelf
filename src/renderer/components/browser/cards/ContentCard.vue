@@ -1,10 +1,7 @@
 <template>
   <div
+    class="content-card rounded text-center elevation-2"
     :class="{
-      'content-card': true,
-      rounded: true,
-      'text-center': true,
-      'elevation-2': true,
       'content-card--highlighted': selected || highlighted,
     }"
     :style="{

@@ -1,4 +1,4 @@
-const { ipcMain, app } = require("electron")
+const { ipcMain, app, shell } = require("electron")
 const { config } = require("../managers/main-config-manager")
 const { folders } = require("../managers/folders/main-folders-manager")
 const { contents } = require("../managers/contents/main-contents-manager")
@@ -6,6 +6,7 @@ const { scraping } = require("../managers/contents/scraping/contents-scraping")
 const { tags } = require("../managers/tags/main-tags-manager")
 const { books } = require("../managers/contents/main-book-manager")
 const { executeSearch } = require("../managers/search/main-search-manager")
+const path = require("path")
 
 //------------------------------------
 // IPCレシーバー設定
@@ -178,6 +179,13 @@ export const registerIpcHandlers = ({ mainWindow }) => {
     } else {
       mainWindow.maximize()
     }
+  })
+
+  //------------------------------------
+  // ローカルファイル関連
+  //------------------------------------
+  ipcMain.on("open-local-file", (event, { filePath }) => {
+    shell.openPath(filePath)
   })
 
   //------------------------------------
