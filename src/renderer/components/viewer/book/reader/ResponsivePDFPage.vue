@@ -66,7 +66,7 @@ export default {
       }
 
       this.renderingTask = this.currentPage.render(this.renderContext)
-      this.renderingTask._internalRenderTask.callback = () => {
+      this.renderingTask.promise.then = () => {
         this.renderingTask = null
       }
       await this.renderingTask.promise

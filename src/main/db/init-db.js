@@ -8,7 +8,7 @@ const { WORKING_SPACE } = require("../initializers/global-settings")
 export const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: path.join(WORKING_SPACE, "database.sqlite"),
-  //logging: false,
+  logging: false,
 })
 
 //------------------------------------

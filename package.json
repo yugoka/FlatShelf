@@ -25,7 +25,7 @@
     "lodash.throttle": "^4.1.1",
     "node-poppler": "^5.1.6",
     "node-stream-zip": "^1.15.0",
-    "pdfjs-dist": "2.5.207",
+    "pdfjs-dist": "^2.16.105",
     "sequelize": "^6.7.0",
     "sharp": "^0.30.7",
     "sqlite3": "^5.0.2",

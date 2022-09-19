@@ -29,13 +29,12 @@
 </template>
 
 <script>
-import * as pdfjs from "pdfjs-dist"
-import * as pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry"
-pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
+import * as pdfjs from "pdfjs-dist/legacy/build/pdf.js"
+const worker = new Worker(`${__static}/pdfjs/pdf.worker.min.js`)
+pdfjs.GlobalWorkerOptions.workerPort = worker
 import BookReaderSpread from "./BookReaderSpread.vue"
 import BookReaderToolbar from "./toolbar/BookReaderToolbar.vue"
 import debounce from "lodash.debounce"
-console.log(__static)
 
 export default {
   components: { BookReaderSpread, BookReaderToolbar },
@@ -52,7 +51,9 @@ export default {
       book: null,
       pdf: null,
       //プリロードするページ数
-      pageBuffer: 3,
+      pageBuffer: 4,
+      //ロード済みのページ
+      loadedPages: [],
     }
   },
 
@@ -87,7 +88,7 @@ export default {
       this.$emit("back")
     },
 
-    setPage(page) {
+    async setPage(page) {
       if (typeof page != "number") return
       this.page = page
     },
@@ -111,12 +112,38 @@ export default {
     }, 1000),
 
     //対象のページをプリロードする。効果は未検証
-    preloadPage(pages) {
-      if (this.isPDF) return
+    async preloadPage() {
+      const start = Math.max(0, this.page - this.pageBuffer)
+      const end = Math.min(this.pageCount - 1, this.page + this.pageBuffer)
 
-      for (const page of pages) {
-        const imgTag = new Image()
-        imgTag.src = `file://${page.dir}`
+      if (this.isPDF && this.pdf) {
+        this.$nextTick(async () => {
+          const canvas = new OffscreenCanvas(1, 1)
+          const canvasContext = canvas.getContext("2d")
+
+          //PDFプリロード
+          for (let pageNum = start; pageNum <= end; pageNum++) {
+            const pageInstance = await this.pdf.getPage(pageNum + 1)
+
+            if (this.loadedPages[pageNum] === false) {
+              console.log("preload", pageNum)
+              this.loadedPages[pageNum] = true
+              const viewport = pageInstance.getViewport()
+              await pageInstance.render({
+                canvasContext,
+                transform: null,
+                viewport,
+              }).promise
+            }
+          }
+        })
+      } else {
+        //画像プリロード
+        const pages = this.book.images.slice(start, end)
+        for (const page of pages) {
+          const imgTag = new Image()
+          imgTag.src = `file://${page.dir}`
+        }
       }
     },
   },
@@ -127,29 +154,22 @@ export default {
         this.pdf = await pdfjs.getDocument({
           url: this.book.dir,
         }).promise
+        await this.preloadPage()
       } else {
         this.pdf = null
+        await this.preloadPage()
       }
+      this.loadedPages = Array(this.pageCount).fill(false)
+      console.log(this.loadedPages)
     },
 
     //ページが更新された時に画像をプリロードする(画像モードのみ)
-    page() {
-      if (!this.isPDF) {
-        const start = Math.max(0, this.page - this.pageBuffer)
-        const end = Math.min(
-          this.book.images.length - 1,
-          this.page + this.pageBuffer
-        )
-        this.preloadPage(this.book.images.slice(start, end))
-      }
+    async page() {
+      await this.preloadPage()
     },
   },
 
-  mounted() {
-    if (this.isPDF) {
-      this.preloadPage(this.book.images.slice(0, this.pageBuffer))
-    }
-  },
+  mounted() {},
 }
 </script>
 

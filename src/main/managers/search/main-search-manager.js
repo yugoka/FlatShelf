@@ -194,12 +194,17 @@ class Search {
 
     //対象のフォルダがない場合rootで検索
     const folderNode = folders.root.getChildById(this.query.folder)
-    if (!folderNode) return
+    console.log(folderNode)
+    if (!folderNode) {
+      log.warn(`[ContentSearch] FolderID: ${this.query.folder} は存在しません`)
+      return
+    }
 
     //子孫フォルダも検索対象の場合、子孫フォルダをIDリストに追加する
-    const folderIDs = this.query.config.includeDecendantFolders
-      ? folderNode.getAllAffiliatedID()
-      : this.query.folder
+    const folderIDs =
+      this.query.config.includeDecendantFolders && this.query.folder != 1
+        ? folderNode.getAllAffiliatedID()
+        : this.query.folder
 
     //クエリにフォルダ条件を追加する。複数のフォルダ条件がある場合or条件になる
     this.queryAnd.push({ folderID: folderIDs })

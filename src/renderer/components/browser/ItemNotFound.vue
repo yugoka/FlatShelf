@@ -5,11 +5,19 @@
     <div class="pt-10 text-body-1 secondary--text">
       ここにはまだアイテムがないようです。
     </div>
-    <div class="text-caption secondary--text">
+    <div class="mt-2 text-caption secondary--text">
       <v-icon small class="mb-1">mdi-file-plus</v-icon>
-      ファイルをドロップするか、
+      ファイルをドラッグ＆ドロップするか、
       <a href="#" class="primary--text" @click="fileInput">ここをクリック</a>
       してアイテムを追加
+    </div>
+
+    <div class="text-caption secondary--text">
+      対応ファイル形式：
+      <v-icon x-small>mdi-folder-zip</v-icon>zip,
+      <v-icon x-small>mdi-image</v-icon>png,
+      <v-icon x-small>mdi-image</v-icon>jpg,
+      <v-icon x-small>mdi-image</v-icon>webpなど
     </div>
   </div>
 </template>
