@@ -125,8 +125,7 @@ export default {
           for (let pageNum = start; pageNum <= end; pageNum++) {
             const pageInstance = await this.pdf.getPage(pageNum + 1)
 
-            if (this.loadedPages[pageNum] === false) {
-              console.log("preload", pageNum)
+            if (this.loadedPages[pageNum] === false && this.page != pageNum) {
               this.loadedPages[pageNum] = true
               const viewport = pageInstance.getViewport()
               await pageInstance.render({

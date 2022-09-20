@@ -15,9 +15,7 @@
     <div class="text-caption secondary--text">
       対応ファイル形式：
       <v-icon x-small>mdi-folder-zip</v-icon>zip,
-      <v-icon x-small>mdi-image</v-icon>png,
-      <v-icon x-small>mdi-image</v-icon>jpg,
-      <v-icon x-small>mdi-image</v-icon>webpなど
+      <v-icon x-small>mdi-image</v-icon>png, jpg, webpなど
     </div>
   </div>
 </template>

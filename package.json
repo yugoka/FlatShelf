@@ -1,6 +1,8 @@
 {
   "name": "flatshelf",
   "version": "0.1.0",
+  "description": "コレクションに特化した同人誌・画像ビューワー",
+  "author": "Asachuna (https://github.com/Asachuna)",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -32,7 +34,7 @@
     "tough-cookie": "^4.1.2",
     "uuid": "^8.3.2",
     "vue": "^2.6.11",
-    "vue-router": "^3.5.2",
+    "vue-router": "^3.6.5",
     "vuetify": "^2.4.0",
     "vuex": "^3.6.2"
   },

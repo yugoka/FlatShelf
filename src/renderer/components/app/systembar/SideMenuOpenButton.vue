@@ -3,11 +3,8 @@
     <template v-slot:activator="{ on, attrs }">
       <v-btn
         v-show="!isSideMenuShown"
-        :class="[
-          { 'animate__animated animate__swing': shakeButton },
-          'ms-2',
-          'me-1',
-        ]"
+        class="ms-1 me-2 button"
+        :class="[{ 'animate__animated animate__swing': shakeButton }]"
         icon
         small
         v-bind="attrs"
@@ -81,6 +78,11 @@ export default {
 </script>
 
 <style scoped>
+.button {
+  user-select: none;
+  -webkit-user-select: all;
+  -webkit-app-region: no-drag;
+}
 .button-icon {
   margin: 0 !important;
   padding: 0 !important;
