@@ -26,8 +26,6 @@ module.exports = {
 
       builderOptions: {
         extraResources: ["static/"],
-        extends: null,
-        files: ["dist/**/*", "package.json"],
       },
     },
   },

@@ -1,6 +1,6 @@
-import "@mdi/font/css/materialdesignicons.css" //アイコン
 import Vue from "vue"
-import Vuetify from "vuetify/lib/framework"
+import Vuetify from "vuetify/lib"
+import "@mdi/font/css/materialdesignicons.css" //アイコン
 
 Vue.use(Vuetify)
 
@@ -15,5 +15,8 @@ export default new Vuetify({
       },
     },
     //options: { customProperties: true },
+  },
+  icons: {
+    iconfont: "mdiSvg", // default - only for display purposes
   },
 })

@@ -57,7 +57,7 @@ const createWindow = () => {
 
       preload: path.join(__dirname, "preload.js"),
       webSecurity: !isDevelopment,
-      sandbox: false,
+      sandbox: true,
     },
     frame: isDevelopment,
   })
