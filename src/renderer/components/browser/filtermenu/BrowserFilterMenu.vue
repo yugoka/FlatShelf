@@ -26,7 +26,11 @@
 
       <v-spacer />
 
-      <FilterMenuUnselectButton @click="unselectContents" :show="editMode" />
+      <FilterMenuUnselectButton
+        class="ms-2"
+        @click="unselectContents"
+        :show="editMode"
+      />
     </v-slide-group>
   </v-toolbar>
 </template>

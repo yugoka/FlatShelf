@@ -7,7 +7,7 @@ const { WORKING_SPACE } = require("../initializers/global-settings")
 
 export const sequelize = new Sequelize({
   dialect: "sqlite",
-  storage: path.join(WORKING_SPACE, "database.sqlite"),
+  storage: path.join(WORKING_SPACE, "flatshelf-db.sqlite"),
   logging: false,
 })
 
@@ -30,6 +30,11 @@ export const initDB = () => {
     Folder.findOrCreate({
       where: { folderID: 1 },
       defaults: { name: "未分類" },
+    })
+
+    Folder.findOrCreate({
+      where: { folderID: 2 },
+      defaults: { name: "ゴミ箱" },
     })
   })
 }

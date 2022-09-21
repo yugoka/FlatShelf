@@ -5,34 +5,32 @@
       <div class="go-prev" @click="prev" />
 
       <v-row no-gutters class="full-height">
-        <v-col cols="6">
-          <div
-            class="image-wrapper"
-            v-if="viewPages[0] != undefined && viewPages[0] != -1"
-          >
-            <BookReaderPage
-              :book="book"
-              :isPDF="isPDF"
-              :pdf="pdf"
-              :page="viewPages[0]"
-              pagePosition="left"
-            />
-          </div>
+        <v-col
+          cols="6"
+          class="image-wrapper"
+          v-if="viewPages[0] != undefined && viewPages[0] != -1"
+        >
+          <BookReaderPage
+            :book="book"
+            :isPDF="isPDF"
+            :pdf="pdf"
+            :page="viewPages[0]"
+            pagePosition="left"
+          />
         </v-col>
 
-        <v-col cols="6">
-          <div
-            class="image-wrapper"
-            v-if="viewPages[1] != undefined && viewPages[1] != -1"
-          >
-            <BookReaderPage
-              :book="book"
-              :isPDF="isPDF"
-              :pdf="pdf"
-              :page="viewPages[1]"
-              pagePosition="right"
-            />
-          </div>
+        <v-col
+          cols="6"
+          class="image-wrapper"
+          v-if="viewPages[1] != undefined && viewPages[1] != -1"
+        >
+          <BookReaderPage
+            :book="book"
+            :isPDF="isPDF"
+            :pdf="pdf"
+            :page="viewPages[1]"
+            pagePosition="right"
+          />
         </v-col>
       </v-row>
     </div>

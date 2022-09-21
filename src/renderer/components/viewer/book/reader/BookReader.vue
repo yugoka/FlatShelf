@@ -161,7 +161,6 @@ export default {
         await this.preloadPage()
       }
       this.loadedPages = Array(this.pageCount).fill(false)
-      console.log(this.loadedPages)
     },
 
     //ページが更新された時に画像をプリロードする(画像モードのみ)

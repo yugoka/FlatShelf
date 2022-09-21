@@ -1,19 +1,24 @@
 {
   "name": "flatshelf",
-  "version": "0.1.0",
+  "version": "0.1.0pre",
   "description": "コレクションに特化した同人誌・画像ビューワー",
   "author": "Asachuna (https://github.com/Asachuna)",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "vue-cli-service electron:serve",
+    "build": "vue-cli-service electron:build --p never",
+    "publish": "vue-cli-service electron:build --p always",
     "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build",
+    "electron:build": "vue-cli-service electron:build --p never",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
-  "main": "background.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/{USER_NAME}/{PROJECT_NAME}.git"
+  },
+  "main": "src/main/index.js",
   "dependencies": {
     "animate.css": "^4.1.1",
     "babel-eslint": "^10.1.0",
@@ -33,7 +38,7 @@
     "sqlite3": "^5.0.2",
     "tough-cookie": "^4.1.2",
     "uuid": "^8.3.2",
-    "vue": "^2.6.11",
+    "vue": "^2.7.10",
     "vue-router": "^3.6.5",
     "vuetify": "^2.4.0",
     "vuex": "^3.6.2",
@@ -45,7 +50,7 @@
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-router": "^4.5.14",
-    "@vue/cli-service": "~4.5.0",
+    "@vue/cli-service": "^4.5.0",
     "electron": "^20.1.1",
     "electron-devtools-installer": "^3.1.0",
     "electron-rebuild": "^3.2.3",
