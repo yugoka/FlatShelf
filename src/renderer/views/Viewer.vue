@@ -24,7 +24,7 @@ import ImageViewer from "../components/viewer/image/ImageViewer.vue"
 import BookViewer from "../components/viewer/book/BookViewer.vue"
 
 export default {
-  name: "viewer",
+  name: "PageViewer",
 
   components: {
     ImageViewer,

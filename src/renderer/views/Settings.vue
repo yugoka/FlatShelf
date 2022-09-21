@@ -37,7 +37,7 @@ import debounce from "lodash.debounce"
 
 export default {
   components: { BackToSearchButton, SettingsRow },
-  name: "Settings",
+  name: "PageSettings",
 
   data() {
     return {

@@ -30,9 +30,9 @@
 
 <script>
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf.js"
-const worker = new Worker(`pdfjs-dist/legacy/build/pdf.worker.js`, {
-  type: "module",
-})
+const worker = new Worker(
+  new URL("pdfjs-dist/build/pdf.worker.js", import.meta.url)
+)
 pdfjs.GlobalWorkerOptions.workerPort = worker
 import BookReaderSpread from "./BookReaderSpread.vue"
 import BookReaderToolbar from "./toolbar/BookReaderToolbar.vue"

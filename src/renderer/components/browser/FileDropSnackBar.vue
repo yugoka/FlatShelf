@@ -1,6 +1,6 @@
 <template>
   <v-snackbar
-    v-model="show"
+    v-model="visible"
     color="primary"
     content-class="text-center"
     timeout="-1"
@@ -17,6 +17,18 @@
 export default {
   props: {
     show: Boolean,
+  },
+
+  data() {
+    return {
+      visible: false,
+    }
+  },
+
+  watch: {
+    show() {
+      this.visible = this.show
+    },
   },
 }
 </script>

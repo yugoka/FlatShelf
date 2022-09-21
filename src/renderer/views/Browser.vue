@@ -25,7 +25,7 @@ import BrowserFilterMenu from "../components/browser/filtermenu/BrowserFilterMen
 import FileDropSnackBar from "../components/browser/FileDropSnackBar.vue"
 
 export default {
-  name: "Browser",
+  name: "PageBrowser",
 
   components: {
     SearchContents,

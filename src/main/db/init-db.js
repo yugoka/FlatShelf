@@ -34,7 +34,7 @@ export const initDB = () => {
 
     Folder.findOrCreate({
       where: { folderID: 2 },
-      defaults: { name: "ゴミ箱" },
+      defaults: { name: "ごみ箱" },
     })
   })
 }

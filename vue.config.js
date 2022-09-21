@@ -1,10 +1,7 @@
-const WorkerPlugin = require("worker-plugin")
-
 module.exports = {
   transpileDependencies: ["vuetify"],
   configureWebpack: {
     // Webpack configuration applied to web builds and the electron renderer process
-    plugins: [new WorkerPlugin()],
   },
   pluginOptions: {
     electronBuilder: {
@@ -29,6 +26,8 @@ module.exports = {
 
       builderOptions: {
         extraResources: ["static/"],
+        extends: null,
+        files: ["dist/**/*", "package.json"],
       },
     },
   },
