@@ -28,7 +28,7 @@
       <v-icon small color="secondary">mdi-close</v-icon>
     </v-btn>
 
-    <span v-show="!selectedTags.length" class="mx-1 caption"> タグを選択 </span>
+    <span v-show="!selectedTags.length" class="me-1 caption"> タグ </span>
   </v-chip>
 </template>
 

@@ -1,5 +1,10 @@
 <template>
-  <v-card class="card" @mouseleave="onMouseLeave">
+  <v-card
+    class="card"
+    :class="{ opacity: isUsing }"
+    @mouseleave="onMouseLeave"
+    @mouseenter="onMouseEnter"
+  >
     <v-text-field
       autofocus
       flat
@@ -64,6 +69,10 @@ export default {
       exactNameTag: null,
       //検索が終わった後trueになり、ウィンドウを閉じるかword.length===0になるとfalseになる
       searchReady: false,
+      waitingClose: false,
+      closeTimeoutID: null,
+      //ウィンドウ表示後一度でもマウスオーバーするとtrueになる
+      isUsing: false,
     }
   },
 
@@ -81,13 +90,29 @@ export default {
       } else {
         this.word = ""
         this.searchReady = false
+        setTimeout(() => {
+          this.isUsing = false
+        }, 250)
       }
     },
   },
 
   methods: {
     onMouseLeave() {
-      this.$emit("close")
+      clearTimeout(this.closeTimeoutID)
+      if (!this.word) {
+        this.waitingClose = true
+        this.closeTimeoutID = setTimeout(() => {
+          if (this.waitingClose) {
+            this.$emit("close")
+          }
+        }, 2000)
+      }
+    },
+
+    onMouseEnter() {
+      this.waitingClose = false
+      this.isUsing = true
     },
 
     onInput: debounce(async function () {
@@ -168,7 +193,14 @@ export default {
   width: 250px;
 }
 
-.card:hover {
+.card.opacity {
+  opacity: 0.6;
+  transition: 0.2s;
+  transition-delay: 0.2s;
+}
+
+.card.opacity:hover {
+  transition-delay: 0s;
   opacity: 1;
 }
 

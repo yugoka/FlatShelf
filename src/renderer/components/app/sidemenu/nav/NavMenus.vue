@@ -69,10 +69,10 @@ export default {
           noTags: true,
         },
         books: {
-          type: "book",
+          types: ["book"],
         },
         images: {
-          type: "image",
+          types: ["image"],
         },
       },
     }

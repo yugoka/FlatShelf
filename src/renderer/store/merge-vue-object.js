@@ -20,5 +20,6 @@ export const merge = function (target, value, propName) {
       return
     }
   }
+
   Vue.set(target, propName, value)
 }

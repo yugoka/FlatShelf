@@ -35,7 +35,7 @@
               </v-icon>
 
               <div class="selector-text">
-                {{ isFolderSelected ? folder.name : "フォルダを選択" }}
+                {{ isFolderSelected ? folder.name : "フォルダ" }}
               </div>
 
               <v-btn
@@ -53,9 +53,11 @@
         </v-tooltip>
       </template>
       <v-card class="card">
-        <div class="pt-2">
-          <div class="menu-header mx-4 mb-1 body-2">
-            <span class="mt-1 ms-3">フォルダを選択</span>
+        <div class="pt-1">
+          <div class="menu-header mx-2 body-2">
+            <span />
+
+            <span class="mt-1">フォルダを選択</span>
             <v-btn icon small @click="isMenuOpen = false">
               <v-icon small> mdi-close </v-icon>
             </v-btn>

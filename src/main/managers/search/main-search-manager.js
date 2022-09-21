@@ -214,16 +214,14 @@ class Search {
   // タイプ条件
   //------------------------------------
   registerSearchTypes() {
-    if (!this.query.type) return
-    const types = Array.isArray(this.query.type)
-      ? this.query.type
-      : [this.query.type]
-    const typeQuery = types.map((type) => {
+    if (!Array.isArray(this.query.types)) return
+
+    const typesQuery = this.query.types.map((type) => {
       return { type: { [Op.like]: `%${type}%` } }
     })
 
     //クエリにフォルダ条件を追加する。複数のフォルダ条件がある場合or条件になる
-    this.queryAnd.push({ [Op.or]: typeQuery })
+    this.queryAnd.push({ [Op.or]: typesQuery })
   }
 
   //------------------------------------

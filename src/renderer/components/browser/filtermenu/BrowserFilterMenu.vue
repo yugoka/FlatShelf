@@ -18,6 +18,12 @@
         v-if="visible"
       />
 
+      <FilterMenuTypeSelector
+        class="me-2"
+        v-if="visible"
+        :viewContextType="viewContext.type"
+      />
+
       <v-spacer />
 
       <FilterMenuUnselectButton @click="unselectContents" :show="editMode" />
@@ -29,12 +35,14 @@
 import FilterMenuFolderSelector from "./FilterMenuFolderSelector.vue"
 import FilterMenuTagPicker from "./FilterMenuTagPicker.vue"
 import FilterMenuUnselectButton from "./FilterMenuUnselectButton.vue"
+import FilterMenuTypeSelector from "./FilterMenuTypeSelector.vue"
 
 export default {
   components: {
     FilterMenuTagPicker,
     FilterMenuFolderSelector,
     FilterMenuUnselectButton,
+    FilterMenuTypeSelector,
   },
 
   data() {
@@ -52,6 +60,8 @@ export default {
       return this.$store.state.edit.editMode
     },
   },
+
+  watch: {},
 
   methods: {
     hide() {
