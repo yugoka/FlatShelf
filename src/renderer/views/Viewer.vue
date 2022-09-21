@@ -26,7 +26,11 @@ import BookViewer from "../components/viewer/book/BookViewer.vue"
 export default {
   name: "viewer",
 
-  components: { ImageViewer, BookViewer, BackToSearchButton },
+  components: {
+    ImageViewer,
+    BookViewer,
+    BackToSearchButton,
+  },
 
   data() {
     return {

@@ -5,7 +5,7 @@ const { Poppler } = require("node-poppler")
 const { app } = require("electron")
 const { v4: UUID } = require("uuid")
 
-const binPath = path.join(__dirname, "../bin")
+const binPath = path.join(__dirname, "../static/bin")
 
 const popplerPath = path.join(binPath, "poppler", process.platform, "bin")
 

@@ -2,7 +2,6 @@
   <div class="book-viewer">
     <BookFolderBackButton v-if="!viewMode" @click="back" />
     <BookEditButton v-if="!viewMode" @click="toggleEditMode" />
-
     <BookReader
       ref="reader"
       v-if="viewMode"

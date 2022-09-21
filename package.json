@@ -36,7 +36,9 @@
     "vue": "^2.6.11",
     "vue-router": "^3.6.5",
     "vuetify": "^2.4.0",
-    "vuex": "^3.6.2"
+    "vuex": "^3.6.2",
+    "webpack": "^4.46.0",
+    "worker-plugin": "^5.0.1"
   },
   "devDependencies": {
     "@mdi/font": "^6.5.95",
