@@ -27,6 +27,10 @@ module.exports = {
 
       builderOptions: {
         extraResources: ["static/"],
+        nsis: {
+          oneClick: false,
+          allowToChangeInstallationDirectory: true,
+        },
       },
     },
   },

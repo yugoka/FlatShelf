@@ -1,14 +1,16 @@
 {
   "name": "flatshelf",
-  "version": "0.1.0pre",
+  "version": "0.0.1",
   "private": true,
   "description": "コレクションに特化した同人誌・画像ビューワー",
   "author": "Asachuna (https://github.com/Asachuna)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Asachuna/FlatShelf.git"
+  },
   "scripts": {
-    "serve": "vue-cli-service electron:serve",
+    "serve": "chcp 65001 && vue-cli-service electron:serve",
     "build": "vue-cli-service electron:build --p never",
-    "electron:build": "vue-cli-service electron:build",
-    "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
     "publish": "vue-cli-service electron:build --p always",
@@ -22,6 +24,7 @@
     "core-js": "^3.6.5",
     "electron-log": "^4.4.1",
     "electron-store": "^8.0.1",
+    "electron-updater": "^5.2.1",
     "justified-layout": "^4.1.0",
     "lodash": "^4.17.21",
     "lodash.throttle": "^4.1.1",
@@ -92,9 +95,5 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Asachuna/FlatShelf.git"
-  }
+  ]
 }

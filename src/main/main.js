@@ -81,6 +81,12 @@ const createWindow = () => {
     config.set("main.window.position", mainWindow.getPosition())
     config.set("main.window.size", mainWindow.getSize())
   })
+
+  //アップデートを検知する
+  if (!isDevelopment) {
+    const { checkUpdate } = require("./initializers/auto-update")
+    checkUpdate(mainWindow)
+  }
 }
 
 //------------------------------------

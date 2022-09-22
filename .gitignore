@@ -29,3 +29,4 @@ pnpm-debug.log*
 min.vue
 .lnk
 .code-workspace
+.env
