@@ -11,7 +11,7 @@
         FlatShelf
         <span v-show="$vuetify.breakpoint.width > 600">
           <v-icon x-small class="ms-1 me-0">mdi-beta</v-icon>
-          0.1.0
+          {{ appVersion }}
         </span>
       </span>
 
@@ -74,6 +74,7 @@ export default {
   data() {
     return {
       maximized: false,
+      appVersion: require("../../../../../package.json").version,
     }
   },
 

@@ -27,6 +27,12 @@ module.exports = {
 
       builderOptions: {
         extraResources: ["static/"],
+        win: {
+          publish: {
+            provider: "github",
+            owner: "Asachuna",
+          },
+        },
         nsis: {
           oneClick: false,
           allowToChangeInstallationDirectory: true,
