@@ -93,9 +93,8 @@
     "last 2 versions",
     "not dead"
   ],
-  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/{USER_NAME}/{PROJECT_NAME}.git"
+    "url": "git+https://github.com/Asachuna/FlatShelf.git"
   }
 }
