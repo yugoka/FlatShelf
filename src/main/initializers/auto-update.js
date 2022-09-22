@@ -15,9 +15,8 @@ export const checkUpdate = (mainWindow) => {
     const dialogOpts = {
       type: "info",
       buttons: ["更新する", "あとで"],
-      message: "アップデートがあります",
-      detail:
-        "新しいバージョンをダウンロードしました。FlatShlefを再起動して更新しますか？",
+      message: "新しいバージョンが利用可能です",
+      detail: `バージョン${info.version}をダウンロードしました。FlatShelfを再起動して更新しますか？`,
     }
 
     dialog.showMessageBox(mainWindow, dialogOpts).then((returnValue) => {
