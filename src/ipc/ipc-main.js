@@ -1,17 +1,19 @@
 const { ipcMain, app, shell } = require("electron")
-const { config } = require("../managers/main-config-manager")
-const { folders } = require("../managers/folders/main-folders-manager")
-const { contents } = require("../managers/contents/main-contents-manager")
-const { scraping } = require("../managers/contents/scraping/contents-scraping")
-const { tags } = require("../managers/tags/main-tags-manager")
-const { books } = require("../managers/contents/main-book-manager")
-const { executeSearch } = require("../managers/search/main-search-manager")
-const path = require("path")
+const log = require("electron-log")
+const { config } = require("../main/managers/main-config-manager")
+const { folders } = require("../main/managers/folders/main-folders-manager")
+const { contents } = require("../main/managers/contents/main-contents-manager")
+const {
+  scraping,
+} = require("../main/managers/contents/scraping/contents-scraping")
+const { tags } = require("../main/managers/tags/main-tags-manager")
+const { books } = require("../main/managers/contents/main-book-manager")
+const { executeSearch } = require("../main/managers/search/main-search-manager")
 
 //------------------------------------
 // IPCレシーバー設定
 // レンダラーからpreload.js経由で発火したイベントをこちらで受け取る
-// 要するにメインプロセス側の通信APIだよ
+// 要するにメインプロセス側のAPIリストだよ
 //------------------------------------
 export const registerIpcHandlers = ({ mainWindow }) => {
   //------------------------------------
@@ -185,7 +187,28 @@ export const registerIpcHandlers = ({ mainWindow }) => {
   // ローカルファイル関連
   //------------------------------------
   ipcMain.on("open-local-file", (event, { filePath }) => {
+    log.info(`[LocalFile] Opening ${filePath}`)
     shell.openPath(filePath)
+  })
+
+  //------------------------------------
+  // ログ関連
+  //------------------------------------
+  ipcMain.on("push-log", (event, { message, logType }) => {
+    const logFunctions = new Map([
+      ["error", log.error],
+      ["warn", log.warn],
+      ["info", log.info],
+      ["verbose", log.verbose],
+      ["silly", log.silly],
+    ])
+
+    if (logFunctions.has(logType)) {
+      logFunctions.get(logType)(`[Frontend] ${message}`)
+    } else {
+      log.warn(`[FrontendLog] logType ${logType} does not exist`)
+      log.warn(`[Frontend] ${message}`)
+    }
   })
 
   //------------------------------------

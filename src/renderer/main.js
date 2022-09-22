@@ -1,3 +1,13 @@
+//------------------------------------
+// エラー検知
+//------------------------------------
+window.addEventListener("error", (event) => {
+  window.ipc.pushLog(event.message, "error")
+})
+
+//------------------------------------
+// 主要なライブラリの読み込み
+//------------------------------------
 import Vue from "vue"
 import App from "./App.vue"
 import Vuex from "vuex"
@@ -8,6 +18,7 @@ import router from "./router"
 //------------------------------------
 // マネージャー類の読み込み
 //------------------------------------
+
 import rendererConfigManager from "./managers/renderer-config-manager"
 import rendererContentsManager from "./managers/renderer-contents-manager"
 import rendererFoldersManager from "./managers/renderer-folders-manager"

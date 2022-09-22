@@ -3,7 +3,7 @@ const { contextBridge, ipcRenderer } = require("electron")
 //------------------------------------
 // プリロード設定
 // レンダラー側でNode APIにアクセスする場合はこれを使う
-// 要するにレンダラープロセス側の通信APIだよ
+// 要するにレンダラープロセス側のAPIリストだよ
 //------------------------------------
 contextBridge.exposeInMainWorld("ipc", {
   //------------------------------------
@@ -162,6 +162,13 @@ contextBridge.exposeInMainWorld("ipc", {
   //------------------------------------
   openLocalFile: (path) => {
     ipcRenderer.send("open-local-file", { filePath: path })
+  },
+
+  //------------------------------------
+  // ログ関連
+  //------------------------------------
+  pushLog: (message, logType = "info") => {
+    ipcRenderer.send("push-log", { message, logType })
   },
 
   //------------------------------------

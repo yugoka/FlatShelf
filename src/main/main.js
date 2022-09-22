@@ -12,7 +12,7 @@ const {
 } = require("electron-devtools-installer")
 
 const { config } = require("./managers/main-config-manager")
-const { registerIpcHandlers } = require("./ipc/ipc-main")
+const { registerIpcHandlers } = require("../ipc/ipc-main")
 
 //------------------------------------
 // 定数
