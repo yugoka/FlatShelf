@@ -6,14 +6,9 @@ const { imageManager } = require("./main-image-manager")
 const { books } = require("./main-book-manager")
 const log = require("electron-log")
 const fs = require("fs").promises
-const imageFileTypes = [
-  "image/png",
-  "image/jpg",
-  "image/jpeg",
-  "image/webp",
-  "image/gif",
-]
-const bookFileTypes = ["application/zip", "application/x-zip-compressed"]
+
+//対応ファイルのMIME
+const { imageFileTypes, bookFileTypes } = require("./content-file-types")
 
 class ContentsManager {
   async createMany(data) {
@@ -36,10 +31,7 @@ class ContentsManager {
       //ファイルの種類を判定
       const type = fileData.type.toLowerCase()
 
-      console.log(type)
-
       //コンテンツの種類によって担当するマネージャーを変える
-      //ここ分割予定
       if (imageFileTypes.includes(type)) {
         return await imageManager.create(data)
       } else if (bookFileTypes.includes(type)) {
