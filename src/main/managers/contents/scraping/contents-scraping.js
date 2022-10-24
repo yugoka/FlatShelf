@@ -1,7 +1,11 @@
 //------------------------------------
 // コンテンツ管理 for メインプロセス
 //------------------------------------
-const { productIDRegex, scrapingWaitTime } = require("./scraping-constants")
+const {
+  productIDRegex,
+  scrapingWaitTime,
+  excludeTags,
+} = require("./scraping-constants")
 const { executeSearch } = require("../../search/main-search-manager")
 const { config } = require("../../main-config-manager")
 const { tags } = require("../../tags/main-tags-manager")
@@ -26,7 +30,7 @@ class ScrapingTaskManager {
   // whileで待機処理書いてるけどあんまり良い実装じゃなさそう
   //------------------------------------
   async addTask(contentIDs) {
-    const contentsData = await executeSearch({ contentIDs, type: "book" })
+    const contentsData = await executeSearch({ contentIDs, types: ["book"] })
 
     for await (const content of contentsData) {
       //最大何回アクセスを試みるか
@@ -167,7 +171,7 @@ const getFANZAData = async (bookName) => {
     .text()
     .trim()
     .split(/\s+/)
-    .filter((tag) => tag != "クーポン対象")
+    .filter((tag) => !excludeTags.includes(tag))
 
   return {
     data: {

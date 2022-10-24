@@ -12,16 +12,8 @@ const { thumbnailGenerator } = require("./thumbnail.js")
 const { deleteFolder } = require("./contents-manager-util")
 const StreamZip = require("node-stream-zip")
 const { getPDFThumbnail } = require("./pdf-parser")
-const chardet = require("chardet")
 
-//定数として分離したい
-const imageFileTypes = [
-  "image/png",
-  "image/jpg",
-  "image/jpeg",
-  "image/webp",
-  "image/gif",
-]
+const { imageFileTypes } = require("./content-file-types")
 
 class BookManager {
   //------------------------------------
