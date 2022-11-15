@@ -34,6 +34,8 @@
       @activate="onClickSelectButton"
     />
 
+    <InfoButton v-if="showImg && hover" />
+
     <img
       v-show="showImg"
       class="content-card-img rounded"
@@ -49,7 +51,8 @@
 </template>
 
 <script>
-import SelectButton from "./SelectButton"
+import InfoButton from "./CardInfoButton.vue"
+import SelectButton from "./CardSelectButton"
 
 export default {
   name: "ContentsCard",
@@ -60,6 +63,7 @@ export default {
 
   components: {
     SelectButton,
+    InfoButton,
   },
 
   data() {
