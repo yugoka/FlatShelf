@@ -1,4 +1,4 @@
-## FlatShelf: コレクションに特化した同人・画像ビューワー
+## FlatShelf: コレクションに特化した画像・pdfビューワー
 <img width="1045" alt="スクリーンショット 2023-05-27 15 48 14" src="https://github.com/yugoka/FlatShelf/assets/84565188/e252803a-54fe-41ae-8f45-15d97790d864">
 
 たくさんのデジタル同人誌を買ったけど、管理がめちゃくちゃ大変😱<br>
