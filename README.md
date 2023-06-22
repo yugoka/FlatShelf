@@ -19,9 +19,9 @@
 https://www.youtube.com/watch?v=BH_VG9Tmrj8
 
 ## 使用技術
-言語: JavaScript
-フロントエンド: Electron + Vue.js, Vuetify
-バックエンド: Electron(Node.js) + SQLite, Sharp
+言語: JavaScript<br>
+フロントエンド: Electron + Vue.js, Vuetify<br>
+バックエンド: Electron(Node.js) + SQLite, Sharp<br>
 
 ## その他
 FlatShelfは無料で利用可能ですが、使用は自己責任でお願いいたします。
