@@ -3,10 +3,10 @@
   "version": "0.0.2",
   "private": true,
   "description": "コレクションに特化した同人誌・画像ビューワー",
-  "author": "Asachuna (https://github.com/Asachuna)",
+  "author": "Yugo Oka (https://github.com/yugoka)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Asachuna/FlatShelf.git"
+    "url": "git+https://github.com/yugoka/FlatShelf.git"
   },
   "scripts": {
     "serve": "vue-cli-service electron:serve",
